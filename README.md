@@ -1,6 +1,4 @@
 # Super Mario Bros
-
-# Super Mario Bros 
 ![SuperMarioBros Logo](https://upload.wikimedia.org/wikipedia/commons/2/2b/Super_Mario_Bros._Logo.svg)
 
 ## About the game
