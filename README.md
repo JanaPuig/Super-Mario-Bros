@@ -12,4 +12,4 @@ Our objective is to recreate the first level of the original video game using th
 The player controls Mario (or his brother Luigi in multiplayer mode) through levels filled with enemies and obstacles. Players must move sideways, jump, and run to avoid dangers, collect coins, and unlock power-ups like the mushroom that increases Mario's size or the fire flower that allows him to throw fireballs. 
 For now, only level 1 has been implemented, but the levels include different types of terrain, such as grasslands, underground caves, aquatic worlds, and castles filled with traps.
 
-## Our Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
+## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
