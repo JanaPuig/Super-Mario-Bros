@@ -28,6 +28,8 @@ For now, only level 1 has been implemented, but the levels include different typ
 
 ## List of Implemented Features:
 
+-Tiled Background
+
 - Coin Grab
 
 - Pipes Teleport
