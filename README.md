@@ -26,4 +26,31 @@ F10: Toggle "God Mode" (invulnerability, flying).
 
 F11: Limit/Unlimit framerate to 30 FPS.
 
+##List of Implemented Features:
+
+>Coin Grab
+Pipes Teleport
+Castle Teleport to start
+Camera follows the player + camera limits
+Music: "GroundTheme"
+Jump Fx when jumping
+Coin Fx when grabbing a coin
+Pipe Fx when teleporting in and out of pipes
+Castle Fx when entering the castle
+Debug: Show/hide collisions with F9
+Debug: 30 fps cap with F11
+Debug: God Mode with F10
+Debug: Show/hide Help Menu with H
+Jumping animation
+Walking animation
+Idle animation
+Main Menu/Title
+Death collisions and logic
+Death Fx and Voice Fx
+Random jump Voice Fx
+Start Voice Fx
+Death animation
+Game Over screen
+Try Again logic
+
 ## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
