@@ -13,18 +13,18 @@ The player controls Mario (or his brother Luigi in multiplayer mode) through lev
 For now, only level 1 has been implemented, but the levels include different types of terrain, such as grasslands, underground caves, aquatic worlds, and castles filled with traps.
 
 ## Player Controls:
-WASD to move.
+- WASD to move.
 
-SPACE to jump.
+- SPACE to jump.
 
 ## Debug Keys:
-H: Show/hide the help menu (shows control and debug keys).
+- H: Show/hide the help menu (shows control and debug keys).
 
-F9: Display colliders and game logic.
+- F9: Display colliders and game logic.
 
-F10: Toggle "God Mode" (invulnerability, flying).
+- F10: Toggle "God Mode" (invulnerability, flying).
 
-F11: Limit/Unlimit framerate to 30 FPS.
+- F11: Limit/Unlimit framerate to 30 FPS.
 
 ## List of Implemented Features:
 
