@@ -30,49 +30,49 @@ F11: Limit/Unlimit framerate to 30 FPS.
 
 - Coin Grab
 
->Pipes Teleport
+- Pipes Teleport
 
->Castle Teleport to start
+- Castle Teleport to start
 
->Camera follows the player + camera limits
+- Camera follows the player + camera limits
 
->Music: "GroundTheme"
+- Music: "GroundTheme"
 
->Jump Fx when jumping
+- Jump Fx when jumping
 
->Coin Fx when grabbing a coin
+- Coin Fx when grabbing a coin
 
->Pipe Fx when teleporting in and out of pipes
+- Pipe Fx when teleporting in and out of pipes
 
->Castle Fx when entering the castle
+- Castle Fx when entering the castle
 
->Debug: Show/hide collisions with F9
+- Debug: Show/hide collisions with F9
 
->Debug: 30 fps cap with F11
+- Debug: 30 fps cap with F11
 
->Debug: God Mode with F10
+- Debug: God Mode with F10
 
->Debug: Show/hide Help Menu with H
+- Debug: Show/hide Help Menu with H
 
->Jumping animation
+- Jumping animation
 
->Walking animation
+- Walking animation
 
->Idle animation
+- Idle animation
 
->Main Menu/Title
+- Main Menu/Title
 
->Death collisions and logic
+- Death collisions and logic
 
->Death Fx and Voice Fx
+- Death Fx and Voice Fx
 
->Random jump Voice Fx
+- Random jump Voice Fx
 
->Start Voice Fx
+- Start Voice Fx
 
->Death animation
+- Death animation
 
->Game Over screen
+- Game Over screen
 
 > Try Again logic
 
