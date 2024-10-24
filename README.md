@@ -28,7 +28,7 @@ F11: Limit/Unlimit framerate to 30 FPS.
 
 ## List of Implemented Features:
 
--Coin Grab
+- Coin Grab
 
 >Pipes Teleport
 
