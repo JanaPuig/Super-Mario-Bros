@@ -74,6 +74,6 @@ F11: Limit/Unlimit framerate to 30 FPS.
 
 - Game Over screen
 
-> Try Again logic
+- Try Again logic
 
 ## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
