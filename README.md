@@ -1,4 +1,4 @@
-# Super Mario Bros
+# Super Mario Bros 
 ![SuperMarioBros Logo](https://upload.wikimedia.org/wikipedia/commons/2/2b/Super_Mario_Bros._Logo.svg)
 
 ## About the game
@@ -12,4 +12,44 @@ Our objective is to recreate the first level of the original video game using th
 The player controls Mario (or his brother Luigi in multiplayer mode) through levels filled with enemies and obstacles. Players must move sideways, jump, and run to avoid dangers, collect coins, and unlock power-ups like the mushroom that increases Mario's size or the fire flower that allows him to throw fireballs. 
 For now, only level 1 has been implemented, but the levels include different types of terrain, such as grasslands, underground caves, aquatic worlds, and castles filled with traps.
 
+## Controls
+* Move left/right: A/D
+* Jump: Space/W
+* Run/Shoot: Left Control
+* Crouch: S
+### Debugging Controls
+* H Shows / hides a help menu showing the keys
+* F9 Visualize the colliders / logic
+* F10 God Mode (fly around, cannot be killed)
+* F11 Enable/Disable FPS cap to 30
+
+## List of Features Implemented
+* Tiled background
+* Coin Grab
+* Pipes Teleport
+* Castle Teleport to start
+* Camera follows the player + camera limits
+* Music: "GroundTheme"
+* Jump Fx when jumping
+* Coin Fx when grabbing a coin
+* Pipe Fx when teleporting in and out of pipes
+* Castle Fx when entering the castle
+* Debug: Show/hide collisions with F9
+* Debug: 30 fps cap with F11
+* Debug: God Mode with F10
+* Debug: Show/hide Help Menu with H
+* Jumping animation
+* Walking animation
+* Idle animation
+* Main Menu/Title
+* Death collisions and logic
+* Death Fx and Voice Fx
+* Random jump Voice Fx
+* Start Voice Fx
+* Death animation
+* Game Over screen
+* Try Again logic
+
+## Team Members
+### Jana Puig & Toni Llovera
 ## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
