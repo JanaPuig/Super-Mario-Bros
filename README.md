@@ -51,6 +51,7 @@ For now, only level 1 has been implemented, but the levels include different typ
 * Death animation
 * Game Over screen
 * Try Again logic
+* Double Jump
 
 ## Team Members
 ### Jana Puig & Toni Llovera
