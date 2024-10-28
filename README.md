@@ -16,6 +16,8 @@ For now, only level 1 has been implemented, but the levels include different typ
 - WASD to move.
 
 - SPACE to jump.
+  
+- T to revive when dead
 
 ## Debug Keys:
 - H: Show/hide the help menu (shows control and debug keys).
