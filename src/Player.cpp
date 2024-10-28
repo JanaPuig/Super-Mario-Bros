@@ -142,10 +142,12 @@ bool Player::Update(float dt) {
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) isMoving = false;
 
 	// Jump
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true); 
 		animationTimer = 0.0f;
 		isJumping = true;
+		++jumpcount;
 		Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
 		// Play random sound
 		int randomSound = rand() % 8;
@@ -181,6 +183,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		isJumping = false;	//reset the jump flag when touching the ground
+		jumpcount = 0;
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");

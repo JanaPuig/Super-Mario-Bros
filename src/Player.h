@@ -33,6 +33,7 @@ public:
 	bool isSprinting = false;
 	bool isDead = false;
 	bool deathSoundPlayed = false;
+	int jumpcount = 0;
 
 	//Audio fx
 	int jumpFxId= 0;
