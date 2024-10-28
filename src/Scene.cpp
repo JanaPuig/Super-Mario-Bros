@@ -22,7 +22,6 @@ Scene::Scene() : Module()
 Scene::~Scene()
 {}
 
-// Called before render is available
 bool Scene::Awake()
 {
 	LOG("Loading Scene");
@@ -89,17 +88,14 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX-275, -cameraY - 250);
 	}// Cambia el estado del menú de ayuda
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {ToggleHelpMenu = false;
-		 // Marca que la tecla H ha sido soltada
-	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {ToggleHelpMenu = false;}
 
 	//Camera Code
-	// Velocidad de la cámara y límites
-	const float cameraMinX = 0.0f;  // Límite izquierdo de la cámara
-	const float cameraMaxX = 4862.0f; // Límite derecho de la cámara (ajusta según el tamaño de tu mapa)
-	const float cameraFollowOffset = 192.0f; // Offset para centrar la cámara en el jugador
+	const float cameraMinX = 0.0f;  //Camera Left Limit
+	const float cameraMaxX = 4862.0f; //Camera Right Limit
+	const float cameraFollowOffset = 192.0f;
 
-	// Ajustar la cámara según la posición del jugador
+	//Camera position to where player is
 	float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
 
 	if (desiredCamPosX < cameraMinX) {
@@ -109,23 +105,20 @@ bool Scene::Update(float dt)
 		desiredCamPosX = cameraMaxX;
 	}
 
-	// Aplicar la posición ajustada a la cámara
+	//Apply camera position
 	Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
 
-	//Teleport code
-	
+
+	//TELEPORT CODE
 	//Going to the underground
 	if ((playerPos.getX() >= 1440 - tolerance && playerPos.getX() <= 1440 + tolerance &&
 		playerPos.getY() >= 288 - tolerance && playerPos.getY() <= 288 + tolerance) ||
 		(playerPos.getX() >= 1472 - tolerance && playerPos.getX() <= 1472 + tolerance &&
 			playerPos.getY() >= 288 - tolerance && playerPos.getY() <= 288 + tolerance)) {
-		if ((Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)) {
-			//Play Fx
+		if ((Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)) 
+		{
 			Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-			// Teletransporta al jugador a la nueva posición
-			player->SetPosition(Vector2D(31, 11));
-			;
-		}
+			player->SetPosition(Vector2D(31, 11)); }
 	}
 	//Getting out of the underground
 		else if(playerPos.getX() >= 1856 - 5 && playerPos.getX() <= 1856 + 5 &&
@@ -133,12 +126,8 @@ bool Scene::Update(float dt)
 	{
 		if ((Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)) {
 			player->SetPosition(Vector2D(36, 6));
-			//Play Fx
 			Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-			// Teletransporta al jugador a la nueva posición
-			LOG("Teleporting player to (1505, 864)");
-			
-		}
+			LOG("Teleporting player to (1505, 864)");	}
 	}
 
 	//Entering the castle
@@ -147,9 +136,9 @@ bool Scene::Update(float dt)
 		(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
 			playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
 		(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-			playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance)){
+			playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
+	{
 		Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-		// Teletransporta al jugador a la nueva posición
 		player->SetPosition(Vector2D(3, 8.2));
 	} 
 	LOG("After Teleport: X: %f, Y: %f", player->GetPosition().getX(), player->GetPosition().getY());

@@ -134,7 +134,6 @@ bool Map::Load(std::string path, std::string fileName)
         {
             std::string objectGroupName = objectGroupNode.attribute("name").as_string();
             std::string layerName = objectGroupNode.attribute("name").as_string();
-            // Verifica si la capa es de colisiones
             if (objectGroupName == "Collisions")
             {
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode; objectNode = objectNode.next_sibling("object"))
@@ -146,7 +145,7 @@ bool Map::Load(std::string path, std::string fileName)
 
                     // Crear colisiones para cada objeto
                     PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    collider->ctype = ColliderType::PLATFORM;
+                    collider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
 
                   
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
@@ -164,7 +163,7 @@ bool Map::Load(std::string path, std::string fileName)
 
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador como DEATH
+                    deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador DEATH
                 }
             }
             else if (layerName == "Roof")
@@ -177,13 +176,12 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador de muerte
+                    // Crear colisionador de Roof
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador como ROOF
+                    deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
                 }
             }
         }
-       
         ret = true;
 
         // L06: TODO 5: LOG all the data loaded iterate all tilesetsand LOG everything
