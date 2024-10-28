@@ -18,10 +18,7 @@ For now, only level 1 has been implemented, but the levels include different typ
 * Run: Left Control
 * Crouch: S
 * Revive when dead: T
-<<<<<<< Updated upstream
-  
-=======
->>>>>>> Stashed changes
+
 ### Debugging Controls
 * H Shows / hides a help menu showing the keys
 * F9 Visualize the colliders / logic
