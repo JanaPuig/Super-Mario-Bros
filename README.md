@@ -15,8 +15,10 @@ For now, only level 1 has been implemented, but the levels include different typ
 ## Controls
 * Move left/right: A/D
 * Jump: Space/W
-* Run/Shoot: Left Control
+* Run: Left Control
 * Crouch: S
+* Revive when dead: T
+  
 ### Debugging Controls
 * H Shows / hides a help menu showing the keys
 * F9 Visualize the colliders / logic
