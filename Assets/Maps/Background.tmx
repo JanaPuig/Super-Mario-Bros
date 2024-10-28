@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="112">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="112">
  <tileset firstgid="1" name="Background" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -22,14 +22,14 @@
   <object id="21" x="1956.5" y="576" width="27.5" height="320"/>
   <object id="22" name="pipe" x="1888.18" y="832" width="68.9091" height="63.8182"/>
   <object id="23" x="2400" y="319.998" width="96.002" height="6.502"/>
-  <object id="24" x="2496" y="191.955" width="256" height="6.5"/>
+  <object id="24" x="2496" y="192" width="256" height="6.5"/>
   <object id="25" x="2848" y="192" width="128" height="6.5"/>
-  <object id="26" x="2944" y="319.869" width="32" height="7"/>
-  <object id="27" x="3135.91" y="319.909" width="64" height="7"/>
-  <object id="31" x="3711.92" y="320.008" width="32.1304" height="6.5"/>
-  <object id="32" x="3807.82" y="192" width="128" height="6.5"/>
+  <object id="26" x="2944" y="320" width="32" height="7"/>
+  <object id="27" x="3136" y="320" width="64" height="7"/>
+  <object id="31" x="3712" y="320" width="32" height="6.5"/>
+  <object id="32" x="3808" y="192" width="128" height="6.5"/>
   <object id="33" x="4064" y="192" width="128" height="6.5"/>
-  <object id="34" x="4096" y="320.033" width="64" height="6.5"/>
+  <object id="34" x="4096" y="320" width="64" height="6.5"/>
   <object id="35" x="5344" y="320" width="128" height="6.5"/>
   <object id="37" x="6784" y="0" width="32" height="445"/>
   <object id="38" x="6336" y="416" width="32" height="32"/>
@@ -65,26 +65,26 @@
   <object id="82" name="lucky" x="640" y="192" width="32" height="6.5"/>
   <object id="83" x="3328" y="320" width="32" height="6.5"/>
   <object id="84" x="3424" y="320" width="32" height="6.5"/>
-  <object id="85" x="3424" y="191.75" width="32" height="6.5"/>
+  <object id="85" x="3424" y="192" width="32" height="6.5"/>
   <object id="86" x="3520" y="320" width="32" height="6.5"/>
  </objectgroup>
  <objectgroup id="6" name="Roof">
-  <object id="92" x="2495.75" y="198.5" width="256" height="25.5"/>
-  <object id="93" x="2848" y="198.5" width="127.939" height="25.5"/>
+  <object id="92" x="2496" y="198.5" width="256" height="25.5"/>
+  <object id="93" x="2848" y="198.5" width="128" height="25.5"/>
   <object id="94" x="2944" y="326.5" width="32" height="25.5"/>
-  <object id="95" x="2400.04" y="326.5" width="96.002" height="25.5"/>
+  <object id="95" x="2400" y="326.5" width="96.002" height="25.5"/>
   <object id="96" x="576" y="326.5" width="160" height="25.5"/>
   <object id="97" x="1599.94" y="581.781" width="224.002" height="25.5"/>
-  <object id="98" x="3136.09" y="326.5" width="64" height="25.5"/>
-  <object id="99" x="3328.04" y="326.505" width="32" height="25.5"/>
+  <object id="98" x="3136" y="326.5" width="64" height="25.5"/>
+  <object id="99" x="3328" y="326.505" width="32" height="25.5"/>
   <object id="100" x="3424" y="326.5" width="32" height="25.5"/>
   <object id="101" x="3424" y="198.5" width="32" height="25.5"/>
   <object id="102" x="3520" y="326.5" width="32" height="25.5"/>
-  <object id="103" x="3712.02" y="326.5" width="32" height="25.5"/>
+  <object id="103" x="3712" y="326.5" width="32" height="25.5"/>
   <object id="104" x="3808" y="198.5" width="128" height="25.5"/>
-  <object id="105" x="4063.98" y="198.5" width="127.998" height="25.5"/>
-  <object id="106" x="4096.01" y="326.5" width="64" height="25.5"/>
-  <object id="107" x="5343.98" y="326.5" width="128" height="25.5"/>
+  <object id="105" x="4064" y="198.5" width="127.998" height="25.5"/>
+  <object id="106" x="4096" y="326.5" width="64" height="25.5"/>
+  <object id="107" x="5344" y="326.5" width="128" height="25.5"/>
   <object id="110" x="448" y="326.5" width="32" height="25.5"/>
   <object id="111" name="lucky" x="640" y="198.5" width="32" height="25.5"/>
  </objectgroup>
