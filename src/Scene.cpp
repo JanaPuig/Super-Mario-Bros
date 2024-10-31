@@ -149,7 +149,7 @@ bool Scene::Update(float dt)
 
 	//Pintar tile sobre la que esta el raton
 	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld(mouseTile.getX(), mouseTile.getY());
-	Engine::GetInstance().render.get()->DrawTexture(mouseTileTex, highlightTile.getX()-Engine::GetInstance().map.get()->GetTileWidth()/2, highlightTile.getY());
+	//Engine::GetInstance().render.get()->DrawTexture(mouseTileTex, highlightTile.getX()-Engine::GetInstance().map.get()->GetTileWidth()/2, highlightTile.getY());
 
 
 	//if mouse button pressed modify player position

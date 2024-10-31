@@ -77,7 +77,6 @@ bool Player::Update(float dt) {
 		}	
 		return true;
 	}
-
 	// Moving Animation
 	if (isMoving && !isJumping) {
 		animationTimer += dt;  // Incrementa el temporizador con el delta time

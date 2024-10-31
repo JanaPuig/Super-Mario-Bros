@@ -243,6 +243,6 @@ Vector2D Map::WorldToMap(int x, int y)
             mapCoord.setY((y / halfheight - x / halfwidth) / 2);
         }
 
-    return mapCoord();
+    return mapCoord;
 }
 
