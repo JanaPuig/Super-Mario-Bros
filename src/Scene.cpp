@@ -141,6 +141,22 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
 		player->SetPosition(Vector2D(3, 8.2));
 	} 
+
+	//Get mouse position and obtain the map coordinate
+	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
+	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap(mousePos.getX() - Engine::GetInstance().render.get()->camera.x,
+																	 mousePos.getY()-Engine::GetInstance().render.get() ->camera.y);
+
+	//Pintar tile sobre la que esta el raton
+	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld(mouseTile.getX(), mouseTile.getY());
+	Engine::GetInstance().render.get()->DrawTexture(mouseTileTex, highlightTile.getX()-Engine::GetInstance().map.get()->GetTileWidth()/2, highlightTile.getY());
+
+
+	//if mouse button pressed modify player position
+	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1)==KEY_DOWN)
+	{
+		player->SetPosition(mousePos);
+	}
 	LOG("After Teleport: X: %f, Y: %f", player->GetPosition().getX(), player->GetPosition().getY());
 	return true;
 }

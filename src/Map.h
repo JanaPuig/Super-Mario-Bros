@@ -4,6 +4,11 @@
 #include <list>
 #include <vector>
 
+enum MapOrientation {
+    ORTOGRAPHIC,
+    ISOMETRIC
+};
+
 struct MapLayer
 {
     // L07: TODO 1: Add the info to the MapLayer Struct
@@ -57,7 +62,7 @@ struct MapData
 	int tileWidth;
 	int tileHeight;
     std::list<TileSet*> tilesets;
-
+    MapOrientation orientation;
     // L07: TODO 2: Add the info to the MapLayer Struct
     std::list<MapLayer*> layers;
 };
@@ -89,8 +94,15 @@ public:
     // L07: TODO 8: Create a method that translates x,y coordinates from map positions to world positions
     Vector2D MapToWorld(int x, int y) const;
 
- 
+    Vector2D WorldToMap(int x, int y);
 
+    int GetTileWidth() {
+        return mapData.tileWidth;
+    }
+
+    int GetTileHeight() {
+        return mapData.tileHeight;
+    }
 public: 
     std::string mapFileName;
     std::string mapPath;

@@ -228,3 +228,21 @@ Vector2D Map::MapToWorld(int x, int y) const
     return ret;
 }
 
+Vector2D Map::WorldToMap(int x, int y)
+{
+    Vector2D mapCoord(0, 0);
+        if (mapData.orientation == MapOrientation::ORTOGRAPHIC)
+        {
+            mapCoord.setX(x / mapData.tileWidth);
+            mapCoord.setY(y / mapData.tileHeight);
+        }
+        else {
+            float halfwidth = mapData.tileWidth / 2;
+            float halfheight = mapData.tileHeight / 2;
+            mapCoord.setX((x / halfwidth + y / halfheight)/2);
+            mapCoord.setY((y / halfheight - x / halfwidth) / 2);
+        }
+
+    return mapCoord();
+}
+
