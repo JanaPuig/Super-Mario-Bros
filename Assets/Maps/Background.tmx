@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="117">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="134">
  <tileset firstgid="1" name="Background" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -92,6 +92,22 @@
  <objectgroup id="5" name="Death">
   <object id="80" x="2688" y="512" width="98.6667" height="37"/>
   <object id="81" x="4864" y="512" width="64" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="Lucky">
+  <object id="118" x="4096" y="218" width="32" height="6"/>
+  <object id="119" x="4128" y="218" width="32" height="6"/>
+  <object id="120" x="3424" y="218" width="32" height="6"/>
+  <object id="121" x="2944" y="218" width="32" height="6"/>
+  <object id="122" x="640" y="218" width="32" height="6"/>
+  <object id="123" x="5408" y="346" width="32" height="6"/>
+  <object id="124" x="3424" y="346" width="32" height="6"/>
+  <object id="125" x="3520" y="346" width="32" height="6"/>
+  <object id="127" x="3328" y="320" width="32" height="6"/>
+  <object id="129" x="3328" y="346" width="32" height="6"/>
+  <object id="130" x="2432" y="346" width="32" height="6"/>
+  <object id="131" x="672" y="346" width="32" height="6"/>
+  <object id="132" x="608" y="346" width="32" height="6"/>
+  <object id="133" x="448" y="346" width="32" height="6"/>
  </objectgroup>
  <layer id="1" name="Capa de patrones 1" width="212" height="30">
   <data>
@@ -2894,7 +2910,7 @@
    <tile gid="738"/>
    <tile gid="738"/>
    <tile gid="739"/>
-   <tile gid="372"/>
+   <tile gid="558"/>
    <tile gid="190"/>
    <tile gid="191"/>
    <tile gid="185"/>
