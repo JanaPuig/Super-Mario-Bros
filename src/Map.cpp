@@ -181,6 +181,23 @@ bool Map::Load(std::string path, std::string fileName)
                     deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
                 }
             }
+            else if (objectGroupName == "Wall")
+            {
+                for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode; objectNode = objectNode.next_sibling("object"))
+                {
+                    int x = objectNode.attribute("x").as_int();
+                    int y = objectNode.attribute("y").as_int();
+                    int width = objectNode.attribute("width").as_int();
+                    int height = objectNode.attribute("height").as_int();
+
+                    // Crear colisiones para cada objeto
+                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    collider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
+
+
+                    LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
+                }
+            }
         }
         ret = true;
 

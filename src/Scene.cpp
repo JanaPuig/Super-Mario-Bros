@@ -140,6 +140,8 @@ bool Scene::Update(float dt)
 	{
 		Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
 		player->SetPosition(Vector2D(3, 8.2));
+		Engine::GetInstance().map.get()->CleanUp();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
 	} 
 
 	//Get mouse position and obtain the map coordinate

@@ -29,7 +29,8 @@ enum class ColliderType {
 	UNKNOWN,
 	QUESTIONBLOCK,
 	DEATH,
-	ROOF
+	ROOF,
+	WALL
 	// ..
 };
 

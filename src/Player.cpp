@@ -191,6 +191,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Player hit a death zone, resetting position...");
 		isDead = true;
 		break;
+	case ColliderType::WALL:
+		LOG("Player hit a death zone, resetting position...");
+		jumpcount = 1;
+		break;
 	default:
 		break;
 	}
@@ -199,12 +203,18 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype) {
 	case ColliderType::PLATFORM:
 		LOG("End Collision PLATFORM");
+		isJumping = true;
+		jumpcount = 1;
 		break;
 	case ColliderType::ITEM:
 		LOG("End Collision ITEM");
 		break;
 	case ColliderType::DEATH:
 		LOG("Position Reset");
+		break;
+	case ColliderType::WALL:
+		LOG("Player hit a death zone, resetting position...");
+		jumpcount = 1;
 		break;
 	default:
 		break;
