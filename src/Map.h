@@ -8,7 +8,30 @@ enum MapOrientation {
     ORTOGRAPHIC,
     ISOMETRIC
 };
+struct Properties
+{
+    struct Property
+    {
+        std::string name;
+        bool value; //We assume that we are going to work only with bool for the moment
+    };
 
+    std::list<Property*> propertyList;
+
+    ~Properties()
+    {
+        for (const auto& property : propertyList)
+        {
+            delete property;
+        }
+
+        propertyList.clear();
+    }
+
+    // L09: DONE 7: Method to ask for the value of a custom property
+    Property* GetProperty(const char* name);
+
+};
 struct MapLayer
 {
     // L07: TODO 1: Add the info to the MapLayer Struct
@@ -17,6 +40,7 @@ struct MapLayer
     int width;
     int height;
     std::vector<int> tiles;
+    Properties properties;
 
     // L07: TODO 6: Short function to get the gid value of i,j
     unsigned int Get(int i, int j) const
@@ -103,6 +127,9 @@ public:
     int GetTileHeight() {
         return mapData.tileHeight;
     }
+
+    MapLayer* GetNavigationLayer();
+
 public: 
     std::string mapFileName;
     std::string mapPath;

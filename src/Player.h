@@ -44,7 +44,7 @@ public:
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	float jumpForce = 3.0f; //Fuerza aplicada al saltar
+	float jumpForce = 2.8f; //Fuerza aplicada al saltar
 	const float jumpFrameDuration = 120.0f;
 	
 	//Animation Parameters

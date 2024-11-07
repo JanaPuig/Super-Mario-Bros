@@ -27,10 +27,11 @@ enum class ColliderType {
 	ITEM,
 	PLATFORM, 
 	UNKNOWN,
-	QUESTIONBLOCK,
+	LUCKY,
 	DEATH,
 	ROOF,
-	WALL
+	WALL,
+	ENEMY
 	// ..
 };
 

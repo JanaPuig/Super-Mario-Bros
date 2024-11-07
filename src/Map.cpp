@@ -198,6 +198,21 @@ bool Map::Load(std::string path, std::string fileName)
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
             }
+            else if (layerName == "Lucky")
+            {
+                // Cargar los objetos de muerte (Death)
+                for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
+                {
+                    int x = objectNode.attribute("x").as_int();
+                    int y = objectNode.attribute("y").as_int();
+                    int width = objectNode.attribute("width").as_int();
+                    int height = objectNode.attribute("height").as_int();
+
+                    // Crear colisionador de muerte
+                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    deathCollider->ctype = ColliderType::LUCKY;
+                }
+            }
         }
         ret = true;
 
@@ -261,5 +276,26 @@ Vector2D Map::WorldToMap(int x, int y)
         }
 
     return mapCoord;
+}
+
+MapLayer* Map::GetNavigationLayer() {
+    for (const auto& layer : mapData.layers) {
+        if (layer->properties.GetProperty("Navigation") != NULL &&
+            layer->properties.GetProperty("Navigation")->value) {
+            return layer;
+        }
+    }
+
+    return nullptr;
+}
+Properties::Property* Properties::GetProperty(const char* name)
+{
+    for (const auto& property : propertyList) {
+        if (property->name == name) {
+            return property;
+        }
+    }
+
+    return nullptr;
 }
 

@@ -33,6 +33,7 @@ public:
 
 	Player* GetPlayer() const { return player; }
 	
+	int level = 0; //Map Level
 	//Help menu
 	void ToggleMenu();
 	SDL_Texture* helpTexture = NULL;// Textura para la imagen del menu de ayuda
@@ -44,7 +45,6 @@ public:
 	//fx
 	int pipeFxId = 0;
 	int CastleFxId = 0;
-	//VictoryAnimation
 	float tolerance = 20.0f;
 
 private:

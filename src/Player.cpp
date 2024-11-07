@@ -203,7 +203,6 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype) {
 	case ColliderType::PLATFORM:
 		LOG("End Collision PLATFORM");
-		isJumping = true;
 		jumpcount = 1;
 		break;
 	case ColliderType::ITEM:
