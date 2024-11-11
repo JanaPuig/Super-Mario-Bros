@@ -32,7 +32,7 @@ bool Scene::Awake()
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	level = 1;
 	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
-	if (level = 1) {
+	if (level == 1) {
 		//Level 1 Coin Item Creation
 		int startX = 1600; // Posición inicial en X
 		int startY = 768;  // Posición inicial en Y
@@ -48,7 +48,7 @@ bool Scene::Awake()
 			}
 		}
 	}
-	else if (level = 2)
+	else if (level == 2)
 	{
 
 	}
@@ -120,7 +120,7 @@ bool Scene::Update(float dt)
 	//Apply camera position
 	Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
 
-	if (level = 1) {
+	if (level == 1) {
 		//TELEPORT CODE
 		//Going to the underground
 		if ((playerPos.getX() >= 1440 - tolerance && playerPos.getX() <= 1440 + tolerance &&
@@ -145,19 +145,25 @@ bool Scene::Update(float dt)
 		}
 
 		//Entering the castle
-		else if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-			playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
-		{
-			Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-			player->SetPosition(Vector2D(3, 10.2));
-			Engine::GetInstance().map.get()->CleanUp();
-			Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
-			level = 2;
+		if (level == 1) {
+			if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
+				playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
+				(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
+					playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
+				(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
+					playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
+			{
+				Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
+				player->SetPosition(Vector2D(3, 10.2));
+				Engine::GetInstance().map.get()->CleanUp();
+				Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
+				Engine::GetInstance().entityManager->RemoveAllItems();
+
+
+				level = 2;
+			}
 		}
+		
 	}
 
 	//Get mouse position and obtain the map coordinate

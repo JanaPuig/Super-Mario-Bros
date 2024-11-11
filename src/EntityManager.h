@@ -30,6 +30,9 @@ public:
 
 	void DestroyEntity(Entity* entity);
 
+	void RemoveAllItems();
+
+
 	void AddEntity(Entity* entity);
 
 public:
