@@ -31,6 +31,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	// Return the player position
+	Vector2D GetPlayerPosition();
+
+
 	Player* GetPlayer() const { return player; }
 	
 	int level = 0; //Map Level
@@ -49,4 +53,6 @@ public:
 
 private:
 	Player* player;
+	Enemy* enemy;
+
 };

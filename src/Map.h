@@ -5,7 +5,7 @@
 #include <vector>
 
 enum MapOrientation {
-    ORTOGRAPHIC,
+    ORTOGRAPHIC=0,
     ISOMETRIC
 };
 struct Properties
@@ -120,6 +120,21 @@ public:
 
     Vector2D WorldToMap(int x, int y);
 
+    TileSet* GetTilesetFromTileId(int gid) const;
+
+
+    // L09: TODO 6: Load a group of properties 
+    bool LoadProperties(pugi::xml_node& node, Properties& properties);
+
+    int GetWidth() {
+        return mapData.width;
+    }
+
+    int GetHeight() {
+        return mapData.height;
+    }
+
+
     int GetTileWidth() {
         return mapData.tileWidth;
     }
@@ -133,6 +148,8 @@ public:
 public: 
     std::string mapFileName;
     std::string mapPath;
+    std::vector<PhysBody*> deadCollisions;
+
 
 private:
     bool mapLoaded;

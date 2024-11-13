@@ -12,7 +12,6 @@
 #include "Map.h"
 #include "Item.h"
 #include "Enemy.h"
-#include "Physics.h"
 
 using namespace std;
 Scene::Scene() : Module()
@@ -51,14 +50,11 @@ bool Scene::Awake()
 	}
 	else if (level == 2)
 	{
-		
+
 	}
 	// Create a enemy using the entity manager 
-	for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-	{
-		Enemy* enemy = (Enemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY);
-		enemy->SetParameters(enemyNode);
-	}
+	enemy = (Enemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY);
+	
 	return ret;
 }
 
@@ -73,6 +69,8 @@ bool Scene::Start()
 	mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/Main_Menu.png");
 	helpTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Help_Menu.png");
 	return true;
+
+	enemy->SetPosition(Vector2D(3, 10.2));
 	
 }
 // Called each loop iteration
@@ -100,6 +98,7 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->DrawTexture(helpTexture, -cameraX, -cameraY + 352);
 		Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX-275, -cameraY - 250);
 	}// Cambia el estado del menú de ayuda
+
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {ToggleHelpMenu = false;}
 
 	//Camera Code
@@ -144,29 +143,9 @@ bool Scene::Update(float dt)
 			}
 		}
 
+
+
 		//Entering the castle
-		if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-			playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
-		{
-			level = 2;
-
-			// Limpia los Colliders 
-			for (auto physBody : Engine::GetInstance().physics->bodiesToDelete) {
-				Engine::GetInstance().physics->DeletePhysBody(physBody);
-			}
-			Engine::GetInstance().physics->bodiesToDelete.clear(); // Limpiar la lista después de borrar
-
-			// Limpia todos los ítems del nivel 1
-			Engine::GetInstance().entityManager->RemoveAllItems();
-
-			Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-			player->SetPosition(Vector2D(3, 10.2));
-			Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
-
 		if (level == 1) {
 			if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
 				playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
@@ -177,19 +156,22 @@ bool Scene::Update(float dt)
 			{
 				Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
 				player->SetPosition(Vector2D(3, 10.2));
-				Engine::GetInstance().map.get()->CleanUp();
+				Engine::GetInstance().map->CleanUp();
+				
+				level = 2;
+
 				Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
 				Engine::GetInstance().entityManager->RemoveAllItems();
 
 
-				level = 2;
+
 			}
 		}
-		
-	}
-	if (level == 2)
-	{
-		
+		/*else if (level == 2) 
+		{
+
+		}
+		*/
 	}
 
 	//Get mouse position and obtain the map coordinate
@@ -217,8 +199,9 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
+
 	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-	ret = false;
+		ret = false;
 	return ret;
 }
 

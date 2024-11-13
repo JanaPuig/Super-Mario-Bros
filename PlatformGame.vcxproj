@@ -166,10 +166,9 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\Enemy.h" />
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EntityManager.h" />
@@ -178,6 +177,7 @@
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />
+    <ClInclude Include="src\Pathfinding.h" />
     <ClInclude Include="src\PerfTimer.h" />
     <ClInclude Include="src\Physics.h" />
     <ClInclude Include="src\Player.h" />

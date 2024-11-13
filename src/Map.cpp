@@ -53,10 +53,33 @@ bool Map::Update(float dt)
     return ret;
 }
 
+TileSet* Map::GetTilesetFromTileId(int gid) const
+{
+    TileSet* set = nullptr;
+
+    for (const auto& tileset : mapData.tilesets) {
+        if (gid >= tileset->firstGid && gid < (tileset->firstGid + tileset->tileCount)) {
+            set = tileset;
+            break;
+        }
+    }
+
+    return set;
+}
+
 // Called before quitting
 bool Map::CleanUp()
 {
     LOG("Unloading map");
+  
+
+    for (auto& body : Engine::GetInstance().physics->bodiesToDelete) {
+        Engine::GetInstance().physics->DeletePhysBody(body);  // Elimina el cuerpo de la simulación física
+        delete body;  // Elimina el cuerpo de la memoria
+    }
+    Engine::GetInstance().physics->bodiesToDelete.clear();  // Limpiar la lista después de eliminar
+
+
 
     for (const auto& tileset : mapData.tilesets) {
         delete tileset;
@@ -144,12 +167,15 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* platformCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    platformCollider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(platformCollider);
+                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    collider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
+
+                    //deadCollisions.push_back(collider);
+                   Engine::GetInstance().physics->bodiesToDelete.push_back(collider);
+
                   
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
-                }   
+                }
             }
             else if (layerName == "Death")
             {
@@ -164,7 +190,9 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador DEATH
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(deathCollider);
+                    //deadCollisions.push_back(deathCollider);
+                    Engine::GetInstance().physics->bodiesToDelete.push_back(deathCollider);
+
                 }
             }
             else if (layerName == "Roof")
@@ -178,9 +206,11 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisionador de Roof
-                    PhysBody* roofCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    roofCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(roofCollider);
+                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
+                    //deadCollisions.push_back(deathCollider);
+                    Engine::GetInstance().physics->bodiesToDelete.push_back(deathCollider);
+
                 }
             }
             else if (objectGroupName == "Wall")
@@ -193,17 +223,18 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* wallCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    wallCollider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(wallCollider);
+                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    collider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
+                    //deadCollisions.push_back(collider);
+                    Engine::GetInstance().physics->bodiesToDelete.push_back(collider);
+
 
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
             }
-           
             else if (layerName == "Lucky")
             {
-                // Cargar los objetos luckyblock
+                // Cargar los objetos de muerte (Death)
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
                 {
                     int x = objectNode.attribute("x").as_int();
@@ -211,10 +242,13 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador del luckyblock
-                    PhysBody* luckyCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    luckyCollider->ctype = ColliderType::LUCKY;
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(luckyCollider);
+                    // Crear colisionador de muerte
+                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    deathCollider->ctype = ColliderType::LUCKY;
+                    //deadCollisions.push_back(deathCollider);
+                    Engine::GetInstance().physics->bodiesToDelete.push_back(deathCollider);
+
+
                 }
             }
         }
@@ -280,6 +314,23 @@ Vector2D Map::WorldToMap(int x, int y)
         }
 
     return mapCoord;
+}
+
+// L09: TODO 6: Load a group of properties from a node and fill a list with it
+bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
+{
+    bool ret = false;
+
+    for (pugi::xml_node propertieNode = node.child("properties").child("property"); propertieNode; propertieNode = propertieNode.next_sibling("property"))
+    {
+        Properties::Property* p = new Properties::Property();
+        p->name = propertieNode.attribute("name").as_string();
+        p->value = propertieNode.attribute("value").as_bool(); // (!!) I'm assuming that all values are bool !!
+
+        properties.propertyList.push_back(p);
+    }
+
+    return ret;
 }
 
 MapLayer* Map::GetNavigationLayer() {
