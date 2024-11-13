@@ -87,6 +87,15 @@ Entity* EntityManager::CreateEntity(EntityType type)
 
 	return entity;
 }
+void EntityManager::RemoveAllItems() {
+	// Recorrer una copia de la lista original para evitar problemas al modificar la lista mientras se recorre
+	auto entitiesCopy = entities;
+	for (auto entity : entitiesCopy) {
+		if (entity->type == EntityType::ITEM) {
+			DestroyEntity(entity); 
+		}
+	}
+}
 
 void EntityManager::DestroyEntity(Entity* entity)
 {

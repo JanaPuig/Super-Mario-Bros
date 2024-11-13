@@ -144,12 +144,12 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    collider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
-
+                    PhysBody* platformCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    platformCollider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
+                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(platformCollider);
                   
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
-                }
+                }   
             }
             else if (layerName == "Death")
             {
@@ -164,6 +164,7 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador DEATH
+                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(deathCollider);
                 }
             }
             else if (layerName == "Roof")
@@ -177,8 +178,9 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisionador de Roof
-                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
+                    PhysBody* roofCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    roofCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
+                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(roofCollider);
                 }
             }
             else if (objectGroupName == "Wall")
@@ -191,16 +193,17 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    collider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
-
+                    PhysBody* wallCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    wallCollider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
+                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(wallCollider);
 
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
             }
+           
             else if (layerName == "Lucky")
             {
-                // Cargar los objetos de muerte (Death)
+                // Cargar los objetos luckyblock
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
                 {
                     int x = objectNode.attribute("x").as_int();
@@ -208,9 +211,10 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador de muerte
-                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    deathCollider->ctype = ColliderType::LUCKY;
+                    // Crear colisionador del luckyblock
+                    PhysBody* luckyCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    luckyCollider->ctype = ColliderType::LUCKY;
+                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(luckyCollider);
                 }
             }
         }

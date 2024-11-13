@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Item.h"
 #include "Enemy.h"
+#include "Physics.h"
 
 using namespace std;
 Scene::Scene() : Module()
@@ -32,7 +33,7 @@ bool Scene::Awake()
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	level = 1;
 	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
-	if (level = 1) {
+	if (level == 1) {
 		//Level 1 Coin Item Creation
 		int startX = 1600; // Posición inicial en X
 		int startY = 768;  // Posición inicial en Y
@@ -48,9 +49,9 @@ bool Scene::Awake()
 			}
 		}
 	}
-	else if (level = 2)
+	else if (level == 2)
 	{
-
+		
 	}
 	// Create a enemy using the entity manager 
 	for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
@@ -99,7 +100,6 @@ bool Scene::Update(float dt)
 		Engine::GetInstance().render.get()->DrawTexture(helpTexture, -cameraX, -cameraY + 352);
 		Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX-275, -cameraY - 250);
 	}// Cambia el estado del menú de ayuda
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {ToggleHelpMenu = false;}
 
 	//Camera Code
@@ -120,8 +120,7 @@ bool Scene::Update(float dt)
 	//Apply camera position
 	Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
 
-	if (level = 1) {
-		//TELEPORT CODE
+	if (level == 1) {
 		//Going to the underground
 		if ((playerPos.getX() >= 1440 - tolerance && playerPos.getX() <= 1440 + tolerance &&
 			playerPos.getY() >= 288 - tolerance && playerPos.getY() <= 288 + tolerance) ||
@@ -145,19 +144,32 @@ bool Scene::Update(float dt)
 		}
 
 		//Entering the castle
-		else if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
+		if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
 			playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
 			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
 				playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
 			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
 				playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
 		{
+			level = 2;
+
+			// Limpia los Colliders 
+			for (auto physBody : Engine::GetInstance().physics->bodiesToDelete) {
+				Engine::GetInstance().physics->DeletePhysBody(physBody);
+			}
+			Engine::GetInstance().physics->bodiesToDelete.clear(); // Limpiar la lista después de borrar
+
+			// Limpia todos los ítems del nivel 1
+			Engine::GetInstance().entityManager->RemoveAllItems();
+
 			Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
 			player->SetPosition(Vector2D(3, 10.2));
-			Engine::GetInstance().map.get()->CleanUp();
 			Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
-			level = 2;
 		}
+	}
+	if (level == 2)
+	{
+		
 	}
 
 	//Get mouse position and obtain the map coordinate
@@ -185,9 +197,8 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
-
 	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	ret = false;
 	return ret;
 }
 
