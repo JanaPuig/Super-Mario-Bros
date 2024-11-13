@@ -91,6 +91,7 @@ bool Map::CleanUp()
     }
     mapData.layers.clear();
 
+
     return true;
 }
 
