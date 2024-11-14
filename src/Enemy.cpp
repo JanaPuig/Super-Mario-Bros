@@ -11,38 +11,33 @@
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
-	name = "Enemy";
 
 }
 
 Enemy::~Enemy() {
-	//delete pathfinding;
+	delete pathfinding;
 }
 
 bool Enemy::Awake() {
-	position = Vector2D(3, 8);
-
 	return true;
 }
 
 bool Enemy::Start() {
 
 	//initilize textures
-	
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies_Sprites.png");
-	if (texture == nullptr) {
-		LOG("Failed to load enemy texture: %s", "Assets/Textures/Enemies_Sprites.png");
-	}
+	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	position.setX(parameters.attribute("x").as_int());
+	position.setY(parameters.attribute("y").as_int());
+	texW = parameters.attribute("w").as_int();
+	texH = parameters.attribute("h").as_int();
 
 	//Load animations
-	
-	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	currentAnimation = &idle;
 
 	//Add a physics to an item - initialize the physics body
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-	if (pbody == nullptr) {
-		LOG("Failed to create physics body for the enemy.");
-	}
+
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
 
@@ -50,29 +45,18 @@ bool Enemy::Start() {
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
 
 	// Initialize pathfinding
-	/*pathfinding = new Pathfinding();
-	ResetPath();*/
+	pathfinding = new Pathfinding();
+	Vector2D pos = GetPosition();
+	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+	pathfinding->ResetPath(tilePos);
 
 	return true;
 }
 
 bool Enemy::Update(float dt)
 {
-	// Actualizar la posición según la física
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
-	// Dibujar la textura del enemigo con la animación si es necesario
-	Engine::GetInstance().render.get()->DrawTexture(texture, 100, 100, nullptr);
-/*
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	currentAnimation->Update()*/;  // Actualiza la animación (si tienes alguna)
-
-	return true;
-
 	// Pathfinding testing inputs
-	/*if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		Vector2D pos = GetPosition();
 		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
 		pathfinding->ResetPath(tilePos);
@@ -87,44 +71,6 @@ bool Enemy::Update(float dt)
 		pathfinding->PropagateBFS();
 	}
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		pathfinding->PropagateDijkstra();
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT &&
-		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateDijkstra();
-	}*/
-
-	// L13: TODO 3:	Add the key inputs to propagate the A* algorithm with different heuristics (Manhattan, Euclidean, Squared)
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_DOWN) {
-	//	pathfinding->PropagateAStar(MANHATTAN);
-	//}
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_REPEAT &&
-	//	Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-	//	pathfinding->PropagateAStar(MANHATTAN);
-	//}
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_DOWN) {
-	//	pathfinding->PropagateAStar(EUCLIDEAN);
-	//}
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_REPEAT &&
-	//	Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-	//	pathfinding->PropagateAStar(EUCLIDEAN);
-	//}
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_DOWN) {
-	//	pathfinding->PropagateAStar(SQUARED);
-	//}
-
-	//if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_REPEAT &&
-	//	Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-	//	pathfinding->PropagateAStar(SQUARED);
-	//}
-
 	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
@@ -134,7 +80,7 @@ bool Enemy::Update(float dt)
 	currentAnimation->Update();
 
 	// Draw pathfinding 
-	//pathfinding->DrawPath();
+	pathfinding->DrawPath();
 
 	return true;
 }
@@ -155,10 +101,4 @@ Vector2D Enemy::GetPosition() {
 	b2Vec2 bodyPos = pbody->body->GetTransform().p;
 	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
 	return pos;
-}
-
-void Enemy::ResetPath() {
-	Vector2D pos = GetPosition();
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-	//pathfinding->ResetPath(tilePos);
 }

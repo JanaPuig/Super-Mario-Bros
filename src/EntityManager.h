@@ -32,7 +32,6 @@ public:
 
 	void RemoveAllItems();
 
-
 	void AddEntity(Entity* entity);
 
 public:

@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "Entity.h"
 #include "SDL2/SDL.h"
@@ -30,8 +31,6 @@ public:
 
 	Vector2D GetPosition();
 
-	void ResetPath();
-
 public:
 
 private:
@@ -43,5 +42,5 @@ private:
 	Animation* currentAnimation = nullptr;
 	Animation idle;
 	PhysBody* pbody;
-	//Pathfinding* pathfinding;
+	Pathfinding* pathfinding;
 };

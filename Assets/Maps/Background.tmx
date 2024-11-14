@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="152">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="152">
  <tileset firstgid="1" name="Background" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
- <tileset firstgid="10121" source="../../../../MapMetadata.tsx"/>
  <objectgroup id="2" name="Collisions">
   <object id="3" x="0" y="448" width="2688" height="42.303"/>
   <object id="5" x="2784" y="448" width="2080" height="64"/>
@@ -92,7 +91,7 @@
   <object id="80" x="2688" y="512" width="98.6667" height="37"/>
   <object id="81" x="4864" y="512" width="64" height="32"/>
  </objectgroup>
- <objectgroup id="7" name="Lucky" visible="0">
+ <objectgroup id="7" name="Lucky">
   <object id="118" x="4096" y="218" width="32" height="6"/>
   <object id="119" x="4128" y="218" width="32" height="6"/>
   <object id="120" x="3424" y="218" width="32" height="6"/>
