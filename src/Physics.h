@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Entity.h"
 #include "box2d/box2d.h"
+#include <list>
+
 
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -15.0f
@@ -81,6 +83,11 @@ public:
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);
+
+	std::list<PhysBody*> bodiesToDelete;
+
+	void DeletePhysBody(PhysBody* physBody);
+	std::list<PhysBody*> listToDelete;
 
 private:
 

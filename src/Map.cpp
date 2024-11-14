@@ -58,6 +58,11 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
+    for (PhysBody* body : Engine::GetInstance().physics->listToDelete) {
+        Engine::GetInstance().physics->DeletePhysBody(body);
+    }
+    Engine::GetInstance().physics->listToDelete.clear();
+
     for (const auto& tileset : mapData.tilesets) {
         delete tileset;
     }
@@ -147,7 +152,8 @@ bool Map::Load(std::string path, std::string fileName)
                     PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     collider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
 
-                  
+                    Engine::GetInstance().physics->listToDelete.push_back(collider);
+
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
             }
@@ -164,6 +170,8 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador DEATH
+
+                    Engine::GetInstance().physics->listToDelete.push_back(deathCollider);
                 }
             }
             else if (layerName == "Roof")
@@ -179,6 +187,8 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de Roof
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
+
+                    Engine::GetInstance().physics->listToDelete.push_back(deathCollider);
                 }
             }
             else if (objectGroupName == "Wall")
@@ -194,6 +204,7 @@ bool Map::Load(std::string path, std::string fileName)
                     PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     collider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
 
+                    Engine::GetInstance().physics->listToDelete.push_back(collider);
 
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
@@ -211,6 +222,9 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::LUCKY;
+
+                    Engine::GetInstance().physics->listToDelete.push_back(deathCollider);
+
                 }
             }
         }

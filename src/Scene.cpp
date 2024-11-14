@@ -87,6 +87,8 @@ void Scene::ChangeLevel(int newLevel)
 
 	if (newLevel == 1)
 	{
+		player->SetPosition(Vector2D(3, 8));
+		Engine::GetInstance().map.get()->CleanUp();
 		Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
 	}
 	else if (newLevel == 2)
