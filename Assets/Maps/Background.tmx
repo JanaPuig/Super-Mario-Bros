@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="152">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="152">
  <tileset firstgid="1" name="Background" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -87,6 +87,7 @@
   <object id="113" x="1472" y="512" width="32" height="64"/>
   <object id="116" x="0.00336667" y="490.352" width="2688" height="21.6481"/>
  </objectgroup>
+ <objectgroup id="9" name="Coin"/>
  <objectgroup id="5" name="Death">
   <object id="80" x="2688" y="512" width="98.6667" height="37"/>
   <object id="81" x="4864" y="512" width="64" height="32"/>

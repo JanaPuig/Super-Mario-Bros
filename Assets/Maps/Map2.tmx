@@ -6512,9 +6512,9 @@
   <object id="172" x="5056" y="324" width="32" height="24"/>
   <object id="174" x="1088" y="612" width="32" height="24"/>
   <object id="175" x="1536" y="612" width="32" height="24"/>
-  <object id="176" x="1920" y="192" width="32" height="24"/>
-  <object id="179" x="3392" y="708" width="32" height="24.3333"/>
-  <object id="181" x="3648" y="580" width="32" height="24.3333"/>
+  <object id="176" x="1920" y="192" width="32" height="28.0889"/>
+  <object id="179" x="3392" y="708" width="32" height="23.9855"/>
+  <object id="181" x="3648" y="580" width="32" height="24.0246"/>
  </objectgroup>
  <objectgroup id="5" name="Lucky">
   <object id="121" x="576" y="572" width="32" height="4"/>

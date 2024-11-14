@@ -67,7 +67,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 {
 	Entity* entity = nullptr;
 
-	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
+	// Verifica que se crea correctamente una entidad
 	switch (type)
 	{
 	case EntityType::PLAYER:
@@ -83,7 +83,10 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	}
 
-	entities.push_back(entity);
+	if (entity != nullptr) {
+		entities.push_back(entity);
+		LOG("Created entity of type %d at address %p", type, entity);
+	}
 
 	return entity;
 }
@@ -117,11 +120,17 @@ bool EntityManager::Update(float dt)
 	return ret;
 }
 void EntityManager::RemoveAllItems() {
-	// Recorrer una copia de la lista original para evitar problemas al modificar la lista mientras se recorre
-	auto entitiesCopy = entities;
-	for (auto entity : entitiesCopy) {
-		if (entity->type == EntityType::ITEM) {
-			DestroyEntity(entity);
+	LOG("Starting removal of all items.");
+	for (auto it = entities.begin(); it != entities.end(); ) {
+		if ((*it)->type == EntityType::ITEM) {
+			LOG("Destroying item entity at position: (%f, %f)", (*it)->position.getX(), (*it)->position.getY());
+			(*it)->CleanUp();
+			delete* it;
+			it = entities.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
+	LOG("All items removed.");
 }

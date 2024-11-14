@@ -14,223 +14,192 @@
 #include "Enemy.h"
 
 using namespace std;
-Scene::Scene() : Module()
-{
-	name = "scene";
-}
 
+Scene::Scene() : Module(), level(1), showHelpMenu(false), showMainMenu(true), ToggleHelpMenu(false)
+{
+    name = "scene";
+}
 // Destructor
-Scene::~Scene()
-{}
+Scene::~Scene() {}
 
 bool Scene::Awake()
 {
-	LOG("Loading Scene");
-	bool ret = true;
+    LOG("Loading Scene");
+    player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
-	//L04: TODO 3b: Instantiate the player using the entity manager
-	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-	level = 1;
-	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
-	if (level = 1) {
-		//Level 1 Coin Item Creation
-		int startX = 1600; // Posición inicial en X
-		int startY = 768;  // Posición inicial en Y
-		int numItems = 7;  // Número de ítems en cada fila
-		int spacing = 32;  // Espacio entre ítems
-		int numRows = 3;   // Número de filas
-		int rowSpacing = 64; // Espacio entre filas
+    if (level == 1) {
+        CreateLevel1Items();
+    }
 
-		for (int row = 0; row < numRows; ++row) {
-			for (int i = 0; i < numItems; ++i) {
-				Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-				item->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
-			}
-		}
-	}
-	if (level = 2)
-	{
+    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
+        enemyNode; enemyNode = enemyNode.next_sibling("enemy")) {
+        Enemy* enemy = (Enemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY);
+        enemy->SetParameters(enemyNode);
+    }
+    return true;
+}
 
-	}
-	// Create a enemy using the entity manager 
-	for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy"); enemyNode; enemyNode = enemyNode.next_sibling("enemy"))
-	{
-		Enemy* enemy = (Enemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY);
-		enemy->SetParameters(enemyNode);
-	}
-	return ret;
+void Scene::CreateLevel1Items() {
+    if (level == 1) {
+        const int startX = 1600, startY = 768, numItems = 7, spacing = 32, numRows = 3, rowSpacing = 64;
+
+        for (int row = 0; row < numRows; ++row) {
+            for (int i = 0; i < numItems; ++i) {
+                Item* item = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+                item->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
+
+                // Agrega un log para verificar la creación de ítems
+                LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+            }
+        }
+    }
 }
 
 
-// Called before the first frame
 bool Scene::Start()
 {
-	//Load Map, Music and Textures
-	Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
-	Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.5f);
-	pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
-	CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
-	mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/Main_Menu.png");
-	helpTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Help_Menu.png");
-	return true;
-	
+    // Load Map, Music, and Textures
+    Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
+    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.5f);
+    pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
+    CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
+    mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/Main_Menu.png");
+    helpTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Help_Menu.png");
+    return true;
 }
-// Called each loop iteration
-bool Scene::PreUpdate()
-{
-	return true;
+
+bool Scene::PreUpdate() {
+    return true;
 }
 
 void Scene::ChangeLevel(int newLevel)
 {
-	level = newLevel;
+    if (level == newLevel) return;
 
-	if (newLevel == 1)
-	{
-		player->SetPosition(Vector2D(3, 8));
-		Engine::GetInstance().map.get()->CleanUp();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
-	}
-	else if (newLevel == 2)
-	{
-		Engine::GetInstance().map.get()->CleanUp();
-		Engine::GetInstance().entityManager->RemoveAllItems();
-		Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
-	}
+    LOG("Changing level from %d to %d", level, newLevel);
+
+    // Eliminar los ítems y entidades del nivel anterior
+    Engine::GetInstance().entityManager->RemoveAllItems();
+    Engine::GetInstance().map.get()->CleanUp();
+
+    level = newLevel;
+
+    // Cargar mapa y crear ítems según el nivel
+    if (level == 1) 
+    {
+        player->SetPosition(Vector2D(3, 8));
+        Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
+        CreateLevel1Items(); // Volver a crear los ítems del nivel 1 cada vez que entras
+    }
+    else if (level ==2)
+    {
+        player->SetPosition(Vector2D(3, 13));
+        Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
+    }
 }
 
-// Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-	{
-		ChangeLevel(2); // Change level 2 
-	}
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+        ChangeLevel(2);
+    }
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-	{
-		ChangeLevel(1); // Change level 1
-	}
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+        ChangeLevel(1);
+    }
 
-	
-	Vector2D playerPos = player->GetPosition();
+    Vector2D playerPos = player->GetPosition();
 
-	//MainMenu code
-	if (showMainMenu==true) Engine::GetInstance().render.get()->DrawTexture(mainMenu, -275, -250);
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) showMainMenu = false;
-	
-	// Handle Help Menu toggle
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) Scene::ToggleMenu(), ToggleHelpMenu = true; 
-		
-	if (showHelpMenu == true) {
-		int cameraX = Engine::GetInstance().render.get()->camera.x;
-		int cameraY = Engine::GetInstance().render.get()->camera.y;
-		Engine::GetInstance().render.get()->DrawTexture(helpTexture, -cameraX, -cameraY + 352);
-		Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX-275, -cameraY - 250);
-	}// Cambia el estado del menú de ayuda
+    // MainMenu code
+    if (showMainMenu) Engine::GetInstance().render.get()->DrawTexture(mainMenu, -275, -250);
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) showMainMenu = false;
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {ToggleHelpMenu = false;}
+    // Handle Help Menu toggle
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
+        ToggleMenu();
+        ToggleHelpMenu = true;
+    }
 
-	//Camera Code
-	const float cameraMinX = 0.0f;  //Camera Left Limit
-	const float cameraMaxX = 4862.0f; //Camera Right Limit
-	const float cameraFollowOffset = 192.0f;
+    if (showHelpMenu) {
+        int cameraX = Engine::GetInstance().render.get()->camera.x;
+        int cameraY = Engine::GetInstance().render.get()->camera.y;
+        Engine::GetInstance().render.get()->DrawTexture(helpTexture, -cameraX, -cameraY + 352);
+        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX - 275, -cameraY - 250);
+    }
 
-	//Camera position to where player is
-	float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {
+        ToggleHelpMenu = false;
+    }
 
-	if (desiredCamPosX < cameraMinX) {
-		desiredCamPosX = cameraMinX;
-	}
-	else if (desiredCamPosX > cameraMaxX) {
-		desiredCamPosX = cameraMaxX;
-	}
+    // Camera Code
+    const float cameraMinX = 0.0f, cameraMaxX = 4862.0f, cameraFollowOffset = 192.0f;
+    float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
+    desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
 
-	//Apply camera position
-	Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
+    Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
 
-	if (level = 1) {
-		//TELEPORT CODE
-		//Going to the underground
-		if ((playerPos.getX() >= 1440 - tolerance && playerPos.getX() <= 1440 + tolerance &&
-			playerPos.getY() >= 288 - tolerance && playerPos.getY() <= 288 + tolerance) ||
-			(playerPos.getX() >= 1472 - tolerance && playerPos.getX() <= 1472 + tolerance &&
-				playerPos.getY() >= 288 - tolerance && playerPos.getY() <= 288 + tolerance)) {
-			if ((Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT))
-			{
-				Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-				player->SetPosition(Vector2D(31, 11));
-			}
-		}
-		//Getting out of the underground
-		else if (playerPos.getX() >= 1856 - 5 && playerPos.getX() <= 1856 + 5 &&
-			playerPos.getY() >= 864 - 5 && playerPos.getY() <= 864 + 5)
-		{
-			if ((Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)) {
-				player->SetPosition(Vector2D(36, 6));
-				Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-				LOG("Teleporting player to (1505, 864)");
-			}
-		}
+    if (level == 1) {
+        HandleTeleport(playerPos);
+    }
 
-		//Entering the castle
-		else if ((playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-			playerPos.getY() >= 416 - tolerance && playerPos.getY() <= 416 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 384 - tolerance && playerPos.getY() <= 384 + tolerance) ||
-			(playerPos.getX() >= 6527 - tolerance && playerPos.getX() <= 6527 + tolerance &&
-				playerPos.getY() >= 352 - tolerance && playerPos.getY() <= 352 + tolerance))
-		{
-			Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-			player->SetPosition(Vector2D(3, 10.2));
-			Engine::GetInstance().map.get()->CleanUp();
-			Engine::GetInstance().entityManager->RemoveAllItems();
-			Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
-			level = 2;
-		}
-	}
+    // Get mouse position and modify player position on mouse click
+    Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
+    Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap(mousePos.getX() - Engine::GetInstance().render.get()->camera.x,
+        mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
+    Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld(mouseTile.getX(), mouseTile.getY());
 
-	//Get mouse position and obtain the map coordinate
-	Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
-	Vector2D mouseTile = Engine::GetInstance().map.get()->WorldToMap(mousePos.getX() - Engine::GetInstance().render.get()->camera.x,
-		mousePos.getY() - Engine::GetInstance().render.get()->camera.y);
+    if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
+        player->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
+    }
 
-	Vector2D highlightTile = Engine::GetInstance().map.get()->MapToWorld(mouseTile.getX(), mouseTile.getY());
-	SDL_Rect rect = { 0,0,32,32 };
-	/*Engine::GetInstance().render.get()->DrawTexture(mouseTileTex,
-		highlightTile.getX(),
-		highlightTile.getY(),
-		&rect);*/
+    LOG("After Teleport: X: %f, Y: %f", player->GetPosition().getX(), player->GetPosition().getY());
 
-
-	//if mouse button pressed modify player position
-	if (Engine::GetInstance().input.get()->GetMouseButtonDown(1) == KEY_DOWN) {
-		player->SetPosition(Vector2D(highlightTile.getX(), highlightTile.getY()));
-	}
-	LOG("After Teleport: X: %f, Y: %f", player->GetPosition().getX(), player->GetPosition().getY());
-	return true;
+    return true;
 }
 
-// Called each loop iteration
+void Scene::HandleTeleport(const Vector2D& playerPos) {
+    const float tolerance = 5.0f;
+    if (IsInTeleportArea(playerPos, 1440, 288, tolerance) || IsInTeleportArea(playerPos, 1472, 288, tolerance)) {
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+            Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
+            player->SetPosition(Vector2D(31, 11));
+        }
+    }
+    else if (IsInTeleportArea(playerPos, 1856, 864, 5)) {
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+            player->SetPosition(Vector2D(36, 6));
+            Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
+            LOG("Teleporting player to (1505, 864)");
+        }
+    }
+    else if (IsInTeleportArea(playerPos, 6527, 416, tolerance)) {
+        Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
+        ChangeLevel(2);
+    }
+}
+
+bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance) {
+    return playerPos.getX() >= x - tolerance && playerPos.getX() <= x + tolerance &&
+        playerPos.getY() >= y - tolerance && playerPos.getY() <= y + tolerance;
+}
+
 bool Scene::PostUpdate()
 {
-	bool ret = true;
-
-	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
-	return ret;
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
+        return false;
+    return true;
 }
 
-// Called before quitting
 bool Scene::CleanUp()
 {
-	Engine::GetInstance().textures.get()->UnLoad(helpTexture);
-	Engine::GetInstance().audio.get()->StopMusic();
-	Engine::GetInstance().textures.get()->UnLoad(mainMenu);
-	LOG("Freeing scene");
-	return true;
+    Engine::GetInstance().textures.get()->UnLoad(helpTexture);
+    Engine::GetInstance().audio.get()->StopMusic();
+    Engine::GetInstance().textures.get()->UnLoad(mainMenu);
+    LOG("Freeing scene");
+    return true;
 }
+
 void Scene::ToggleMenu() {
-	showHelpMenu = !showHelpMenu;
-	LOG(showHelpMenu ? "SHOWING MENU" : "UNSHOWING MENU");
+    showHelpMenu = !showHelpMenu;
+    LOG(showHelpMenu ? "SHOWING MENU" : "UNSHOWING MENU");
 }

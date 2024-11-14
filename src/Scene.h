@@ -16,6 +16,8 @@ public:
 	// Called before render is available
 	bool Awake();
 
+	void CreateLevel1Items();
+
 	// Called before the first frame
 	bool Start();
 
@@ -24,6 +26,10 @@ public:
 
 	// Called each loop iteration
 	bool Update(float dt);
+
+	void HandleTeleport(const Vector2D& playerPos);
+
+	bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
 
 	// Called before all Updates
 	bool PostUpdate();
