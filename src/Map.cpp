@@ -174,7 +174,7 @@ bool Map::Load(std::string path, std::string fileName)
                     Engine::GetInstance().physics->listToDelete.push_back(deathCollider);
                 }
             }
-            else if (layerName == "Roof")
+            else if (objectGroupName == "Roof")
             {
                 //cargar los objetos de Roof
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
@@ -209,7 +209,7 @@ bool Map::Load(std::string path, std::string fileName)
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
                 }
             }
-            else if (layerName == "Lucky")
+            else if (objectGroupName == "Lucky")
             {
                 // Cargar los objetos de muerte (Death)
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))

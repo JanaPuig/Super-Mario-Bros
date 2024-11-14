@@ -22,10 +22,10 @@ bool Item::Awake() {
 bool Item::Start() {
 
 	//initilize textures
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Coin.png");
+	UndergroundCoin = Engine::GetInstance().textures.get()->Load("Assets/Textures/Coin.png");
 	
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
-	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+	Engine::GetInstance().textures.get()->GetSize(UndergroundCoin, texW, texH);
 	
 	//audio effect
 	pickCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Coin.wav");
@@ -51,7 +51,7 @@ bool Item::Update(float dt)
 	}
 
 	if (!isPicked) {
-		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY());
+		Engine::GetInstance().render.get()->DrawTexture(UndergroundCoin, (int)position.getX(), (int)position.getY());
 	}
 
 	return true;

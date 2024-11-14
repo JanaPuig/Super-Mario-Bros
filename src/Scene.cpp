@@ -93,7 +93,7 @@ void Scene::ChangeLevel(int newLevel)
     }
     else if (level ==2)
     {
-        player->SetPosition(Vector2D(3, 13));
+        player->SetPosition(Vector2D(3, 14));
         Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
     }
 }
@@ -106,6 +106,9 @@ bool Scene::Update(float dt)
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
         ChangeLevel(1);
+    }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+        player->SetPosition(level == 1 ? Vector2D(3, 8.3) : Vector2D(3, 14));
     }
 
     Vector2D playerPos = player->GetPosition();

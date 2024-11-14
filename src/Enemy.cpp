@@ -25,15 +25,9 @@ bool Enemy::Awake() {
 bool Enemy::Start() {
 
 	//initilize textures
-	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
-	texW = parameters.attribute("w").as_int();
-	texH = parameters.attribute("h").as_int();
+	EnemyIdle = Engine::GetInstance().textures.get()->Load("Assets/Textures/goomba_idle.png");
+	Engine::GetInstance().textures.get()->GetSize(EnemyIdle, texW, texH);
 
-	//Load animations
-	idle.LoadAnimations(parameters.child("animations").child("idle"));
-	currentAnimation = &idle;
 
 	//Add a physics to an item - initialize the physics body
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
@@ -42,7 +36,7 @@ bool Enemy::Start() {
 	pbody->ctype = ColliderType::ENEMY;
 
 	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(1);
 
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
@@ -76,7 +70,7 @@ bool Enemy::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	Engine::GetInstance().render.get()->DrawTexture(EnemyIdle, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 	currentAnimation->Update();
 
 	// Draw pathfinding 

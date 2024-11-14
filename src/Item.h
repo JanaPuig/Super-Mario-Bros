@@ -33,7 +33,7 @@ public:
 private:
 
 	
-	SDL_Texture* texture;
+	SDL_Texture* UndergroundCoin;
 	const char* texturePath;
 	int texW, texH;
 

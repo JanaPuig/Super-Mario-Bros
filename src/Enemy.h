@@ -35,7 +35,7 @@ public:
 
 private:
 
-	SDL_Texture* texture;
+	SDL_Texture* EnemyIdle;
 	const char* texturePath;
 	int texW, texH;
 	pugi::xml_node parameters;
