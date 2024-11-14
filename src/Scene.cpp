@@ -81,9 +81,35 @@ bool Scene::PreUpdate()
 	return true;
 }
 
+void Scene::ChangeLevel(int newLevel)
+{
+	level = newLevel;
+
+	if (newLevel == 1)
+	{
+		Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
+	}
+	else if (newLevel == 2)
+	{
+		Engine::GetInstance().map.get()->CleanUp();
+		Engine::GetInstance().entityManager->RemoveAllItems();
+		Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
+	}
+}
+
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		ChangeLevel(2); // Change level 2 
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		ChangeLevel(1); // Change level 1
+	}
+
 	
 	Vector2D playerPos = player->GetPosition();
 

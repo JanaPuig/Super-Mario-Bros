@@ -33,6 +33,8 @@ public:
 
 	Player* GetPlayer() const { return player; }
 	
+	void ChangeLevel(int newLevel);
+
 	int level = 0; //Map Level
 	//Help menu
 	void ToggleMenu();
@@ -46,6 +48,8 @@ public:
 	int pipeFxId = 0;
 	int CastleFxId = 0;
 	float tolerance = 20.0f;
+
+
 
 private:
 	Player* player;
