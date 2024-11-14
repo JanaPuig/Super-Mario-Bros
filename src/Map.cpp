@@ -58,20 +58,9 @@ bool Map::CleanUp()
 {
     LOG("Unloading map");
 
-  
-    //auto& physicsEngine = Engine::GetInstance().physics;
-
-    //for (auto& body : physicsEngine->bodiesToDelete) {
-    //    delete body; // Eliminar el collider de la memoria
-
-    //    physicsEngine->bodiesToDelete.clear();
-    //}
- 
-
     for (const auto& tileset : mapData.tilesets) {
         delete tileset;
     }
-
     mapData.tilesets.clear();
 
     for (const auto& layer : mapData.layers) {
@@ -155,15 +144,12 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* platformCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    platformCollider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(platformCollider);
+                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    collider->ctype = ColliderType::PLATFORM; //Asignar tipo de colisionador PLATFORM
+
                   
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
-                    
-                    //levelCollisions[currentLevel].push_back(platformCollider);
-                }   
-
+                }
             }
             else if (layerName == "Death")
             {
@@ -178,10 +164,6 @@ bool Map::Load(std::string path, std::string fileName)
                     // Crear colisionador de muerte
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::DEATH;  // Asignar tipo de colisionador DEATH
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(deathCollider);
-                    //Engine::GetInstance().physics->bodiesToDelete.push_back(deathCollider);
-                    //levelCollisions[currentLevel].push_back(deathCollider);
-
                 }
             }
             else if (layerName == "Roof")
@@ -195,12 +177,8 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisionador de Roof
-                    PhysBody* roofCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    roofCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(roofCollider);
-                    //Engine::GetInstance().physics->bodiesToDelete.push_back(roofCollider);
-                    //levelCollisions[currentLevel].push_back(roofCollider);
-
+                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
                 }
             }
             else if (objectGroupName == "Wall")
@@ -213,20 +191,16 @@ bool Map::Load(std::string path, std::string fileName)
                     int height = objectNode.attribute("height").as_int();
 
                     // Crear colisiones para cada objeto
-                    PhysBody* wallCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    wallCollider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(wallCollider);
+                    PhysBody* collider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    collider->ctype = ColliderType::WALL; //Asignar tipo de colisionador PLATFORM
+
 
                     LOG("Creating collider at x: %d, y: %d, width: %d, height: %d", x + (width / 2), y + (height / 2), width, height);
-                    //Engine::GetInstance().physics->bodiesToDelete.push_back(wallCollider);
-                    //levelCollisions[currentLevel].push_back(wallCollider);
-
                 }
             }
-           
             else if (layerName == "Lucky")
             {
-                // Cargar los objetos luckyblock
+                // Cargar los objetos de muerte (Death)
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
                 {
                     int x = objectNode.attribute("x").as_int();
@@ -234,13 +208,9 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador del luckyblock
-                    PhysBody* luckyCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
-                    luckyCollider->ctype = ColliderType::LUCKY;
-                    //Engine::GetInstance().physics->bodiesToDelete.push_back(luckyCollider);
-                    //levelCollisions[currentLevel].push_back(luckyCollider);
-
-                    //Engine::GetInstance().physics.get()->bodiesToDelete.push_back(luckyCollider);
+                    // Crear colisionador de muerte
+                    PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    deathCollider->ctype = ColliderType::LUCKY;
                 }
             }
         }

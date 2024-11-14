@@ -22,6 +22,8 @@ public:
 	// Called every frame
 	bool Update(float dt);
 
+	void RemoveAllItems();
+
 	// Called before quitting
 	bool CleanUp();
 
@@ -29,8 +31,6 @@ public:
 	Entity* CreateEntity(EntityType type);
 
 	void DestroyEntity(Entity* entity);
-
-	void RemoveAllItems();
 
 	void AddEntity(Entity* entity);
 
