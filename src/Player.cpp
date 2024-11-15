@@ -50,6 +50,9 @@ bool Player::Start() {
 	return true;
 }
 bool Player::Update(float dt) {
+	if (Engine::GetInstance().scene.get()->showMainMenu) {
+		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
+	}
 	if (!isActive) return true;
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);

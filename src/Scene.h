@@ -3,70 +3,97 @@
 #include "Module.h"
 #include "Player.h"
 
+// Forward declaration of SDL_Texture structure
 struct SDL_Texture;
 
+// Scene class, derived from Module
 class Scene : public Module
 {
 public:
-	Scene();
+    // Constructor
+    Scene();
 
-	// Destructor
-	virtual ~Scene();
+    // Destructor
+    virtual ~Scene();
 
-	// Called before render is available
-	bool Awake();
+    // Called before render is available
+    bool Awake();
 
-	void CreateLevel1Items();
+    // Creates items specific to Level 1
+    void CreateLevel1Items();
 
-	// Called before the first frame
-	bool Start();
+    // Called before the first frame
+    bool Start();
 
-	// Called before all Updates
-	bool PreUpdate();
+    // Called before all updates
+    bool PreUpdate();
 
-	// Called each loop iteration
-	bool Update(float dt);
+    // Called each loop iteration
+    bool Update(float dt);
 
-	void HandleTeleport(const Vector2D& playerPos);
+    // Handles teleportation logic
+    void HandleTeleport(const Vector2D& playerPos);
 
-	bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
+    // Checks if the player is within a teleportation area
+    bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
 
-	// Called before all Updates
-	bool PostUpdate();
+    // Called after all updates
+    bool PostUpdate();
 
-	// Called before quitting
-	bool CleanUp();
+    // Called before quitting
+    bool CleanUp();
 
-	Player* GetPlayer() const { return player; }
+    // Returns the player instance
+    Player* GetPlayer() const { return player; }
 
-	void ChangeLevel(int newLevel);
+    // Changes the current level
+    void ChangeLevel(int newLevel);
 
-	int level = 0; //Map Level
-	//Help menu
-	void ToggleMenu();
-	SDL_Texture* helpTexture = NULL;// Textura para la imagen del menu de ayuda
-	bool showHelpMenu = false;
-	bool ToggleHelpMenu = false;
-	//Main menu
-	SDL_Texture* mainMenu = NULL;
-	bool showMainMenu = true;
-	//fx
-	int pipeFxId = 0;
-	int CastleFxId = 0;
-	float tolerance = 20.0f;
+    // Toggles the help menu
+    void ToggleMenu();
+
+    // Public member variables
+    int level = 0;                   // Current map level
+
+    SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
+    bool showHelpMenu = false;       // Whether the help menu is visible
+    bool ToggleHelpMenu = false;     // Toggle flag for the help menu
+
+    SDL_Texture* Title = NULL;    // Texture for the main menu
+    bool showMainMenu = true;        // Whether the main menu is visible
+
+    int pipeFxId = 0;                // Sound effect ID for pipe interaction
+    int CastleFxId = 0;              // Sound effect ID for castle interaction
+    float tolerance = 20.0f;         // Tolerance value for proximity checks
 
 private:
-	Player* player;
+    // Player instance
+    Player* player;
 
-	// Nuevas variables para las texturas de transición
-	SDL_Texture* level1Transition = NULL;
-	SDL_Texture* level2Transition = NULL;
+    // Transition-related variables
+    SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
+    SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
 
-	// Duración y temporizador para la pantalla de transición
-	float transitionDuration = 3100; 
-	float transitionTimer = 0.0f;
-	bool showingTransition = false;
+    float transitionDuration = 3100;      // Duration of the transition screen (in ms)
+    float transitionTimer = 0.0f;         // Timer for tracking transition time
+    bool showingTransition = false;       // Whether the transition screen is visible
 
-	void ShowTransitionScreen();
-	void FinishTransition();
+    // Displays the transition screen
+    void ShowTransitionScreen();
+
+    // Finalizes the transition process
+    void FinishTransition();
+    SDL_Texture* mainMenu = NULL;
+    SDL_Texture* newGameButton = NULL;  // Textura para el botón Nuevo Juego
+    SDL_Texture* loadGameButton = NULL; // Textura para el botón Cargar Juego
+    SDL_Texture* leaveGameButton = NULL; // Textura para el botón Salir
+    SDL_Texture* newGameButtonSelected = NULL;  
+    SDL_Texture* loadGameButtonSelected = NULL; 
+    SDL_Texture* leaveGameButtonSelected = NULL;
+    int selectedOption = 0; // Opción seleccionada (0: Nuevo Juego, 1: Cargar Juego, 2: Salir)
+
+    // Métodos para manejar la selección de opciones
+    void HandleMainMenuSelection();
+    void StartNewGame();
+    void LoadGame();
 };

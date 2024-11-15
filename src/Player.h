@@ -3,75 +3,79 @@
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
 
-
+// Forward declaration
 struct SDL_Texture;
 
 class Player : public Entity
 {
 public:
-	Player();
-	virtual ~Player();
-	bool Awake();
-	bool Start();
-	bool Update(float dt);
-	bool CleanUp();
+    Player();
+    virtual ~Player();
 
-	// L08 TODO 6: Define OnCollision function for the player. 
-	void OnCollision(PhysBody* physA, PhysBody* physB)override;
-	void OnCollisionEnd(PhysBody* physA, PhysBody* physB)override;
-	Vector2D GetPosition() const { return position; }
-	void SetPosition(const Vector2D& newPosition);
-	void ToggleGodMode();
-	void PlayerFlight(float dt);
-	void SetActive(bool active) { isActive = active; }
-	bool IsActive() const { return isActive; }
-public:
+    // Lifecycle methods
+    bool Awake();
+    bool Start();
+    bool Update(float dt);
+    bool CleanUp();
 
-	//Player Parameters
-	float speed = 5.0f;
-	int texW, texH;
-	bool isMoving = false;
-	bool isSprinting = false;
-	bool isDead = false;
-	bool deathSoundPlayed = false;
-	int jumpcount = 0;
+    // Collision methods
+    void OnCollision(PhysBody* physA, PhysBody* physB) override;
+    void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
 
-	//Audio fx
-	int jumpFxId= 0;
-	int jumpVoiceIds[8];
-	int DeathId = 0;
-	int StartId = 0;
-	int ohNoId = 0;
+    // Player-specific functionality
+    Vector2D GetPosition() const { return position; }
+    void SetPosition(const Vector2D& newPosition);
+    void ToggleGodMode();
+    void PlayerFlight(float dt);
 
-	// L08 TODO 5: Add physics to the player - declare a Physics body
-	PhysBody* pbody;
-	float jumpForce = 2.8f; //Fuerza aplicada al saltar
-	const float jumpFrameDuration = 120.0f;
-	
-	//Animation Parameters
-	int frameWidth = 0;
-	int frameHeight = 0; // Tamaño de cada cuadro de la animación
-	int currentFrame = 0; // Cuadro actual de la animación
-	float animationTimer = 0.0f;// Temporizador de la animación
-	float frameDuration = 130.0f;   // Duración de cada cuadro (en segundos)
+    // State management
+    void SetActive(bool active) { isActive = active; }
+    bool IsActive() const { return isActive; }
 
-	SDL_Texture* helpTexture = NULL; // Textura para la imagen del menu de ayuda
-	SDL_Texture* idleTexture = NULL; // Textura para el spritesheet idle
-	SDL_Texture* idleLTexture = NULL; // Textura para el spritesheet idle Left
-	SDL_Texture* jumpTexture = NULL; // Textura para el spritesheet de saltar
-	SDL_Texture* jumpLTexture = NULL; // Textura para el spritesheet de saltar a la izquierda
-	SDL_Texture* die = NULL; // Textura para el spritesheet de morir
-	SDL_Texture* gameOver = NULL; // Textura para la pantalla game over
-	SDL_Texture* walkingTexture = NULL; // Textura para el spritesheet de andar
-	SDL_Texture* walkingLTexture = NULL; // Textura para el spritesheet de andar hacia la izquierda
-
-	//BOOLEANS
-	bool showHelpMenu = false;
-	bool ToggleHelpMenu = false;
-	bool facingLeft = false;
-	bool isJumping = false; 
-	bool godMode = false;
-	bool godModeToggle = false;
 private:
-	bool isActive = true;
+    // Player parameters
+    float speed = 5.0f;
+    float jumpForce = 2.8f;
+    const float jumpFrameDuration = 120.0f;
+
+    // Animation parameters
+    int texW = 0, texH = 0;
+    int frameWidth = 0, frameHeight = 0;
+    int currentFrame = 0;
+    float animationTimer = 0.0f;
+    float frameDuration = 130.0f;
+
+    // Physics body
+    PhysBody* pbody = nullptr;
+
+    // Textures
+    SDL_Texture* idleTexture = nullptr;
+    SDL_Texture* idleLTexture = nullptr;
+    SDL_Texture* jumpTexture = nullptr;
+    SDL_Texture* jumpLTexture = nullptr;
+    SDL_Texture* walkingTexture = nullptr;
+    SDL_Texture* walkingLTexture = nullptr;
+    SDL_Texture* die = nullptr;
+    SDL_Texture* gameOver = nullptr;
+
+    // Audio FX
+    int jumpFxId = 0;
+    int jumpVoiceIds[8] = { 0 };
+    int DeathId = 0;
+    int StartId = 0;
+    int ohNoId = 0;
+
+    // Player state
+    bool isMoving = false;
+    bool isSprinting = false;
+    bool isDead = false;
+    bool isJumping = false;
+    bool deathSoundPlayed = false;
+    bool facingLeft = false;
+    bool godMode = false;
+    bool godModeToggle = false;
+    int jumpcount = 0;
+
+    // Internal state
+    bool isActive = true;
 };
