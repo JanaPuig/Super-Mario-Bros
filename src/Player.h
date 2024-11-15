@@ -23,7 +23,8 @@ public:
 	void SetPosition(const Vector2D& newPosition);
 	void ToggleGodMode();
 	void PlayerFlight(float dt);
-
+	void SetActive(bool active) { isActive = active; }
+	bool IsActive() const { return isActive; }
 public:
 
 	//Player Parameters
@@ -71,5 +72,6 @@ public:
 	bool isJumping = false; 
 	bool godMode = false;
 	bool godModeToggle = false;
-	
+private:
+	bool isActive = true;
 };

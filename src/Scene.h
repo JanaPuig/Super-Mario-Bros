@@ -38,7 +38,7 @@ public:
 	bool CleanUp();
 
 	Player* GetPlayer() const { return player; }
-	
+
 	void ChangeLevel(int newLevel);
 
 	int level = 0; //Map Level
@@ -55,8 +55,18 @@ public:
 	int CastleFxId = 0;
 	float tolerance = 20.0f;
 
-
-
 private:
 	Player* player;
+
+	// Nuevas variables para las texturas de transición
+	SDL_Texture* level1Transition = NULL;
+	SDL_Texture* level2Transition = NULL;
+
+	// Duración y temporizador para la pantalla de transición
+	float transitionDuration = 3100; 
+	float transitionTimer = 0.0f;
+	bool showingTransition = false;
+
+	void ShowTransitionScreen();
+	void FinishTransition();
 };

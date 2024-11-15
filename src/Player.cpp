@@ -50,6 +50,7 @@ bool Player::Start() {
 	return true;
 }
 bool Player::Update(float dt) {
+	if (!isActive) return true;
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
 
@@ -71,7 +72,13 @@ bool Player::Update(float dt) {
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
 			deathSoundPlayed = false;  
-			SetPosition(Vector2D(3, 8.3));
+			if (Engine::GetInstance().scene.get()->level==1) {
+				SetPosition(Vector2D(3, 8.3));
+			}
+			else if (Engine::GetInstance().scene.get()->level == 2) {
+				SetPosition(Vector2D(3, 14.5));
+			}
+			
 			Engine::GetInstance().audio.get()->PlayFx(StartId, 0); 
 			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav"); 
 		}	
