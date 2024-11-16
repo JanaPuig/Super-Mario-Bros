@@ -31,22 +31,31 @@ bool Scene::Awake()
 {
     LOG("Loading Scene");
 
-    // Create the player entity
-    player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
+    if (level == 1 || level == 2) 
+    {
+        // Create the player entity
+        player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
+
+        // Load level-specific items
+        if (level == 1) {
+            CreateLevel1Items();
+        }
+
+        // Load enemy configurations from XML and initialize them
+        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
+            enemyNode;
+            enemyNode = enemyNode.next_sibling("enemy"))
+        {
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            enemy->SetParameters(enemyNode);
+        }
+    }
 
     // Load level-specific items
     if (level == 1) {
         CreateLevel1Items();
     }
 
-    // Load enemy configurations from XML and initialize them
-    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
-        enemyNode;
-        enemyNode = enemyNode.next_sibling("enemy"))
-    {
-        Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        enemy->SetParameters(enemyNode);
-    }
     return true;
 }
 
@@ -107,6 +116,9 @@ void Scene::ChangeLevel(int newLevel)
     if (level == newLevel) return;
 
     LOG("Changing level from %d to %d", level, newLevel);
+
+    //Remove enemy
+    Engine::GetInstance().entityManager->RemoveAllEnemies();
 
     // Remove all items and clean up the current map
     Engine::GetInstance().entityManager->RemoveAllItems();
@@ -338,7 +350,7 @@ void Scene::HandleMainMenuSelection()
         switch (selectedOption) {
         case 0: StartNewGame(); break;
         case 1: LoadGame(); break;
-        case 2: Engine::GetInstance().CleanUp; break;
+        case 2: Engine::GetInstance().CleanUp(); break;
         }
     }
 }

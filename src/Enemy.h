@@ -35,7 +35,7 @@ public:
 
 private:
 
-	SDL_Texture* EnemyIdle;
+	SDL_Texture* texture;
 	const char* texturePath;
 	int texW, texH;
 	pugi::xml_node parameters;
@@ -43,4 +43,17 @@ private:
 	Animation idle;
 	PhysBody* pbody;
 	Pathfinding* pathfinding;
+
+	//Animation enemy walking
+	float frameTime = 0;
+	float frameDuration = 130.0f;
+	int currentFrame = 0;
+	int totalFrames = 3;
+
+	bool movingRight = true;
+	bool movingLeft = false;
+
+	float speed = 1.0f;
+	float leftBoundary = 0.0f;
+	float rightBoundary = 0.0f;
 };
