@@ -36,12 +36,7 @@ bool Scene::Awake()
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
 
-        // Load level-specific items
-        if (level == 1) {
-            CreateLevel1Items();
-        }
-
-        // Load enemy configurations from XML and initialize them
+       // Load enemy configurations from XML and initialize them
         for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
             enemyNode;
             enemyNode = enemyNode.next_sibling("enemy"))
