@@ -48,6 +48,7 @@ private:
 
 	//Animation enemy walking
 	float deathTimer = 0.0f;
+
 	float frameTime = 0;
 	float frameDuration = 130.0f;
 	int currentFrame = 0;
@@ -55,7 +56,6 @@ private:
 
 	bool movingRight = true;
 	bool movingLeft = false;
-
 
 	float speed = 1.0f;
 	float leftBoundary = 0.0f;

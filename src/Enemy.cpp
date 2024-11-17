@@ -32,6 +32,12 @@ bool Enemy::Start() {
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
 
+	//Load animations
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	currentAnimation = &idle;
+
+	leftBoundary = 500;
+	rightBoundary = position.getX() + 500;
 
 	//Load animations
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
