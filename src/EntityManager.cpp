@@ -134,3 +134,20 @@ void EntityManager::RemoveAllItems() {
 	}
 	LOG("All items removed.");
 }
+
+void EntityManager::RemoveAllEnemies() {
+
+	for (auto it = entities.begin(); it != entities.end(); ) {
+		if ((*it)->type == EntityType::ENEMY) {
+			LOG("Destroying enemy entity at position: (%f, %f)", (*it)->position.getX(), (*it)->position.getY());
+			(*it)->CleanUp();
+			delete* it;
+			it = entities.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
+
+	LOG("All enemies removed.");
+}

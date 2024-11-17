@@ -24,6 +24,9 @@ public:
 
 	void RemoveAllItems();
 
+	void RemoveAllEnemies();
+
+
 	// Called before quitting
 	bool CleanUp();
 

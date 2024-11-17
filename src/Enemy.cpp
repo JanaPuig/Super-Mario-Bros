@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+#include "EntityManager.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
@@ -25,14 +26,26 @@ bool Enemy::Awake() {
 bool Enemy::Start() {
 
 	//initilize textures
-	EnemyIdle = Engine::GetInstance().textures.get()->Load("Assets/Textures/goomba_idle.png");
-	Engine::GetInstance().textures.get()->GetSize(EnemyIdle, texW, texH);
+	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	position.setX(parameters.attribute("x").as_int());
+	position.setY(parameters.attribute("y").as_int());
+	texW = parameters.attribute("w").as_int();
+	texH = parameters.attribute("h").as_int();
 
+
+	//Load animations
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	dead.LoadAnimations(parameters.child("animations").child("dead"));
+	currentAnimation = &idle; // Por defecto, el enemigo inicia con la animación idle
+
+	leftBoundary = 500;
+	rightBoundary = position.getX() + 500;
 
 	//Add a physics to an item - initialize the physics body
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
 	//Assign collider type
+	pbody->listener =  this;
 	pbody->ctype = ColliderType::ENEMY;
 
 	// Set the gravity of the body
@@ -49,6 +62,63 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt)
 {
+	if (Engine::GetInstance().scene.get()->showMainMenu) {
+		return true; // Si estamos en el menú, no hacer nada
+	}
+	//Dead Animation
+	if (isDead) {
+		currentAnimation = &dead; // Cambia a la animación de muerte
+		SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+
+		Engine::GetInstance().render.get()->DrawTexture(
+			texture,
+			(int)position.getX(),
+			(int)position.getY(),
+			&frameRect
+		);
+
+		// Detén el movimiento del enemigo
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+
+		return true;
+	}
+
+	//Animation walking
+	frameTime += dt;
+	if (frameTime >= frameDuration) {
+		currentFrame = (currentFrame + 1) % totalFrames;
+		frameTime = 0.0f;
+	}
+
+	b2Vec2 velocity = pbody->body->GetLinearVelocity();
+	if (movingRight) {
+		velocity.x = speed;  // Right movement
+		if (position.getX() >= rightBoundary)
+		{
+			movingRight = false;
+			movingLeft = true;
+		}
+
+	}
+	if (movingLeft)
+	{
+		velocity.x = -speed;  //  Left movement
+
+		if (position.getX() <= leftBoundary)
+		{
+			movingRight = true;
+			movingLeft = false;
+		}
+	}
+	pbody->body->SetLinearVelocity(velocity);
+
+	b2Transform pbodyPos = pbody->body->GetTransform();
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
+	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
+	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
+
 	// Pathfinding testing inputs
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		Vector2D pos = GetPosition();
@@ -57,6 +127,8 @@ bool Enemy::Update(float dt)
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_DOWN) {
+		std::cout << "Tecla J presionada" << std::endl;
+
 		pathfinding->PropagateBFS();
 	}
 
@@ -64,14 +136,14 @@ bool Enemy::Update(float dt)
 		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
 		pathfinding->PropagateBFS();
 	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+		pathfinding->PropagateDijkstra();
+	}
 
-	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
-	Engine::GetInstance().render.get()->DrawTexture(EnemyIdle, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	currentAnimation->Update();
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT &&
+		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+		pathfinding->PropagateDijkstra();
+	}
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();
@@ -81,6 +153,7 @@ bool Enemy::Update(float dt)
 
 bool Enemy::CleanUp()
 {
+
 	return true;
 }
 

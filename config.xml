@@ -1,19 +1,47 @@
 <!-- Config file for the engine -->
 <config>
-  <engine>
-    <title>Super Mario Bros</title>
-    <maxFrameDuration value="16"/>
-  </engine>
+	<engine>
+		<title>Super Mario Bros</title>
+		<maxFrameDuration value="16"/>
+	</engine>
 
-  <render>
-    <vsync value="false"/>
-  </render>
+	<render>
+		<vsync value="false"/>
+	</render>
 
-  <window>
-    <resolution width="1920" height="960" scale="1"/>
-    <fullscreen value="false"/>
-    <borderless value="false"/>
-    <resizable value="false"/>
-    <fullscreen_window value="false"/>
-  </window>
+	<window>
+		<resolution width="1920" height="960" scale="1"/>
+		<fullscreen value="false"/>
+		<borderless value="false"/>
+		<resizable value="false"/>
+		<fullscreen_window value="true"/>
+	</window>
+
+	<scene>
+		<entities>
+			
+			<enemies>
+				<enemy name="goomba" x="200" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
+					<animations>
+						<dead>
+							<frame x="0" y="32" w="32" h="32"/>
+						</dead>
+						<idle loop="true" speed ="2">
+							<frame x="0" y="0" w="32" h="32"/>
+
+
+							<frame x="32" y="0" w="32" h="32"/>
+
+
+							<frame x="64" y="0" w="32" h="32"/>
+						</idle>
+						<dead>
+						
+						</dead>
+					</animations>
+				</enemy>
+			</enemies>
+		</entities>
+	</scene>>
+	
 </config>

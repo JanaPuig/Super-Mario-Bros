@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Physics.h"
+#include "Enemy.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -38,7 +39,7 @@ bool Player::Start() {
 	jumpLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumpingL.png");
 	die = Engine::GetInstance().textures.get()->Load("Assets/Textures/die.png");
 	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
-
+	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
 	Engine::GetInstance().textures.get()->GetSize(walkingTexture, texW, texH);
 	frameWidth = texW / 3; 
 	frameHeight = texH;
@@ -205,8 +206,26 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Player hit a death zone, resetting position...");
 		jumpcount = 1;
 		break;
+	case ColliderType::ENEMY: {
+		LOG("Collision with ENEMY");
+
+		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
+		float playerBottom = this->position.getY() + this->texH / 2;
+		float enemyTop = enemy->GetPosition().getY();
+
+		if (enemy != nullptr&& playerBottom < enemyTop) {
+			enemy->isDead = true; // Marca al enemigo como muerto
+			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
+			Engine::GetInstance().audio.get()->PlayFx(GoombaDeathSound, 0);
+		}
+		else {
+			isDead = true;
+		}
+		break;
+	}
 	default:
 		break;
+
 	}
 }
 void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
@@ -224,6 +243,9 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::WALL:
 		LOG("Player hit a death zone, resetting position...");
 		jumpcount = 1;
+		break;
+	case ColliderType::ENEMY:
+		
 		break;
 	default:
 		break;

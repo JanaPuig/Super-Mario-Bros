@@ -120,6 +120,14 @@ public:
 
     Vector2D WorldToMap(int x, int y);
 
+    int GetWidth() {
+        return mapData.width;
+    }
+
+    int GetHeight() {
+        return mapData.height;
+    }
+
     int GetTileWidth() {
         return mapData.tileWidth;
     }

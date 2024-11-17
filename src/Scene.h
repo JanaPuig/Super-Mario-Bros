@@ -43,6 +43,9 @@ public:
     // Called before quitting
     bool CleanUp();
 
+    // Return the player position
+    Vector2D GetPlayerPosition();
+
     // Returns the player instance
     Player* GetPlayer() const { return player; }
 
@@ -63,7 +66,10 @@ public:
     bool showMainMenu = true;        // Whether the main menu is visible
 
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
-    int CastleFxId = 0;              // Sound effect ID for castle interaction
+    int CastleFxId = 0;   
+    int SelectFxId = 0;
+    int SelectFxId2 = 0;
+    int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
 
 private:
@@ -74,10 +80,12 @@ private:
     SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
     SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
 
+    int gameIntroMusicId = 0; // Identificador de la música GameIntro
+    int menuMusicId = 0; // Identificador de la música MenuMusic
     float transitionDuration = 3100;      // Duration of the transition screen (in ms)
     float transitionTimer = 0.0f;         // Timer for tracking transition time
     bool showingTransition = false;       // Whether the transition screen is visible
-
+    bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
     // Displays the transition screen
     void ShowTransitionScreen();
 
