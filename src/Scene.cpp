@@ -361,3 +361,9 @@ void Scene::LoadGame() {
     //cargar juego guardado
     showMainMenu = false;  // Oculta el menú principal
 }
+
+// Return the player position
+Vector2D Scene::GetPlayerPosition()
+{
+    return player->GetPosition();
+}

@@ -43,6 +43,9 @@ public:
     // Called before quitting
     bool CleanUp();
 
+    // Return the player position
+    Vector2D GetPlayerPosition();
+
     // Returns the player instance
     Player* GetPlayer() const { return player; }
 
