@@ -26,8 +26,7 @@
 						<dead>
 							<frame x="0" y="32" w="32" h="32"/>
 						</dead>
-						<idle loop="true" speed ="1.70">
-
+						<idle loop="true" speed ="2">
 							<frame x="0" y="0" w="32" h="32"/>
 
 
@@ -36,6 +35,9 @@
 
 							<frame x="64" y="0" w="32" h="32"/>
 						</idle>
+						<dead>
+						
+						</dead>
 					</animations>
 				</enemy>
 			</enemies>
