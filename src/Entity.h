@@ -21,6 +21,7 @@ inline bool operator==(EntityType lhs, EnemyType rhs) {
 }
 
 
+
 class PhysBody;
 
 class Entity

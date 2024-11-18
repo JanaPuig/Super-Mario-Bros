@@ -21,6 +21,26 @@
 		<entities>
 			
 			<enemies>
+				<enemy_fly name="koopa" x="192" y="400" w="32" h="48" texture_fly="Assets/Textures/koopaSprites.png" gravity="true">
+					<animations>
+						<idlekoopa loop="true" speed="3">
+							<frame x="160" y="162" w="33" h="48"/>
+							<frame x="120" y="162" w="33" h="48"/>
+							<frame x="79" y="162" w="33" h="48"/>
+							<frame x="39" y="162" w="33" h="48"/>
+							<frame x="1" y="162" w="33" h="48"/>
+							<frame x="160" y="215" w="33" h="48"/>
+							<frame x="120" y="215" w="33" h="48"/>
+							<frame x="79" y="215" w="33" h="48"/>
+							<frame x="39" y="215" w="33" h="48"/>
+							<frame x="1" y="215" w="33" h="48"/>
+						</idlekoopa>
+						<deadkoopa>
+							<frame x="7" y="64" w="23" h="21"/>
+						</deadkoopa>
+					</animations>
+				</enemy_fly>
+				
 				<enemy name="goomba" x="192" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<dead>

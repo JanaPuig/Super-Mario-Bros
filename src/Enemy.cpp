@@ -8,7 +8,6 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
-
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
 
@@ -24,7 +23,10 @@ bool Enemy::Awake() {
 
 bool Enemy::Start() {
 
+
 	//initilize textures
+	texture_fly = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_fly").as_string());
+
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
@@ -36,6 +38,10 @@ bool Enemy::Start() {
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
 	dead.LoadAnimations(parameters.child("animations").child("dead"));
 	currentAnimation = &idle; // Por defecto, el enemigo inicia con la animación idle
+
+	idlekoopa.LoadAnimations(parameters.child("animations").child("idlekoopa"));
+	deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
+	currentAnimation = &idlekoopa;
 
 	leftBoundary = 500;
 	rightBoundary = position.getX() + 500;
@@ -80,7 +86,13 @@ bool Enemy::Update(float dt)
 	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
 
-	if (type == EnemyType::WALKING) {
+
+
+
+
+
+
+	if (type == EnemyType::WALKING){
 		//Dead Animation
 		if (isDead) {
 			currentAnimation = &dead; // Cambia a la animación de muerte
@@ -93,14 +105,14 @@ bool Enemy::Update(float dt)
 				&frameRect
 			);
 
-
 			// Detén el movimiento del enemigo
 			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 
 			return true;
 		}
 
-
+		//Animation walking
+		
 		//b2Vec2 velocity = pbody->body->GetLinearVelocity();
 		//if (movingRight) {
 		//	velocity.x = speed;  // Right movement
@@ -121,8 +133,23 @@ bool Enemy::Update(float dt)
 		//		movingLeft = false;
 		//	}
 		//}
-		//pbody->body->SetLinearVelocity(velocity);
+		//pbody->body->SetLinearVelocity(velocity);		
 	}
+	
+	else if (type == EnemyType::FLYING)
+	{
+		currentAnimation = &deadkoopa; 
+		frameRect = currentAnimation->GetCurrentFrame();
+
+		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
+
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0)); 
+		return true;
+	}
+
+
+
+
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -160,7 +187,6 @@ bool Enemy::Update(float dt)
 		pathfinding->PropagateDijkstra();
 	}
 
-	
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();

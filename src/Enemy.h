@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include "Entity.h"
 #include "SDL2/SDL.h"
@@ -7,6 +6,7 @@
 #include "Pathfinding.h"
 
 struct SDL_Texture;
+
 
 class Enemy : public Entity
 {
@@ -37,12 +37,20 @@ public:
 private:
 
 	SDL_Texture* texture;
+	SDL_Texture* texture_fly;
+
 	const char* texturePath;
 	int texW, texH;
 	pugi::xml_node parameters;
 	Animation* currentAnimation = nullptr;
+	Animation* currentAnimation_fly = nullptr;
+
 	Animation idle;
 	Animation dead;
+
+	Animation idlekoopa;
+	Animation deadkoopa;
+
 	PhysBody* pbody;
 	Pathfinding* pathfinding;
 
