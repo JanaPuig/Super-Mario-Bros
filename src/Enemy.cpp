@@ -62,7 +62,8 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt)
 {
-	if (Engine::GetInstance().scene.get()->showMainMenu) {
+	
+	if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
 		return true; // Si estamos en el menú, no hacer nada
 	}
 	//Dead Animation

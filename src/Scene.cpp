@@ -12,7 +12,6 @@
 #include "Map.h"
 #include "Item.h"
 #include "Enemy.h"
-#include "Player.h"
 
 using namespace std;
 
@@ -181,7 +180,7 @@ bool Scene::Update(float dt)
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
-        return true; // Skip the game logic during transition
+        return true; // Skip the rest of the game logic during transition
     }
 
     // Debug controls for level changes
@@ -192,7 +191,6 @@ bool Scene::Update(float dt)
         ChangeLevel(1);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-        player->SetPosition(level == 1 ? Vector2D(3, 9) : Vector2D(3, 14.5));
         ShowTransitionScreen();
 
     }
@@ -303,7 +301,7 @@ void Scene::ShowTransitionScreen()
 
     // Disable the player during the transition
     if (player != nullptr) {
-        player->SetActive(false);
+      player->SetActive(false);
     }
 
     Engine::GetInstance().audio.get()->StopMusic();
@@ -320,7 +318,7 @@ void Scene::ShowTransitionScreen()
 void Scene::FinishTransition()
 {
     showingTransition = false;
-
+    Engine::GetInstance().map->CleanUp();
     // Reactivate the player after transition
     if (player != nullptr) {
         player->SetActive(true);
@@ -328,7 +326,7 @@ void Scene::FinishTransition()
 
     // Load the respective level
     if (level == 1) {
-        player->SetPosition(Vector2D(3, 8.3));
+        player->SetPosition(Vector2D(3, 8.65));
         Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
         CreateLevel1Items();
     }
@@ -336,9 +334,8 @@ void Scene::FinishTransition()
         player->SetPosition(Vector2D(3, 14.5));
         Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
     }
-
     // Resume music after transition
-    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.5f);
+    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
 }
 void Scene::HandleMainMenuSelection()
 {

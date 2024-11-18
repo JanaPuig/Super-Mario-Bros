@@ -32,7 +32,6 @@ public:
 
 private:
 
-	
 	SDL_Texture* Coin;
 	const char* texturePath;
 	int texW, texH;

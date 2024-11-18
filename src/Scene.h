@@ -61,6 +61,7 @@ public:
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
     bool showHelpMenu = false;       // Whether the help menu is visible
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
+    bool showingTransition = false;       // Whether the transition screen is visible
 
     SDL_Texture* Title = NULL;    // Texture for the main menu
     bool showMainMenu = true;        // Whether the main menu is visible
@@ -84,7 +85,7 @@ private:
     int menuMusicId = 0; // Identificador de la música MenuMusic
     float transitionDuration = 3100;      // Duration of the transition screen (in ms)
     float transitionTimer = 0.0f;         // Timer for tracking transition time
-    bool showingTransition = false;       // Whether the transition screen is visible
+
     bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
     // Displays the transition screen
     void ShowTransitionScreen();
