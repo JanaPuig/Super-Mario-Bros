@@ -26,7 +26,7 @@ bool Player::Start() {
 	jumpVoiceIds[i] = Engine::GetInstance().audio.get()->LoadFx(path.c_str()); }
 
 	jumpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Jump_Small.wav");
-	StartId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
+	hereWeGoAgain = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/HereWeGoAgain.wav");
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 
@@ -76,14 +76,15 @@ bool Player::Update(float dt) {
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
 			deathSoundPlayed = false;  
+			
 			if (Engine::GetInstance().scene.get()->level==1) {
-				SetPosition(Vector2D(3, 8.3));
+				SetPosition(Vector2D(3, 8.65));
 			}
 			else if (Engine::GetInstance().scene.get()->level == 2) {
-				SetPosition(Vector2D(3, 14.5));
+				SetPosition(Vector2D(3, 14.45));
 			}
 			
-			Engine::GetInstance().audio.get()->PlayFx(StartId, 0); 
+			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0); 
 			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav"); 
 		}	
 		return true;

@@ -87,6 +87,8 @@ bool Scene::Start()
     MenuStart = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/StartNewGame.wav");
     SelectFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectDown.wav");
     SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
+    marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
+    hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
 
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/mainMenu.png");
@@ -142,28 +144,28 @@ bool Scene::Update(float dt)
             isGameIntroPlaying = true;
             }
         // Dibujar el fondo del menú principal
-        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY-100);
+        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY);
 
         // Dibujar los botones con la textura correcta según la opción seleccionada
         if (selectedOption == 0) {
-            Engine::GetInstance().render.get()->DrawTexture(newGameButtonSelected, -cameraX + 730, -cameraY + 350);
+            Engine::GetInstance().render.get()->DrawTexture(newGameButtonSelected, -cameraX + 65, -cameraY + 335);
         }
         else {
-            Engine::GetInstance().render.get()->DrawTexture(newGameButton, -cameraX + 730, -cameraY + 350);
+            Engine::GetInstance().render.get()->DrawTexture(newGameButton, -cameraX + 25, -cameraY + 350);
         }
 
         if (selectedOption == 1) {
-            Engine::GetInstance().render.get()->DrawTexture(loadGameButtonSelected, -cameraX + 710, -cameraY + 500);
+            Engine::GetInstance().render.get()->DrawTexture(loadGameButtonSelected, -cameraX + 55, -cameraY + 480);
         }
         else {
-            Engine::GetInstance().render.get()->DrawTexture(loadGameButton, -cameraX + 710, -cameraY + 500);
+            Engine::GetInstance().render.get()->DrawTexture(loadGameButton, -cameraX + 25, -cameraY + 490);
         }
 
         if (selectedOption == 2) {
-            Engine::GetInstance().render.get()->DrawTexture(leaveGameButtonSelected, -cameraX + 690, -cameraY + 650);
+            Engine::GetInstance().render.get()->DrawTexture(leaveGameButtonSelected, -cameraX + 50, -cameraY + 630);
         }
         else {
-            Engine::GetInstance().render.get()->DrawTexture(leaveGameButton, -cameraX + 690, -cameraY + 650);
+            Engine::GetInstance().render.get()->DrawTexture(leaveGameButton, -cameraX + 15, -cameraY + 640);
         }
 
         // Manejar la selección de opciones
@@ -324,7 +326,7 @@ void Scene::FinishTransition()
 {
     showingTransition = false;
     Engine::GetInstance().map->CleanUp();
-   
+    Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
     // Reactivate the player after transition
     if (player != nullptr) {
         player->SetActive(true);
@@ -358,7 +360,7 @@ void Scene::HandleMainMenuSelection()
     // Si se presiona Enter, ejecutar la opción seleccionada
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
-        case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); ShowTransitionScreen(); break;
+        case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
         case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }

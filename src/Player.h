@@ -62,7 +62,7 @@ private:
     int jumpFxId = 0;
     int jumpVoiceIds[8] = { 0 };
     int DeathId = 0;
-    int StartId = 0;
+    int hereWeGoAgain = 0;
     int ohNoId = 0;
     int GoombaDeathSound = 0;
     // Player state

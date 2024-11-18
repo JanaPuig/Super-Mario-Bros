@@ -75,41 +75,30 @@ bool Enemy::Update(float dt)
 		return true; // Si estamos en el menú, no hacer nada
 	}
 
+	if (isDead) {
+		currentAnimation = &dead; // Cambiar a la animación de muerte
+		SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
 
-	//Animation walking
+		Engine::GetInstance().render.get()->DrawTexture(
+			texture,
+			(int)position.getX(),
+			(int)position.getY(),
+			&frameRect
+		);
+
+		// Detener el movimiento del enemigo
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		return true; // Salir de la función para evitar dibujar otra animación
+	}
+
+	// Si no está muerto, animación de caminar
 	frameTime += dt;
 	if (frameTime >= frameDuration) {
 		currentFrame = (currentFrame + 1) % totalFrames;
 		frameTime = 0.0f;
 	}
-
 	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
-
-
-
-
-
-
-
-	if (type == EnemyType::WALKING){
-		//Dead Animation
-		if (isDead) {
-			currentAnimation = &dead; // Cambia a la animación de muerte
-			SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-
-			Engine::GetInstance().render.get()->DrawTexture(
-				texture,
-				(int)position.getX(),
-				(int)position.getY(),
-				&frameRect
-			);
-
-			// Detén el movimiento del enemigo
-			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-
-			return true;
-		}
 
 		//Animation walking
 		
@@ -134,9 +123,8 @@ bool Enemy::Update(float dt)
 		//	}
 		//}
 		//pbody->body->SetLinearVelocity(velocity);		
-	}
 	
-	else if (type == EnemyType::FLYING)
+	if (type == EnemyType::FLYING)
 	{
 		currentAnimation = &deadkoopa; 
 		frameRect = currentAnimation->GetCurrentFrame();
@@ -146,9 +134,6 @@ bool Enemy::Update(float dt)
 		pbody->body->SetLinearVelocity(b2Vec2(0, 0)); 
 		return true;
 	}
-
-
-
 
 
 	b2Transform pbodyPos = pbody->body->GetTransform();

@@ -70,6 +70,8 @@ public:
     int CastleFxId = 0;   
     int SelectFxId = 0;
     int SelectFxId2 = 0;
+    int marioTime = 0;
+    int hereWeGo = 0;
     int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
 
