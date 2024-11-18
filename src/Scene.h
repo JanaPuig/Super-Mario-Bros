@@ -66,6 +66,7 @@ public:
     SDL_Texture* Title = NULL;    // Texture for the main menu
     bool showMainMenu = true;        // Whether the main menu is visible
 
+    int StartId = 0;
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
     int CastleFxId = 0;   
     int SelectFxId = 0;

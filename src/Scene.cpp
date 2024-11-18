@@ -84,6 +84,7 @@ bool Scene::Start()
     MenuStart = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/StartNewGame.wav");
     SelectFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectDown.wav");
     SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
+    StartId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
 
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/mainMenu.png");
@@ -296,6 +297,7 @@ void Scene::ToggleMenu()
 // Shows the transition screen
 void Scene::ShowTransitionScreen()
 {
+   
     showingTransition = true;
     transitionTimer = 0.0f;
 
@@ -317,6 +319,7 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
+    
     showingTransition = false;
     Engine::GetInstance().map->CleanUp();
     // Reactivate the player after transition
@@ -351,7 +354,7 @@ void Scene::HandleMainMenuSelection()
     // Si se presiona Enter, ejecutar la opción seleccionada
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
-        case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); ShowTransitionScreen(); break;
+        case 0: StartNewGame();       Engine::GetInstance().audio.get()->PlayFx(StartId);  Engine::GetInstance().audio.get()->PlayFx(MenuStart); ShowTransitionScreen(); break;
         case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }

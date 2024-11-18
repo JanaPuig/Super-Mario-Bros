@@ -31,7 +31,6 @@ public:
     // State management
     void SetActive(bool active) { isActive = active; }
     bool IsActive() const { return isActive; }
-
 private:
     // Player parameters
     float speed = 5.0f;

@@ -45,7 +45,7 @@ bool Enemy::Start() {
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
 	//Assign collider type
-	pbody->listener =  this;
+
 	pbody->ctype = ColliderType::ENEMY;
 
 	// Set the gravity of the body
@@ -156,6 +156,30 @@ bool Enemy::CleanUp()
 {
 
 	return true;
+}
+void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype) {
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
+
+
+		break;
+	default:
+		break;
+
+	}
+}
+void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype) {
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
+
+
+		break;
+	default:
+		break;
+
+	}
 }
 
 void Enemy::SetPosition(Vector2D pos) {
