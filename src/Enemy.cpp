@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
 
@@ -67,23 +68,7 @@ bool Enemy::Update(float dt)
 	if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
 		return true; // Si estamos en el menú, no hacer nada
 	}
-	//Dead Animation
-	if (isDead) {
-		currentAnimation = &dead; // Cambia a la animación de muerte
-		SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
 
-		Engine::GetInstance().render.get()->DrawTexture(
-			texture,
-			(int)position.getX(),
-			(int)position.getY(),
-			&frameRect
-		);
-
-		// Detén el movimiento del enemigo
-		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-
-		return true;
-	}
 
 	//Animation walking
 	frameTime += dt;
@@ -92,27 +77,52 @@ bool Enemy::Update(float dt)
 		frameTime = 0.0f;
 	}
 
-	//b2Vec2 velocity = pbody->body->GetLinearVelocity();
-	//if (movingRight) {
-	//	velocity.x = speed;  // Right movement
-	//	if (position.getX() >= rightBoundary)
-	//	{
-	//		movingRight = false;
-	//		movingLeft = true;
-	//	}
+	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
+	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
 
-	//}
-	//if (movingLeft)
-	//{
-	//	velocity.x = -speed;  //  Left movement
+	if (type == EnemyType::WALKING) {
+		//Dead Animation
+		if (isDead) {
+			currentAnimation = &dead; // Cambia a la animación de muerte
+			SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
 
-	//	if (position.getX() <= leftBoundary)
-	//	{
-	//		movingRight = true;
-	//		movingLeft = false;
-	//	}
-	//}
-	//pbody->body->SetLinearVelocity(velocity);
+			Engine::GetInstance().render.get()->DrawTexture(
+				texture,
+				(int)position.getX(),
+				(int)position.getY(),
+				&frameRect
+			);
+
+
+			// Detén el movimiento del enemigo
+			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+
+			return true;
+		}
+
+
+		//b2Vec2 velocity = pbody->body->GetLinearVelocity();
+		//if (movingRight) {
+		//	velocity.x = speed;  // Right movement
+		//	if (position.getX() >= rightBoundary)
+		//	{
+		//		movingRight = false;
+		//		movingLeft = true;
+		//	}
+
+		//}
+		//if (movingLeft)
+		//{
+		//	velocity.x = -speed;  //  Left movement
+
+		//	if (position.getX() <= leftBoundary)
+		//	{
+		//		movingRight = true;
+		//		movingLeft = false;
+		//	}
+		//}
+		//pbody->body->SetLinearVelocity(velocity);
+	}
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -150,8 +160,7 @@ bool Enemy::Update(float dt)
 		pathfinding->PropagateDijkstra();
 	}
 
-	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
+	
 
 	// Draw pathfinding 
 	pathfinding->DrawPath();

@@ -11,6 +11,16 @@ enum class EntityType
 	UNKNOWN
 };
 
+enum class EnemyType {
+	WALKING,
+	FLYING
+};
+
+inline bool operator==(EntityType lhs, EnemyType rhs) {
+	return static_cast<int>(lhs) == static_cast<int>(rhs);
+}
+
+
 class PhysBody;
 
 class Entity
