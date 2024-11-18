@@ -23,10 +23,6 @@ public:
 
 	bool CleanUp();
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
-
-	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
-
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
