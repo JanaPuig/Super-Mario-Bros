@@ -39,6 +39,8 @@ void Pathfinding::ResetPath(Vector2D pos) {
     breadcrumbs.clear(); //Clear the breadcrumbs list
     pathTiles.clear(); //Clear the pathTiles list
 
+
+
     // Inserts the first position in the queue and visited list
     frontier.push(pos);
     frontierDijkstra.push(std::make_pair(0, pos));

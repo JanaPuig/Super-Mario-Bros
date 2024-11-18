@@ -16,6 +16,7 @@ class Audio;
 class Scene;
 class EntityManager;
 class Map;
+class Player;
 //L08 TODO 2: Add Physics module
 class Physics;
 

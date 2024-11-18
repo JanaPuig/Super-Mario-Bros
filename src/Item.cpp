@@ -22,10 +22,10 @@ bool Item::Awake() {
 bool Item::Start() {
 
 	//initilize textures
-	UndergroundCoin = Engine::GetInstance().textures.get()->Load("Assets/Textures/Coin.png");
+	Coin = Engine::GetInstance().textures.get()->Load("Assets/Textures/Coin.png");
 	
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
-	Engine::GetInstance().textures.get()->GetSize(UndergroundCoin, texW, texH);
+	Engine::GetInstance().textures.get()->GetSize(Coin, texW, texH);
 	
 	//audio effect
 	pickCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Coin.wav");
@@ -35,7 +35,7 @@ bool Item::Start() {
 
 bool Item::Update(float dt)
 {
-	if (Engine::GetInstance().scene.get()->showMainMenu) {
+	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->showingTransition) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 	Player* player = Engine::GetInstance().scene.get()->GetPlayer(); 
@@ -54,7 +54,7 @@ bool Item::Update(float dt)
 	}
 
 	if (!isPicked) {
-		Engine::GetInstance().render.get()->DrawTexture(UndergroundCoin, (int)position.getX(), (int)position.getY());
+		Engine::GetInstance().render.get()->DrawTexture(Coin, (int)position.getX(), (int)position.getY());
 	}
 
 	return true;

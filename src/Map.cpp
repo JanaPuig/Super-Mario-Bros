@@ -268,8 +268,10 @@ Vector2D Map::MapToWorld(int x, int y) const
 {
     Vector2D ret;
 
-    ret.setX(x * mapData.tileWidth);
-    ret.setY(y * mapData.tileHeight);
+        ret.setX(x * mapData.tileWidth);
+        ret.setY(y * mapData.tileHeight);
+    
+
 
     return ret;
 }
@@ -282,7 +284,7 @@ Vector2D Map::WorldToMap(int x, int y)
             mapCoord.setX(x / mapData.tileWidth);
             mapCoord.setY(y / mapData.tileHeight);
         }
-        else {
+        if (mapData.orientation == MapOrientation::ISOMETRIC) {
             float halfwidth = mapData.tileWidth / 2;
             float halfheight = mapData.tileHeight / 2;
             mapCoord.setX((x / halfwidth + y / halfheight)/2);

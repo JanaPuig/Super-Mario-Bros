@@ -36,6 +36,7 @@ public:
 	void DestroyEntity(Entity* entity);
 
 	void AddEntity(Entity* entity);
+	
 
 public:
 

@@ -20,7 +20,7 @@
 // types of bodies
 enum bodyType {
 	DYNAMIC,
-	STATIC,
+	STATIC, 
 	KINEMATIC
 };
 

@@ -12,7 +12,6 @@
 #include "Map.h"
 #include "Item.h"
 #include "Enemy.h"
-#include "Player.h"
 
 using namespace std;
 
@@ -36,14 +35,17 @@ bool Scene::Awake()
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
 
-       // Load enemy configurations from XML and initialize them
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
-            enemyNode;
-            enemyNode = enemyNode.next_sibling("enemy"))
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
-        }
+        if (level == 1) {
+            // Load enemy configurations from XML and initialize them
+            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
+                enemyNode;
+                enemyNode = enemyNode.next_sibling("enemy"))
+            {
+                Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                enemy->SetParameters(enemyNode);
+            }
+       }
+     
     }
 
     // Load level-specific items
@@ -78,11 +80,13 @@ void Scene::CreateLevel1Items()
 bool Scene::Start()
 {
     Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
-    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.5f);
 
     // Load sound effects
     pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
     CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
+    MenuStart = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/StartNewGame.wav");
+    SelectFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectDown.wav");
+    SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
 
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/mainMenu.png");
@@ -132,6 +136,11 @@ bool Scene::Update(float dt)
 
     // Si estamos en el menú principal, no se procesan otras lógicas
     if (showMainMenu) {
+        // Reproducir GameIntro solo una vez
+        if (!isGameIntroPlaying) {
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
+            isGameIntroPlaying = true;
+            }
         // Dibujar el fondo del menú principal
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY-100);
 
@@ -162,6 +171,7 @@ bool Scene::Update(float dt)
 
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
+
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -173,19 +183,21 @@ bool Scene::Update(float dt)
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
-        return true; // Skip the game logic during transition
+        return true; // Skip the rest of the game logic during transition
     }
 
     // Debug controls for level changes
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+        LOG("F2 presionado");
+
         ChangeLevel(2);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
         ChangeLevel(1);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-        player->SetPosition(level == 1 ? Vector2D(3, 9) : Vector2D(3, 14.5));
         ShowTransitionScreen();
+
     }
 
     Vector2D playerPos = player->GetPosition();
@@ -294,7 +306,7 @@ void Scene::ShowTransitionScreen()
 
     // Disable the player during the transition
     if (player != nullptr) {
-        player->SetActive(false);
+      player->SetActive(false);
     }
 
     Engine::GetInstance().audio.get()->StopMusic();
@@ -311,7 +323,8 @@ void Scene::ShowTransitionScreen()
 void Scene::FinishTransition()
 {
     showingTransition = false;
-
+    Engine::GetInstance().map->CleanUp();
+   
     // Reactivate the player after transition
     if (player != nullptr) {
         player->SetActive(true);
@@ -319,32 +332,34 @@ void Scene::FinishTransition()
 
     // Load the respective level
     if (level == 1) {
-        player->SetPosition(Vector2D(3, 8.3));
+        player->SetPosition(Vector2D(3, 8.65));
         Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
         CreateLevel1Items();
+
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(3, 14.5));
         Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
     }
-
     // Resume music after transition
-    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.5f);
+    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
 }
 void Scene::HandleMainMenuSelection()
 {
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN) {
         selectedOption = (selectedOption + 1) % 3; // Mover hacia abajo
+        Engine::GetInstance().audio.get()->PlayFx(SelectFxId, 0.f);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) {
         selectedOption = (selectedOption + 2) % 3; // Mover hacia arriba
+        Engine::GetInstance().audio.get()->PlayFx(SelectFxId2, 0.f);
     }
 
     // Si se presiona Enter, ejecutar la opción seleccionada
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
-        case 0: StartNewGame(); break;
-        case 1: LoadGame(); break;
+        case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); ShowTransitionScreen(); break;
+        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }
     }

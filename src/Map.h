@@ -5,7 +5,7 @@
 #include <vector>
 
 enum MapOrientation {
-    ORTOGRAPHIC,
+    ORTOGRAPHIC=0,
     ISOMETRIC
 };
 struct Properties
@@ -119,6 +119,8 @@ public:
     Vector2D MapToWorld(int x, int y) const;
 
     Vector2D WorldToMap(int x, int y);
+
+
 
     int GetWidth() {
         return mapData.width;
