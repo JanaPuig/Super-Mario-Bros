@@ -23,7 +23,7 @@ bool Enemy::Start() {
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
-        currentAnimation = &idlekoopa;
+        currentAnimation = &idlekoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -39,7 +39,7 @@ bool Enemy::Start() {
     // Cargar animaciones
     idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
     deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
-    idlekoopa.LoadAnimations(parameters.child("animations").child("idlekoopa"));
+    idlekoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
     walkingKoopa.LoadAnimations(parameters.child("animations").child("walkingkoopa"));
 
@@ -81,7 +81,7 @@ bool Enemy::Update(float dt) {
 
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        currentAnimation = isDead ? &deadkoopa : &idlekoopa;
+        currentAnimation = isDead ? &deadkoopa : &idlekoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         currentAnimation = isDead ? &deadGoomba : &idleGoomba;

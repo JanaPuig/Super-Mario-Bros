@@ -39,6 +39,7 @@ bool Player::Start() {
 	jumpLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumpingL.png");
 	die = Engine::GetInstance().textures.get()->Load("Assets/Textures/die.png");
 	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
+
 	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
 	Engine::GetInstance().textures.get()->GetSize(walkingTexture, texW, texH);
 	frameWidth = texW / 3; 

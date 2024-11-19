@@ -50,9 +50,9 @@
 			</player>
 			<enemies>
 				<!-- Koopa Animations -->
-				<enemy_koopa name="koopa" x="400" y="400" w="32" h="64" texture_koopa="Assets/Textures/koopaSprites.png" gravity="true">
+				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" texture_koopa="Assets/Textures/koopaSprites.png" gravity="true">
 					<animations>
-						<idlekoopa loop="true" speed="0.25">
+						<idlekoopaL loop="true" speed="0.25">
 							<frame x="326" y="324" w="62" h="92"/>
 							<frame x="240" y="334" w="72" h="72"/>
 							<frame x="158" y="340" w="76" h="58"/>
@@ -63,8 +63,20 @@
 							<frame x="160" y="439" w="72" h="64"/>
 							<frame x="84" y="431" w="66" h="80"/>
 							<frame x="0" y="436" w="72" h="66"/>
-						</idlekoopa>
-						<walkingkoopa loop="true" speed="0.25">
+						</idlekoopaL>
+						<idlekoopaR loop="true" speed="0.25">
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+						</idlekoopaR>
+						<walkingkoopaL loop="true" speed="0.25">
 							<frame x="" y="" w="" h=""/>
 							<frame x="" y="" w="" h=""/>
 							<frame x="" y="" w="" h=""/>
@@ -77,9 +89,23 @@
 							<frame x="" y="" w="" h=""/>
 							<frame x="" y="" w="" h=""/>
 							<frame x="" y="" w="" h=""/>
-						</walkingkoopa>
-						<deadkoopa>
-							<frame x="20" y="134" w="32" h="30"/>
+						</walkingkoopaL>
+						<walkingkoopaR loop="true" speed="0.25">
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+						</walkingkoopaR>
+						<deadkoopa texture="deadkoopa.png">
+							<frame x="20" y="134" w="64" h="60"/>
 						</deadkoopa>
 					</animations>
 				</enemy_koopa>

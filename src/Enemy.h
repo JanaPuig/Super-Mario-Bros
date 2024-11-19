@@ -48,7 +48,7 @@ private:
 	Animation idleGoomba;
 	Animation deadGoomba;
 
-	Animation idlekoopa;
+	Animation idlekoopaLeft;
 	Animation walkingKoopa;
 	Animation deadkoopa;
 
