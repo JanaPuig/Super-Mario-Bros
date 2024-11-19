@@ -36,15 +36,15 @@ bool Scene::Awake()
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
 
         if (level == 1) {
-            // Load enemy configurations from XML and initialize them
-            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
-                enemyNode;
-                enemyNode = enemyNode.next_sibling("enemy"))
-            {
+            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
+                enemyNode; enemyNode = enemyNode.next_sibling()) {
                 Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 enemy->SetParameters(enemyNode);
+
+                // Log para depuración
+                LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
             }
-       }
+        }
      
     }
 
@@ -361,7 +361,7 @@ void Scene::HandleMainMenuSelection()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
         case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
-        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
+        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);  break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }
     }
@@ -376,6 +376,8 @@ void Scene::StartNewGame() {
 void Scene::LoadGame() {
    
     //cargar juego guardado
+    Engine::GetInstance().audio.get()->StopMusic();
+    ShowTransitionScreen();
     showMainMenu = false;  // Oculta el menú principal
 }
 

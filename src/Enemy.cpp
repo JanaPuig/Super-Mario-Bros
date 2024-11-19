@@ -8,192 +8,128 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
-Enemy::Enemy() : Entity(EntityType::ENEMY)
-{
 
-}
+Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
 Enemy::~Enemy() {
-	delete pathfinding;
+    delete pathfinding;
 }
 
 bool Enemy::Awake() {
-	return true;
+    return true;
 }
 
 bool Enemy::Start() {
+    // Inicialización de texturas
+    if (parameters.attribute("name").as_string() == std::string("koopa")) {
+        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
+        currentAnimation = &idlekoopa;
+    }
+    else if (parameters.attribute("name").as_string() == std::string("goomba")) {
+        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+        currentAnimation = &idleGoomba;
+    }
 
+    // Configuración inicial
+    position.setX(parameters.attribute("x").as_int());
+    position.setY(parameters.attribute("y").as_int());
+    texW = parameters.attribute("w").as_int();
+    texH = parameters.attribute("h").as_int();
 
-	//initilize textures
-	texture_fly = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_fly").as_string());
+    // Cargar animaciones
+    idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
+    deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
+    idlekoopa.LoadAnimations(parameters.child("animations").child("idlekoopa"));
+    deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
+    walkingKoopa.LoadAnimations(parameters.child("animations").child("walkingkoopa"));
 
-	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
-	texW = parameters.attribute("w").as_int();
-	texH = parameters.attribute("h").as_int();
+    // Límite para caminar
+    leftBoundary = position.getX() - 500;
+    rightBoundary = position.getX() + 500;
 
+    // Añadir física
+    pbody = Engine::GetInstance().physics.get()->CreateCircle(
+        (int)position.getX() + texH / 2,
+        (int)position.getY() + texH / 2,
+        texH / 2,
+        bodyType::DYNAMIC
+    );
+    pbody->listener = this;
+    pbody->ctype = ColliderType::ENEMY;
 
-	//Load animations
-	idle.LoadAnimations(parameters.child("animations").child("idle"));
-	dead.LoadAnimations(parameters.child("animations").child("dead"));
-	currentAnimation = &idle; // Por defecto, el enemigo inicia con la animación idle
+    if (!parameters.attribute("gravity").as_bool()) {
+        pbody->body->SetGravityScale(0);
+    }
 
-	idlekoopa.LoadAnimations(parameters.child("animations").child("idlekoopa"));
-	deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
-	currentAnimation = &idlekoopa;
+    b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
+    pbody->body->SetTransform(bodyPos, 0);
 
-	leftBoundary = 500;
-	rightBoundary = position.getX() + 500;
+    // Inicializar pathfinding
+    pathfinding = new Pathfinding();
+    Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(position.getX(), position.getY());
+    pathfinding->ResetPath(tilePos);
 
-	//Add a physics to an item - initialize the physics body
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-
-	//Assign collider type
-	pbody->listener =  this;
-	pbody->ctype = ColliderType::ENEMY;
-
-	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
-
-	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
-	pbody->body->SetTransform(bodyPos, 0);
-
-	// Initialize pathfinding
-	pathfinding = new Pathfinding();
-
-	Vector2D pos = GetPosition();
-
-	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-	pathfinding->ResetPath(tilePos);
-	return true;
+    return true;
 }
 
-bool Enemy::Update(float dt)
-{
-	if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
-		return true; // Si estamos en el menú, no hacer nada
-	}
+bool Enemy::Update(float dt) {
+    frameTime += dt;
 
-	if (isDead) {
-		currentAnimation = &dead; // Cambiar a la animación de muerte
-		SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+    if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
+        return true; // Si estamos en el menú, no hacer nada
+    }
 
-		Engine::GetInstance().render.get()->DrawTexture(
-			texture,
-			(int)position.getX(),
-			(int)position.getY(),
-			&frameRect
-		);
+    // Actualizar animación según el estado
+    if (parameters.attribute("name").as_string() == std::string("koopa")) {
+        currentAnimation = isDead ? &deadkoopa : &idlekoopa;
+    }
+    else if (parameters.attribute("name").as_string() == std::string("goomba")) {
+        currentAnimation = isDead ? &deadGoomba : &idleGoomba;
+    }
 
-		// Detener el movimiento del enemigo
-		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		return true; // Salir de la función para evitar dibujar otra animación
-	}
+    if (currentAnimation) {
+        currentAnimation->Update();  // Actualizar animación
+    }
 
-	// Si no está muerto, animación de caminar
-	frameTime += dt;
-	if (frameTime >= frameDuration) {
-		currentFrame = (currentFrame + 1) % totalFrames;
-		frameTime = 0.0f;
-	}
-	SDL_Rect frameRect = { currentFrame * texW, 0, texW, texH };
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
+    SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+    Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
 
-		//Animation walking
-		
-		//b2Vec2 velocity = pbody->body->GetLinearVelocity();
-		//if (movingRight) {
-		//	velocity.x = speed;  // Right movement
-		//	if (position.getX() >= rightBoundary)
-		//	{
-		//		movingRight = false;
-		//		movingLeft = true;
-		//	}
+    // Actualizar posición física
+    b2Transform pbodyPos = pbody->body->GetTransform();
+    position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+    position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-		//}
-		//if (movingLeft)
-		//{
-		//	velocity.x = -speed;  //  Left movement
+    // Pathfinding
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+        Vector2D pos = GetPosition();
+        Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+        pathfinding->ResetPath(tilePos);
+    }
 
-		//	if (position.getX() <= leftBoundary)
-		//	{
-		//		movingRight = true;
-		//		movingLeft = false;
-		//	}
-		//}
-		//pbody->body->SetLinearVelocity(velocity);		
-	
-	if (type == EnemyType::FLYING)
-	{
-		currentAnimation = &deadkoopa; 
-		frameRect = currentAnimation->GetCurrentFrame();
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_DOWN) {
+        pathfinding->PropagateBFS();
+    }
 
-		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &frameRect);
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+        pathfinding->PropagateDijkstra();
+    }
 
-		pbody->body->SetLinearVelocity(b2Vec2(0, 0)); 
-		return true;
-	}
+    // Dibujar pathfinding
+    pathfinding->DrawPath();
 
-
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
-	//Vector2D pos = GetPosition();
-	//Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-	//pathfinding->ResetPath(tilePos);
-
-	
-
-	// Pathfinding testing inputs
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-		Vector2D pos = GetPosition();
-		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-		pathfinding->ResetPath(tilePos);
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_DOWN) {
-		std::cout << "Tecla J presionada" << std::endl;
-
-		pathfinding->PropagateBFS();
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_REPEAT &&
-		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateBFS();
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		pathfinding->PropagateDijkstra();
-	}
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT &&
-		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateDijkstra();
-	}
-
-
-	// Draw pathfinding 
-	pathfinding->DrawPath();
-
-	return true;
+    return true;
 }
 
-bool Enemy::CleanUp()
-{
-
-	return true;
+bool Enemy::CleanUp() {
+    return true;
 }
 
 void Enemy::SetPosition(Vector2D pos) {
-	//pos.setX(pos.getX() + texW / 2);
-	//pos.setY(pos.getY() + texH / 2);
-	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
-	pbody->body->SetTransform(bodyPos, 0);
+    b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+    pbody->body->SetTransform(bodyPos, 0);
 }
 
 Vector2D Enemy::GetPosition() {
-	b2Vec2 bodyPos = pbody->body->GetTransform().p;
-	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
-	return pos;
+    b2Vec2 bodyPos = pbody->body->GetTransform().p;
+    return Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
 }

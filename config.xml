@@ -4,11 +4,9 @@
 		<title>Super Mario Bros</title>
 		<maxFrameDuration value="16"/>
 	</engine>
-
 	<render>
 		<vsync value="false"/>
 	</render>
-
 	<window>
 		<resolution width="1920" height="960" scale="1"/>
 		<fullscreen value="false"/>
@@ -16,48 +14,54 @@
 		<resizable value="false"/>
 		<fullscreen_window value="true"/>
 	</window>
-
 	<scene>
 		<entities>
-			
 			<enemies>
-				<enemy_fly name="koopa" x="192" y="400" w="32" h="48" texture_fly="Assets/Textures/koopaSprites.png" gravity="true">
+				<!-- Koopa Animations -->
+				<enemy_koopa name="koopa" x="400" y="400" w="32" h="64" texture_koopa="Assets/Textures/koopaSprites.png" gravity="true">
 					<animations>
-						<idlekoopa loop="true" speed="3">
-							<frame x="160" y="162" w="33" h="48"/>
-							<frame x="120" y="162" w="33" h="48"/>
-							<frame x="79" y="162" w="33" h="48"/>
-							<frame x="39" y="162" w="33" h="48"/>
-							<frame x="1" y="162" w="33" h="48"/>
-							<frame x="160" y="215" w="33" h="48"/>
-							<frame x="120" y="215" w="33" h="48"/>
-							<frame x="79" y="215" w="33" h="48"/>
-							<frame x="39" y="215" w="33" h="48"/>
-							<frame x="1" y="215" w="33" h="48"/>
+						<idlekoopa loop="true" speed="0.25">
+							<frame x="326" y="324" w="62" h="92"/>
+							<frame x="240" y="334" w="72" h="72"/>
+							<frame x="158" y="340" w="76" h="58"/>
+							<frame x="78" y="338" w="76" h="62"/>
+							<frame x="2" y="330" w="68" h="78"/>
+							<frame x="318" y="434" w="76" h="72"/>
+							<frame x="236" y="439" w="80" h="62"/>
+							<frame x="160" y="439" w="72" h="64"/>
+							<frame x="84" y="431" w="66" h="80"/>
+							<frame x="0" y="436" w="72" h="66"/>
 						</idlekoopa>
+						<walkingkoopa loop="true" speed="0.25">
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+							<frame x="" y="" w="" h=""/>
+						</walkingkoopa>
 						<deadkoopa>
-							<frame x="7" y="64" w="23" h="21"/>
+							<frame x="20" y="134" w="32" h="30"/>
 						</deadkoopa>
 					</animations>
-				</enemy_fly>
-				
+				</enemy_koopa>
+				<!-- Goomba Animations -->
 				<enemy name="goomba" x="192" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<dead>
 							<frame x="0" y="32" w="32" h="32"/>
 						</dead>
-						<idle loop="true" speed ="2">
+						<idle loop="true" speed ="0.1">
 							<frame x="0" y="0" w="32" h="32"/>
-
-
 							<frame x="32" y="0" w="32" h="32"/>
-
-
 							<frame x="64" y="0" w="32" h="32"/>
 						</idle>
-						<dead>
-						
-						</dead>
 					</animations>
 				</enemy>
 			</enemies>

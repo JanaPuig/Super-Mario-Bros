@@ -36,8 +36,8 @@ public:
 
 private:
 
-	SDL_Texture* texture;
-	SDL_Texture* texture_fly;
+	SDL_Texture* textureGoomba;
+	SDL_Texture* textureKoopa;
 
 	const char* texturePath;
 	int texW, texH;
@@ -45,10 +45,11 @@ private:
 	Animation* currentAnimation = nullptr;
 	Animation* currentAnimation_fly = nullptr;
 
-	Animation idle;
-	Animation dead;
+	Animation idleGoomba;
+	Animation deadGoomba;
 
 	Animation idlekoopa;
+	Animation walkingKoopa;
 	Animation deadkoopa;
 
 	PhysBody* pbody;
@@ -57,7 +58,7 @@ private:
 	//Animation enemy walking
 	float deathTimer = 0.0f;
 	float frameTime = 0;
-	float frameDuration = 130.0f;
+	float frameDuration = 200.0f;
 	int currentFrame = 0;
 	int totalFrames = 3;
 
