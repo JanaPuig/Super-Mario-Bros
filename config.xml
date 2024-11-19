@@ -17,40 +17,45 @@
 	<scene>
 		<entities>
 			<!-- Player Animations -->
-			<player name="mario" x="100" y="200" w="32" h="32" gravity="true">
+			<player name="mario" x="100" y="200" w="32" h="32" gravity="true"
+					idle_texture="Assets/Textures/player1.png" idleL_texture="Assets/Textures/playerL.png"
+				walkin_texture="Assets/Textures/mario_walking.png" walkingL_texture="Assets/Textures/mario_walkingL.png" 
+					jumping_texture="Assets/Textures/mario_jumping.png" jumpingL_texture="Assets/Textures/mario_jumpingL.png"
+				die_texture="Assets/Textures/die.png">
 				<animations>
-					<idle texture="Assets/Textures/player1.png" loop="true" speed="0.1">
+					<idle  loop="true" speed="0.1">
 						<frame x="0" y="0" w="32" h="32"/>
 					</idle>
-					<idleL texture="Assets/Textures/playerL.png" loop="true" speed="0.1">
+					<idleL  loop="true" speed="0.1">
 						<frame x="0" y="0" w="32" h="32"/>
 					</idleL>
-					<walking texture="Assets/Textures/mario_walking.png" loop="true" speed="0.25">
+					<walking  loop="true" speed="0.25">
 						<frame x="0" y="0" w="32" h="32"/>
 						<frame x="32" y="0" w="32" h="32"/>
 						<frame x="64" y="0" w="32" h="32"/>
 					</walking>
-					<walkingL texture="Assets/Textures/mario_walkingL.png" loop="true" speed="0.25">
+					<walkingL  loop="true" speed="0.25">
 						<frame x="0" y="0" w="32" h="32"/>
 						<frame x="32" y="0" w="32" h="32"/>
 						<frame x="64" y="0" w="32" h="32"/>
 					</walkingL>
-					<jumping texture="Assets/Textures/mario_jumping.png" loop="false" speed="0.15">
+					<jumping  loop="false" speed="0.15">
 						<frame x="0" y="0" w="32" h="32"/>
 						<frame x="32" y="0" w="32" h="32"/>
 					</jumping>
-					<jumpingL texture="Assets/Textures/mario_jumpingL.png" loop="false" speed="0.15">
+					<jumpingL  loop="false" speed="0.15">
 						<frame x="0" y="0" w="32" h="32"/>
 						<frame x="32" y="0" w="32" h="32"/>
 					</jumpingL>
-					<die texture="Assets/Textures/die.png" loop="false">
+					<dead  loop="false">
 						<frame x="0" y="0" w="32" h="32"/>
-					</die>
+					</dead>
 				</animations>
 			</player>
 			<enemies>
 				<!-- Koopa Animations -->
-				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" koopa_flying="Assets/Textures/koopaSprites.png" dead_koopa="Assets/Textures/deadkoopa.png" gravity="true">
+				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" koopa_flying="Assets/Textures/koopaSprites.png" 
+							 dead_koopa="Assets/Textures/deadkoopa.png" gravity="true">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="326" y="324" w="62" h="92"/>
@@ -124,6 +129,6 @@
 				</enemy>
 			</enemies>
 		</entities>
-	</scene>>
+	</scene>
 	
 </config>

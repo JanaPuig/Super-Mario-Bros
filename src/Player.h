@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
+#include "Animation.h"
 
 // Forward declaration
 struct SDL_Texture;
@@ -48,6 +49,17 @@ private:
     // Physics body
     PhysBody* pbody = nullptr;
 
+    //Animations
+   Animation walkingLeft;
+    Animation walkingRight;
+    Animation jumpingLeft;
+    Animation jumpingRight;
+    Animation deadPlayer;
+    Animation idleLeft;
+    Animation idleRight;
+    Animation* currentAnimation = nullptr;
+    
+    pugi::xml_node parameters;
     // Textures
     SDL_Texture* idleTexture = nullptr;
     SDL_Texture* idleLTexture = nullptr;
@@ -55,8 +67,8 @@ private:
     SDL_Texture* jumpLTexture = nullptr;
     SDL_Texture* walkingTexture = nullptr;
     SDL_Texture* walkingLTexture = nullptr;
-    SDL_Texture* die = nullptr;
-    SDL_Texture* gameOver = nullptr;
+    SDL_Texture* dieTexture = nullptr;
+    SDL_Texture* gameOverTexture = nullptr;
 
     // Audio FX
     int jumpFxId = 0;
@@ -65,6 +77,7 @@ private:
     int hereWeGoAgain = 0;
     int ohNoId = 0;
     int GoombaDeathSound = 0;
+
     // Player state
     bool isMoving = false;
     bool isSprinting = false;

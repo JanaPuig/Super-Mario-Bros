@@ -24,7 +24,7 @@ bool Player::Start() {
 	for (int i = 0; i < 8; ++i) 
 	{ std::string path = "Assets/Audio/Fx/MarioVoices/Jump_Random_" + std::to_string(i + 1) + ".wav";
 	jumpVoiceIds[i] = Engine::GetInstance().audio.get()->LoadFx(path.c_str()); }
-
+	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
 	jumpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Jump_Small.wav");
 	hereWeGoAgain = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/HereWeGoAgain.wav");
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
@@ -37,10 +37,10 @@ bool Player::Start() {
 	idleLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/playerL.png");
 	jumpTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumping.png");
 	jumpLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumpingL.png");
-	die = Engine::GetInstance().textures.get()->Load("Assets/Textures/die.png");
-	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
+	dieTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/die.png");
+	gameOverTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
 
-	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
+;
 	Engine::GetInstance().textures.get()->GetSize(walkingTexture, texW, texH);
 	frameWidth = texW / 3; 
 	frameHeight = texH;
@@ -71,8 +71,8 @@ bool Player::Update(float dt) {
 		//Drawn Death Texture
 		int cameraX = Engine::GetInstance().render.get()->camera.x;
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
-		Engine::GetInstance().render.get()->DrawTexture(die, (int)position.getX(), (int)position.getY());
-		Engine::GetInstance().render.get()->DrawTexture(gameOver, -cameraX + 225, -cameraY);
+		Engine::GetInstance().render.get()->DrawTexture(dieTexture, (int)position.getX(), (int)position.getY());
+		Engine::GetInstance().render.get()->DrawTexture(gameOverTexture, -cameraX + 225, -cameraY);
 	
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
@@ -210,7 +210,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ENEMY: {
 		LOG("Collision with ENEMY");
-
 		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
 		float playerBottom = this->position.getY() + this->texH / 2;
 		float enemyTop = enemy->GetPosition().getY();
