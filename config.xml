@@ -50,7 +50,7 @@
 			</player>
 			<enemies>
 				<!-- Koopa Animations -->
-				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" texture_koopa="Assets/Textures/koopaSprites.png" gravity="true">
+				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" koopa_flying="Assets/Textures/koopaSprites.png" dead_koopa="Assets/Textures/deadkoopa.png" gravity="true">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="326" y="324" w="62" h="92"/>
@@ -104,13 +104,13 @@
 							<frame x="" y="" w="" h=""/>
 							<frame x="" y="" w="" h=""/>
 						</walkingkoopaR>
-						<deadkoopa texture="deadkoopa.png">
-							<frame x="20" y="134" w="64" h="60"/>
+						<deadkoopa >
+							<frame x="0" y="0" w="32" h="30"/>
 						</deadkoopa>
 					</animations>
 				</enemy_koopa>
 				<!-- Goomba Animations -->
-				<enemy name="goomba" x="192" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy name="goomba" x="192" y="400" w="32" h="32" goombaSprites="Assets/Textures/goombaSprites.png" gravity="true">
 					<animations>
 						<dead>
 							<frame x="0" y="32" w="32" h="32"/>

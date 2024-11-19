@@ -22,11 +22,13 @@ bool Enemy::Awake() {
 bool Enemy::Start() {
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
+        // Cargar texturas
+        textureKoopaFlying = Engine::GetInstance().textures.get()->Load(parameters.attribute("koopa_flying").as_string());
+        textureKoopaDead = Engine::GetInstance().textures.get()->Load(parameters.attribute("dead_koopa").as_string()); // Cargar la textura de Koopa muerto
         currentAnimation = &idlekoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("goombaSprites").as_string());
         currentAnimation = &idleGoomba;
     }
 
@@ -71,7 +73,6 @@ bool Enemy::Start() {
 
     return true;
 }
-
 bool Enemy::Update(float dt) {
     frameTime += dt;
 
@@ -81,18 +82,23 @@ bool Enemy::Update(float dt) {
 
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        currentAnimation = isDead ? &deadkoopa : &idlekoopaLeft;
+        currentAnimation = isDead ? &deadkoopa : &idlekoopaLeft; // Cambiar a 'deadKoopa' si está muerto
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        currentAnimation = isDead ? &deadGoomba : &idleGoomba;
+        currentAnimation = isDead ? &deadGoomba : &idleGoomba; // Mantener lógica de Goomba
     }
 
     if (currentAnimation) {
-        currentAnimation->Update();  // Actualizar animación
+        currentAnimation->Update(); // Actualizar la animación seleccionada
     }
 
+    // Dibujar el enemigo
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-    Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+    SDL_Texture* currentTexture = (parameters.attribute("name").as_string() == std::string("koopa"))
+        ? (isDead ? textureKoopaDead : textureKoopaFlying)
+        : textureGoomba;
+
+    Engine::GetInstance().render.get()->DrawTexture(currentTexture, (int)position.getX(), (int)position.getY(), &frameRect);
 
     // Actualizar posición física
     b2Transform pbodyPos = pbody->body->GetTransform();
@@ -119,7 +125,6 @@ bool Enemy::Update(float dt) {
 
     return true;
 }
-
 bool Enemy::CleanUp() {
     return true;
 }

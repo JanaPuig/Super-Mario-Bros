@@ -37,7 +37,8 @@ public:
 private:
 
 	SDL_Texture* textureGoomba;
-	SDL_Texture* textureKoopa;
+	SDL_Texture* textureKoopaFlying;
+	SDL_Texture* textureKoopaDead;
 
 	const char* texturePath;
 	int texW, texH;
