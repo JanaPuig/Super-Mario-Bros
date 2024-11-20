@@ -16,88 +16,116 @@ Player::Player() : Entity(EntityType::PLAYER)
 Player::~Player() {
 }
 bool Player::Awake() {
-	position = Vector2D(3, 8);
 	return true;
 }
 bool Player::Start() {
 	// Load FX and Textures
-	for (int i = 0; i < 8; ++i) 
-	{ std::string path = "Assets/Audio/Fx/MarioVoices/Jump_Random_" + std::to_string(i + 1) + ".wav";
-	jumpVoiceIds[i] = Engine::GetInstance().audio.get()->LoadFx(path.c_str()); }
+	for (int i = 0; i < 8; ++i)
+	{
+		std::string path = "Assets/Audio/Fx/MarioVoices/Jump_Random_" + std::to_string(i + 1) + ".wav";
+		jumpVoiceIds[i] = Engine::GetInstance().audio.get()->LoadFx(path.c_str());
+	}
 
 	jumpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Jump_Small.wav");
 	hereWeGoAgain = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/HereWeGoAgain.wav");
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 
+
+	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
+
+	// Configuración inicial
+	position.setX(parameters.attribute("x").as_int());
+	position.setY(parameters.attribute("y").as_int());
+	texW = parameters.attribute("w").as_int();
+	texH = parameters.attribute("h").as_int();
+
 	//Teextures
-	walkingTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_walking.png");
-	walkingLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_walkingL.png");
-	idleTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/player1.png");
-	idleLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/playerL.png");
-	jumpTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumping.png");
-	jumpLTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/mario_jumpingL.png");
-	die = Engine::GetInstance().textures.get()->Load("Assets/Textures/die.png");
+	idleTexture.LoadAnimations(parameters.child("animations").child("idle"));
+	idleLTexture.LoadAnimations(parameters.child("animations").child("idleL"));
+	walkingTexture.LoadAnimations(parameters.child("animations").child("walking"));
+	walkingLTexture.LoadAnimations(parameters.child("animations").child("walkingL"));
+	jumpTexture.LoadAnimations(parameters.child("animations").child("jumping"));
+	jumpLTexture.LoadAnimations(parameters.child("animations").child("jumpingL"));
+	die.LoadAnimations(parameters.child("animations").child("die"));
+
+	currentAnimation = &idleTexture;
+
+
 	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
 	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
-	Engine::GetInstance().textures.get()->GetSize(walkingTexture, texW, texH);
-	frameWidth = texW / 3; 
-	frameHeight = texH;
-	Engine::GetInstance().textures.get()->GetSize(idleTexture, texW, texH);
 
+	// Añadir física
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
+
+	if (!parameters.attribute("gravity").as_bool()) {
+		pbody->body->SetGravityScale(0);
+	}
+
+	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
+	pbody->body->SetTransform(bodyPos, 0);
+
 	return true;
 }
 bool Player::Update(float dt) {
+
 	if (Engine::GetInstance().scene.get()->showMainMenu) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 	if (!isActive) return true;
 	// L08 TODO 5: Add physics to the player - updated player position using physics
+
+	if (pbody == nullptr) {
+		LOG("Error: pbody no inicializado.");
+		return true;
+
+	}
+
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
+
 
 	// ANIMATION CODES
 	// Death handling
 	if (isDead) {
 		if (!deathSoundPlayed) {
 			Engine::GetInstance().audio.get()->PlayFx(ohNoId, 0);
-			Engine::GetInstance().audio.get()->StopMusic(0.2f);  
-			Engine::GetInstance().audio.get()->PlayFx(DeathId, 0); 
+			Engine::GetInstance().audio.get()->StopMusic(0.2f);
+			Engine::GetInstance().audio.get()->PlayFx(DeathId, 0);
 			deathSoundPlayed = true;
 		}
 		//Drawn Death Texture
 		int cameraX = Engine::GetInstance().render.get()->camera.x;
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
-		Engine::GetInstance().render.get()->DrawTexture(die, (int)position.getX(), (int)position.getY());
+		currentAnimation = &die;
 		Engine::GetInstance().render.get()->DrawTexture(gameOver, -cameraX + 225, -cameraY);
-	
+
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
-			deathSoundPlayed = false;  
-			
-			if (Engine::GetInstance().scene.get()->level==1) {
+			deathSoundPlayed = false;
+
+			if (Engine::GetInstance().scene.get()->level == 1) {
 				SetPosition(Vector2D(3, 8.65));
 			}
 			else if (Engine::GetInstance().scene.get()->level == 2) {
 				SetPosition(Vector2D(3, 14.45));
 			}
-			
-			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0); 
-			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav"); 
-		}	
+
+			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
+			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+		}
 		return true;
 	}
 	// Moving Animation
 	if (isMoving && !isJumping) {
-		animationTimer += dt;  // Incrementa el temporizador con el delta time
-		if (animationTimer >= frameDuration) {
-			animationTimer = 0.0f;
-			currentFrame = (currentFrame + 1) % 3;
+		if (facingLeft)
+		{
+			currentAnimation = &walkingLTexture;
 		}
-		SDL_Rect currentClip = { currentFrame * frameWidth, 0, frameWidth, frameHeight };
-		Engine::GetInstance().render.get()->DrawTexture(facingLeft ? walkingLTexture : walkingTexture, (int)position.getX(), (int)position.getY(), &currentClip);
+		else {
+			currentAnimation = &walkingTexture;
+		}
 	}
 
 	// Jumping Animation
@@ -109,25 +137,35 @@ bool Player::Update(float dt) {
 			jumpClip = { 0, 0, texW, texH };
 		}
 		else {
-			currentFrame = 1; 
+			currentFrame = 1;
 			jumpClip = { texW, 0, texW, texH };
 		}
-		Engine::GetInstance().render.get()->DrawTexture(facingLeft ? jumpLTexture : jumpTexture, (int)position.getX(), (int)position.getY(), &jumpClip);
+		if (facingLeft) {
+			currentAnimation = &jumpLTexture;
+		}
+		else {
+			currentAnimation = &jumpTexture;
+		}
 	}
 
 	// Idle Animation
 	else {
-		Engine::GetInstance().render.get()->DrawTexture(facingLeft ? idleLTexture : idleTexture, (int)position.getX(), (int)position.getY());
+		if (facingLeft) {
+			currentAnimation = &idleLTexture;
+		}
+		else {
+			currentAnimation = &idleTexture;
+		}
 	}
 
 	//DEBUG FUNCTIONS
 	// God Mode toggle
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN && !godModeToggle) {
 		Player::ToggleGodMode();
-		godModeToggle = true; 
+		godModeToggle = true;
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_UP) {
-		godModeToggle = false; 
+		godModeToggle = false;
 	}
 	if (godMode) {
 		Player::pbody->body->SetGravityScale(0);
@@ -141,11 +179,17 @@ bool Player::Update(float dt) {
 	float movementSpeed = 0.2f;  // walking speed
 	// Sprint
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) { movementSpeed = 0.35f; isSprinting = true; frameDuration = 80.0f; }
-	else { isSprinting = false; frameDuration = 130.0f;
+	else {
+		isSprinting = false; frameDuration = 130.0f;
 	}
 
 	// Left
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) velocity.x = -movementSpeed * dt, isMoving = true, facingLeft = true;
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead)
+	{
+		velocity.x = -movementSpeed * dt;
+		isMoving = true;
+		facingLeft = true;
+	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) isMoving = false;
 
 	// Right
@@ -155,7 +199,7 @@ bool Player::Update(float dt) {
 	// Jump
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
 		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true); 
+		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
 		animationTimer = 0.0f;
 		isJumping = true;
 		++jumpcount;
@@ -170,21 +214,18 @@ bool Player::Update(float dt) {
 	pbody->body->SetLinearVelocity(velocity);
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
+	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	currentAnimation->Update();
 	return true;
 }
 
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	Engine::GetInstance().textures.get()->UnLoad(idleTexture);
-	Engine::GetInstance().textures.get()->UnLoad(walkingTexture);
-	Engine::GetInstance().textures.get()->UnLoad(jumpTexture);
-	Engine::GetInstance().textures.get()->UnLoad(idleLTexture);
-	Engine::GetInstance().textures.get()->UnLoad(walkingLTexture);
-	Engine::GetInstance().textures.get()->UnLoad(jumpLTexture);
+	Engine::GetInstance().textures.get()->UnLoad(texturePlayer);
 	return true;
 }
 
@@ -214,7 +255,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		float playerBottom = this->position.getY() + this->texH / 2;
 		float enemyTop = enemy->GetPosition().getY();
 
-		if (enemy != nullptr&& playerBottom < enemyTop) {
+		if (enemy != nullptr && playerBottom < enemyTop) {
 			enemy->isDead = true; // Marca al enemigo como muerto
 			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
 			Engine::GetInstance().audio.get()->PlayFx(GoombaDeathSound, 0);
@@ -246,7 +287,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 		jumpcount = 1;
 		break;
 	case ColliderType::ENEMY:
-		
+
 		break;
 	default:
 		break;
@@ -255,11 +296,27 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 
 void Player::SetPosition(const Vector2D& newPosition)
 {
-	b2Vec2 newPos = b2Vec2(newPosition.getX(), newPosition.getY());
-	pbody->body->SetTransform(newPos, 0);  
+	if (pbody == nullptr || pbody->body == nullptr) {
+		LOG("Error: pbody o pbody->body no están inicializados.");
+		return;
+
+	}
+	b2Vec2 newPos = b2Vec2(PIXEL_TO_METERS(newPosition.getX()), PIXEL_TO_METERS(newPosition.getY()));
+	pbody->body->SetTransform(newPos, 0);
 	// Actualizar la posición visual del jugador
 	position = newPosition;
 	LOG("SetPosition called: X: %f, Y: %f", position.getX(), position.getY());
+}
+
+Vector2D Player::GetPosition() {
+	if (!pbody || !pbody->body) {
+		std::cerr << "Error: pbody or pbody->body is null!" << std::endl;
+		return Vector2D(0, 0); // Devuelve un valor por defecto o maneja el error
+	}
+
+	b2Vec2 bodyPos = pbody->body->GetTransform().p;
+	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+	return pos;
 }
 
 void Player::ToggleGodMode() {
@@ -269,8 +326,10 @@ void Player::ToggleGodMode() {
 	filter.maskBits = godMode ? 0x0000 : 0xFFFF;
 	pbody->body->GetFixtureList()->SetFilterData(filter);
 	pbody->body->SetGravityScale(godMode ? 0 : 1);
+
 	if (godMode) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 }
+
 
 void Player::PlayerFlight(float dt) {
 	b2Vec2 velocity = pbody->body->GetLinearVelocity();
@@ -280,4 +339,5 @@ void Player::PlayerFlight(float dt) {
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) velocity.y = -0.2f * dt;  // up
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) velocity.y = 0.2f * dt;   // down
 	pbody->body->SetLinearVelocity(velocity);// Apply velocity to the body
+
 }

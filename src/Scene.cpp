@@ -34,6 +34,7 @@ bool Scene::Awake()
     {
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
+        player->SetParameters(configParameters.child("entities").child("player"));
 
         if (level == 1) {
             for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();

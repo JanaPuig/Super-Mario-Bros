@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
+#include "Animation.h"
 
 // Forward declaration
 struct SDL_Texture;
@@ -32,7 +33,18 @@ public:
     void SetActive(bool active) { isActive = active; }
     bool IsActive() const { return isActive; }
 
+    void SetParameters(pugi::xml_node parameters) {
+        this->parameters = parameters;
+    }
+
+    Vector2D GetPosition();
+
 private:
+
+    SDL_Texture* texturePlayer;
+    pugi::xml_node parameters;
+    Animation* currentAnimation = nullptr;
+
     // Player parameters
     float speed = 5.0f;
     float jumpForce = 2.8f;
@@ -49,13 +61,13 @@ private:
     PhysBody* pbody = nullptr;
 
     // Textures
-    SDL_Texture* idleTexture = nullptr;
-    SDL_Texture* idleLTexture = nullptr;
-    SDL_Texture* jumpTexture = nullptr;
-    SDL_Texture* jumpLTexture = nullptr;
-    SDL_Texture* walkingTexture = nullptr;
-    SDL_Texture* walkingLTexture = nullptr;
-    SDL_Texture* die = nullptr;
+    Animation idleTexture;
+    Animation idleLTexture;
+    Animation jumpTexture;
+    Animation jumpLTexture;
+    Animation walkingTexture;
+    Animation walkingLTexture;
+    Animation die;
     SDL_Texture* gameOver = nullptr;
 
     // Audio FX
