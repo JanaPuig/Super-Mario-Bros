@@ -34,8 +34,8 @@ bool Player::Start() {
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
 	//Player Configuration 
-	position.setX(parameters.attribute("x").as_int());
-	position.setY(parameters.attribute("y").as_int());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
 
@@ -79,9 +79,11 @@ bool Player::Update(float dt) {
 		return true;
 
 	}
+	//Actualize textures to be sure they are Drawn
+	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	currentAnimation->Update();
 
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
-
 
 	// ANIMATION CODES
 	// Death handling
@@ -108,7 +110,6 @@ bool Player::Update(float dt) {
 			else if (Engine::GetInstance().scene.get()->level == 2) {
 				SetPosition(Vector2D(3, 14.45));
 			}
-
 			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
 			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 		}
@@ -211,11 +212,9 @@ bool Player::Update(float dt) {
 	pbody->body->SetLinearVelocity(velocity);
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
+
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
-	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	currentAnimation->Update();
 	return true;
 }
 
