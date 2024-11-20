@@ -25,6 +25,9 @@ bool Enemy::Start() {
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
         currentAnimation = &idlekoopaLeft;
+
+        // Carga las animaciones de walkingkoopaLeft y deadkoopa
+
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -41,8 +44,10 @@ bool Enemy::Start() {
     idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
     deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
     idlekoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
+    idlekoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
+    walkingKoopaRight.LoadAnimations(parameters.child("animations").child("walkingkoopaR"));
+    walkingKoopaLeft.LoadAnimations(parameters.child("animations").child("walkingkoopaL"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
-    walkingKoopa.LoadAnimations(parameters.child("animations").child("walkingkoopa"));
 
     // Límite para caminar
     leftBoundary = position.getX() - 500;
@@ -81,15 +86,19 @@ bool Enemy::Update(float dt) {
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
 
-        if (isDead) {
+        if (hitCount >=2) {
             currentAnimation = &deadkoopa;
+        }
+        else if (hitCount == 1)
+        {
+            currentAnimation = &walkingKoopaLeft;
         }
         else {
             currentAnimation = &idlekoopaLeft;
         }
     }
     if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        if (isDead) {
+        if (hitCount >=1) {
             currentAnimation = &deadGoomba;
         }
         else {

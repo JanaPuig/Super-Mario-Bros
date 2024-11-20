@@ -32,9 +32,7 @@ public:
 	Vector2D GetPosition();
 
 public:
-	bool isDead = false;
-
-private:
+	int hitCount = 0;
 
 	SDL_Texture* textureGoomba;
 	SDL_Texture* textureKoopa;
@@ -49,7 +47,9 @@ private:
 	Animation deadGoomba;
 
 	Animation idlekoopaLeft;
-	Animation walkingKoopa;
+	Animation idlekoopaRight;
+	Animation walkingKoopaLeft;
+	Animation walkingKoopaRight;
 	Animation deadkoopa;
 
 	PhysBody* pbody;
@@ -69,4 +69,5 @@ private:
 	float speed = 1.0f;
 	float leftBoundary = 0.0f;
 	float rightBoundary = 0.0f;
+
 };

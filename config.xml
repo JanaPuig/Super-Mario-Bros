@@ -75,34 +75,26 @@
 							<frame x="643" y="431" w="66" h="80"/>
 							<frame x="721" y="437" w="72" h="66"/>
 						</idlekoopaR>
-						<walkingkoopaL loop="true" speed="0.25">
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
+						<walkingkoopaL loop="true" speed="0.15">
+							<frame x="336" y="158" w="42" h="64"/>
+							<frame x="256" y="158" w="42" h="62"/>
+							<frame x="176" y="160" w="42" h="58"/>
+							<frame x="94" y="160" w="44" h="60"/>
+							<frame x="334" y="78" w="44" h="64"/>
+							<frame x="256" y="78" w="42" h="62"/>
+							<frame x="176" y="80" w="42" h="58"/>
+							<frame x="94" y="80" w="46" h="58"/>
 						</walkingkoopaL>
-						<walkingkoopaR loop="true" speed="0.25">
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-							<frame x="" y="" w="" h=""/>
-						</walkingkoopaR>
+						<walkingkoopa loop="true" speed="0.15">
+							<frame x="414" y="158" w="42" h="64"/>
+							<frame x="494" y="158" w="42" h="62"/>
+							<frame x="574" y="160" w="42" h="58"/>
+							<frame x="654" y="160" w="44" h="60"/>
+							<frame x="414" y="78" w="44" h="64"/>
+							<frame x="494" y="78" w="42" h="62"/>
+							<frame x="574" y="80" w="42" h="58"/>
+							<frame x="652" y="80" w="46" h="58"/>
+						</walkingkoopa>
 						<deadkoopa texture="deadkoopa.png">
 							<frame x="20" y="134" w="64" h="60"/>
 						</deadkoopa>

@@ -246,24 +246,22 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ENEMY: {
 		LOG("Collision with ENEMY");
-
 		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
 		float playerBottom = this->position.getY() + this->texH / 2;
 		float enemyTop = enemy->GetPosition().getY();
 
 		if (enemy != nullptr && playerBottom < enemyTop) {
-			enemy->isDead = true; // Marca al enemigo como muerto
 			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
 			Engine::GetInstance().audio.get()->PlayFx(GoombaDeathSound, 0);
+			enemy->hitCount++; // Incrementa el contador de impactos
 		}
 		else {
-			isDead = true;
+			isDead = true; // Si el jugador no está encima, muere
 		}
 		break;
 	}
 	default:
 		break;
-
 	}
 }
 void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
