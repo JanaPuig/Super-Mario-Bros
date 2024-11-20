@@ -13,6 +13,7 @@ Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
 Enemy::~Enemy() {
     delete pathfinding;
+
 }
 
 bool Enemy::Awake() {
@@ -23,7 +24,7 @@ bool Enemy::Start() {
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
-        currentAnimation = &idlekoopa;
+        currentAnimation = &idlekoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -39,7 +40,7 @@ bool Enemy::Start() {
     // Cargar animaciones
     idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
     deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
-    idlekoopa.LoadAnimations(parameters.child("animations").child("idlekoopa"));
+    idlekoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
     walkingKoopa.LoadAnimations(parameters.child("animations").child("walkingkoopa"));
 
@@ -81,10 +82,21 @@ bool Enemy::Update(float dt) {
 
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        currentAnimation = isDead ? &deadkoopa : &idlekoopa;
+
+        if (isDead) {
+            currentAnimation = &deadkoopa;
+        }
+        else {
+            currentAnimation = &idlekoopaLeft;
+        }
     }
-    else if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        currentAnimation = isDead ? &deadGoomba : &idleGoomba;
+    if (parameters.attribute("name").as_string() == std::string("goomba")) {
+        if (isDead) {
+            currentAnimation = &deadGoomba;
+        }
+        else {
+            currentAnimation = &idleGoomba;
+        }
     }
 
     if (currentAnimation) {
@@ -98,6 +110,7 @@ bool Enemy::Update(float dt) {
     b2Transform pbodyPos = pbody->body->GetTransform();
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
 
     // Pathfinding
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
