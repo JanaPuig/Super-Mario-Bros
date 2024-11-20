@@ -53,16 +53,15 @@
 				<enemy_koopa name="koopa" x="400" y="400" w="80" h="92" texture_koopa="Assets/Textures/koopaSprites.png" gravity="true">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
-							<frame x="326" y="324" w="62" h="92"/>
 							<frame x="240" y="334" w="72" h="72"/>
 							<frame x="158" y="340" w="76" h="58"/>
 							<frame x="78" y="338" w="76" h="62"/>
 							<frame x="2" y="330" w="68" h="78"/>
 							<frame x="318" y="434" w="76" h="72"/>
-							<frame x="236" y="439" w="80" h="62"/>
-							<frame x="161" y="439" w="72" h="64"/>
-							<frame x="84" y="431" w="66" h="80"/>
-							<frame x="0" y="436" w="72" h="66"/>
+							<frame x="236" y="438" w="80" h="62"/>
+							<frame x="160" y="438" w="72" h="64"/>
+							<frame x="84" y="430" w="66" h="80"/>
+							<frame x="0" y="436" w="72" h="74"/>
 						</idlekoopaL>
 						<idlekoopaR loop="true" speed="0.25">
 							<frame x="407" y="325" w="60" h="92"/>
@@ -107,7 +106,15 @@
 						<deadkoopa texture="deadkoopa.png">
 							<frame x="20" y="134" w="64" h="60"/>
 						</deadkoopa>
-					</animations>
+						<idlewinglesskoopa>
+							<frame x="414" y="0" w="44" h="60"/>
+						</idlewinglesskoopa>
+						<idlewinglesskoopaL>
+							<frame x="334" y="0" w="44" h="60"/>
+						</idlewinglesskoopaL>
+					
+				
+				</animations>
 				</enemy_koopa>
 				<!-- Goomba Animations -->
 				<enemy name="goomba" x="192" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">

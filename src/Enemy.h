@@ -21,6 +21,7 @@ public:
 
 	bool Update(float dt);
 
+
 	bool CleanUp();
 
 	void SetParameters(pugi::xml_node parameters) {
