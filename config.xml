@@ -28,23 +28,24 @@
 					<walking loop="true" speed="0.25">
 						<frame x="32" y="0" w="32" h="32"/>
 						<frame x="64" y="0" w="32" h="32"/>
-						<frame x="96" y="0" w="32" h="32"/>
+						<frame x="0" y="0" w="32" h="32"/>
 					</walking>
 					<walkingL loop="true" speed="0.25">
 						<frame x="32" y="32" w="32" h="32"/>
 						<frame x="64" y="32" w="32" h="32"/>
-						<frame x="96" y="32" w="32" h="32"/>
+						<frame x="0" y="32" w="32" h="32"/>
 					</walkingL>
 					<jumping loop="false" speed="0.15">
+						<frame x="96" y="0" w="32" h="32"/>
 						<frame x="128" y="0" w="32" h="32"/>
-						<frame x="160" y="0" w="32" h="32"/>
 					</jumping>
 					<jumpingL loop="false" speed="0.15">
 						<frame x="128" y="32" w="32" h="32"/>
-						<frame x="160" y="32" w="32" h="32"/>
+						<frame x="96" y="32" w="32" h="32"/>
+
 					</jumpingL>
 					<die loop="false">
-						<frame x="192" y="0" w="32" h="32"/>
+						<frame x="160" y="0" w="32" h="32"/>
 					</die>
 				</animations>
 			</player>
