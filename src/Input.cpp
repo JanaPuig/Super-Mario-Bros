@@ -13,7 +13,6 @@ Input::Input() : Module()
 	memset(keyboard, KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
 	memset(mouseButtons, KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 }
-
 // Destructor
 Input::~Input()
 {

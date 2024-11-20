@@ -67,7 +67,7 @@ private:
     Animation jumpLTexture;
     Animation walkingTexture;
     Animation walkingLTexture;
-    Animation die;
+    Animation deadTexture;
     SDL_Texture* gameOver = nullptr;
 
     // Audio FX

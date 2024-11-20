@@ -61,7 +61,6 @@ bool Enemy::Start() {
     if (!parameters.attribute("gravity").as_bool()) {
         pbody->body->SetGravityScale(0);
     }
-
     b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
     pbody->body->SetTransform(bodyPos, 0);
 
@@ -75,7 +74,6 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt) {
     frameTime += dt;
-
     if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
         return true; // Si estamos en el menú, no hacer nada
     }

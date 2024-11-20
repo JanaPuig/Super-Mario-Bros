@@ -19,42 +19,40 @@ bool Player::Awake() {
 	return true;
 }
 bool Player::Start() {
-	// Load FX and Textures
+	// Load FX 
 	for (int i = 0; i < 8; ++i)
 	{
 		std::string path = "Assets/Audio/Fx/MarioVoices/Jump_Random_" + std::to_string(i + 1) + ".wav";
 		jumpVoiceIds[i] = Engine::GetInstance().audio.get()->LoadFx(path.c_str());
 	}
-
 	jumpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Jump_Small.wav");
 	hereWeGoAgain = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/HereWeGoAgain.wav");
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
-
-
+	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
+	//Load Player Texture
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
-	// Configuración inicial
+	//Player Configuration 
 	position.setX(parameters.attribute("x").as_int());
 	position.setY(parameters.attribute("y").as_int());
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
 
-	//Teextures
+	//Load Animations
 	idleTexture.LoadAnimations(parameters.child("animations").child("idle"));
 	idleLTexture.LoadAnimations(parameters.child("animations").child("idleL"));
 	walkingTexture.LoadAnimations(parameters.child("animations").child("walking"));
 	walkingLTexture.LoadAnimations(parameters.child("animations").child("walkingL"));
 	jumpTexture.LoadAnimations(parameters.child("animations").child("jumping"));
 	jumpLTexture.LoadAnimations(parameters.child("animations").child("jumpingL"));
-	die.LoadAnimations(parameters.child("animations").child("die"));
+	deadTexture.LoadAnimations(parameters.child("animations").child("die"));
 
 	currentAnimation = &idleTexture;
 
 
 	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
-	GoombaDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
-
+	
 	// Añadir física
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -75,7 +73,6 @@ bool Player::Update(float dt) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 	if (!isActive) return true;
-	// L08 TODO 5: Add physics to the player - updated player position using physics
 
 	if (pbody == nullptr) {
 		LOG("Error: pbody no inicializado.");
@@ -98,7 +95,7 @@ bool Player::Update(float dt) {
 		//Drawn Death Texture
 		int cameraX = Engine::GetInstance().render.get()->camera.x;
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
-		currentAnimation = &die;
+		currentAnimation = &deadTexture;
 		Engine::GetInstance().render.get()->DrawTexture(gameOver, -cameraX + 225, -cameraY);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
