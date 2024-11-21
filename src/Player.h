@@ -23,9 +23,11 @@ public:
     void OnCollision(PhysBody* physA, PhysBody* physB) override;
     void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
 
+    void SetPosition(const Vector2D& newPosition);
+
+
     // Player-specific functionality
     Vector2D GetPosition() const { return position; }
-    void SetPosition(const Vector2D& newPosition);
     void ToggleGodMode();
     void PlayerFlight(float dt);
 
@@ -71,6 +73,7 @@ private:
     SDL_Texture* gameOver = nullptr;
 
     // Audio FX
+    int pickCoinFxId= 0;
     int jumpFxId = 0;
     int jumpVoiceIds[8] = { 0 };
     int DeathId = 0;

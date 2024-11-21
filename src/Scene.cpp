@@ -80,7 +80,7 @@ void Scene::CreateLevel1Items()
 // Called before the first frame
 bool Scene::Start()
 {
-    Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
+    Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
     // Load sound effects
     pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
@@ -272,6 +272,12 @@ bool Scene::PostUpdate()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         return false;
     }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+        LoadState();
+    }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+        SaveState();
+    }
     return true;
 }
 
@@ -336,13 +342,13 @@ void Scene::FinishTransition()
     // Load the respective level
     if (level == 1) {
         player->SetPosition(Vector2D(3, 8.65));
-        Engine::GetInstance().map->Load("Assets/Maps/", "Background.tmx");
+        Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
         CreateLevel1Items();
 
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(3, 14.5));
-        Engine::GetInstance().map->Load("Assets/Maps/", "Map2.tmx");
+        Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
     }
     // Resume music after transition
     Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
@@ -371,14 +377,13 @@ void Scene::StartNewGame() {
     level = 1;  // Comienza un nuevo juego en el nivel 1
     player->SetPosition(Vector2D(3, 8.3)); // Reinicia la posición del jugador
     showMainMenu = false;  // Oculta el menú principal
-    
 }
 
 void Scene::LoadGame() {
-   
     //cargar juego guardado
     Engine::GetInstance().audio.get()->StopMusic();
     ShowTransitionScreen();
+    LoadState();
     showMainMenu = false;  // Oculta el menú principal
 }
 
@@ -386,4 +391,42 @@ void Scene::LoadGame() {
 Vector2D Scene::GetPlayerPosition()
 {
     return player->GetPosition();
+}
+void Scene::LoadState()
+{
+    pugi::xml_document LoadFile;
+    pugi::xml_parse_result result=LoadFile.load_file("config.xml");
+
+    if (result == NULL) {
+        LOG("Error Loading config.xml: %s", result.description());
+        return;
+    }
+    // read the player position from the XML
+    Vector2D posPlayer;
+    posPlayer.setX(LoadFile.child("config").child("scene").child("entities").child("player").attribute("x").as_int());
+    posPlayer.setY(LoadFile.child("config").child("scene").child("entities").child("player").attribute("y").as_int());
+
+    // set the player position
+    player->SetPosition(posPlayer);
+
+    //cargar mas cosas; enemies, items...
+}
+
+void Scene::SaveState()
+{
+    pugi::xml_document SaveFile;
+    pugi::xml_parse_result result = SaveFile.load_file("config.xml");
+    if (result == NULL) {
+        LOG("Error Saving config.xml: %s", result.description());
+        return;
+    }
+    // read the player position and set the value in the XML
+    Vector2D playerPos = player->GetPosition();
+    SaveFile.child("config").child("scene").child("entities").child("player").attribute("x").set_value(playerPos.getX());
+    SaveFile.child("config").child("scene").child("entities").child("player").attribute("y").set_value(playerPos.getY());
+
+    // save the XML modification to disk
+    SaveFile.save_file("config.xml");
+
+    //guardar mas cosas; enemies, items...
 }
