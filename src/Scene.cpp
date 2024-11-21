@@ -41,19 +41,16 @@ bool Scene::Awake()
                 enemyNode; enemyNode = enemyNode.next_sibling()) {
                 Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 enemy->SetParameters(enemyNode);
-
                 // Log para depuración
                 LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
             }
         }
      
     }
-
     // Load level-specific items
     if (level == 1) {
         CreateLevel1Items();
     }
-
     return true;
 }
 
@@ -95,18 +92,19 @@ bool Scene::Start()
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
 
     // Load textures for menus and transitions
-    mainMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/mainMenu.png");
-    Title = Engine::GetInstance().textures.get()->Load("Assets/Textures/title.png");
-    helpMenuTexture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Help_Menu.png");
-    level1Transition = Engine::GetInstance().textures.get()->Load("Assets/Textures/world1-1.png");
-    level2Transition = Engine::GetInstance().textures.get()->Load("Assets/Textures/world1-2.png");
-    newGameButtonSelected = Engine::GetInstance().textures.get()->Load("Assets/Textures/NewGameButtonSelected.png");
-    loadGameButtonSelected = Engine::GetInstance().textures.get()->Load("Assets/Textures/LoadGameButtonSelected.png");
-    leaveGameButtonSelected = Engine::GetInstance().textures.get()->Load("Assets/Textures/LeaveGameButtonSelected.png");
-    newGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/NewGameButton.png");
-    loadGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/LoadGameButton.png");
-    leaveGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/LeaveGameButton.png");
-    loadingScreen = Engine::GetInstance().textures.get()->Load("Assets/Textures/loadgame.png");
+    mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
+    Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
+    helpMenuTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("helpMenu").attribute("path").as_string());
+    level1Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level1Transition").attribute("path").as_string());
+    level2Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level2Transition").attribute("path").as_string());
+    newGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButtonSelected").attribute("path").as_string());
+    loadGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButtonSelected").attribute("path").as_string());
+    leaveGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButtonSelected").attribute("path").as_string());
+    newGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButton").attribute("path").as_string());
+    loadGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButton").attribute("path").as_string());
+    leaveGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButton").attribute("path").as_string());
+    loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
+    gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     return true;
 }
 
@@ -311,6 +309,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(Title);
     Engine::GetInstance().textures.get()->UnLoad(level1Transition);
     Engine::GetInstance().textures.get()->UnLoad(level2Transition);
+    Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -401,10 +400,10 @@ void Scene::StartNewGame() {
     SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(1);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(30);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(430);
-    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value();
-    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value();
-    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value();
-    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value();
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(200);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(400);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(400);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(400);
     SaveFile.save_file("config.xml");
 }
 

@@ -15,9 +15,24 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" enemy1State="" enemy2State=" " enemy1X="" enemy2X=" " enemy1Y="" enemy2Y=" " />
+		<SaveFile level="1" playerX="30" playerY="430" enemy1State="" enemy2State=" " enemy1X="200" enemy2X="400" enemy1Y="400" enemy2Y="400" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
+		<textures>
+			<mainMenu path="Assets/Textures/mainMenu.png" />
+			<title path="Assets/Textures/title.png" />
+			<helpMenu path="Assets/Textures/Help_Menu.png" />
+			<level1Transition path="Assets/Textures/world1-1.png" />
+			<level2Transition path="Assets/Textures/world1-2.png" />
+			<newGameButtonSelected path="Assets/Textures/NewGameButtonSelected.png" />
+			<loadGameButtonSelected path="Assets/Textures/LoadGameButtonSelected.png" />
+			<leaveGameButtonSelected path="Assets/Textures/LeaveGameButtonSelected.png" />
+			<newGameButton path="Assets/Textures/NewGameButton.png" />
+			<loadGameButton path="Assets/Textures/LoadGameButton.png" />
+			<leaveGameButton path="Assets/Textures/LeaveGameButton.png" />
+			<loadingScreen path="Assets/Textures/loadgame.png" />
+			<gameOver path="Assets/Textures/gameOver.png" />
+		</textures>
 		<entities>
 			<items>
 				<item name="coin" x="1600" y="768" w="32" h="32" texture="Assets/Textures/Coin.png" gravity="true">
@@ -116,7 +131,7 @@
 						</idlewinglesskoopaL>
 					</animations>
 				</enemy_koopa>
-				<enemy name="goomba" x="192" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy name="goomba" x="200" y="400" w="32" h="32" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />

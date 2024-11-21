@@ -72,7 +72,8 @@ public:
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
     bool showingTransition = false;       // Whether the transition screen is visible
 
-    SDL_Texture* Title = NULL;    // Texture for the main menu
+    SDL_Texture* Title = NULL; // Texture for the main menu
+    SDL_Texture* gameOver = NULL;
     bool showMainMenu = true;        // Whether the main menu is visible
 
     int pipeFxId = 0;                // Sound effect ID for pipe interaction

@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+#include "EntityManager.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
@@ -84,13 +85,13 @@ bool Enemy::Update(float dt) {
 
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-
-        if (hitCount >=2) {
-            currentAnimation = &deadkoopa;
-        }
-        else if (hitCount == 1)
+        if (hitCount == 1)
         {
             currentAnimation = &walkingKoopaLeft;
+        }
+        else if (hitCount >=2) {
+            currentAnimation = &deadkoopa;
+            //Engine::GetInstance().entityManager->DestroyEntity();
         }
         else {
             currentAnimation = &idlekoopaLeft;
@@ -99,6 +100,7 @@ bool Enemy::Update(float dt) {
     if (parameters.attribute("name").as_string() == std::string("goomba")) {
         if (hitCount >=1) {
             currentAnimation = &deadGoomba;
+            //Engine::GetInstance().entityManager->DestroyEntity();
         }
         else {
             currentAnimation = &idleGoomba;
@@ -132,7 +134,6 @@ bool Enemy::Update(float dt) {
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
         pathfinding->PropagateDijkstra();
     }
-
     // Dibujar pathfinding
     pathfinding->DrawPath();
 

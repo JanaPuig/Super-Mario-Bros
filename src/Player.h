@@ -44,7 +44,6 @@ public:
 private:
 
     SDL_Texture* texturePlayer;
-    SDL_Texture* gameOver = nullptr;
     pugi::xml_node parameters;
     Animation* currentAnimation = nullptr;
 

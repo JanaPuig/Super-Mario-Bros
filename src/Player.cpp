@@ -47,12 +47,8 @@ bool Player::Start() {
 	jumpRAnimation.LoadAnimations(parameters.child("animations").child("jumping"));
 	jumpLAnimation.LoadAnimations(parameters.child("animations").child("jumpingL"));
 	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
-
 	currentAnimation = &idleRAnimation;
 
-
-	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
-	
 	// Añadir física
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
 	pbody->listener = this;
@@ -98,7 +94,7 @@ bool Player::Update(float dt) {
 		int cameraX = Engine::GetInstance().render.get()->camera.x;
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
 		currentAnimation = &deadAnimation;
-		Engine::GetInstance().render.get()->DrawTexture(gameOver, -cameraX + 225, -cameraY);
+		Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
