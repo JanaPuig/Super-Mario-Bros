@@ -31,6 +31,8 @@ public:
 
 	Vector2D GetPosition();
 
+	void ResetPath();
+
 public:
 	int hitCount = 0;
 

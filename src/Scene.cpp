@@ -37,10 +37,11 @@ bool Scene::Awake()
         player->SetParameters(configParameters.child("entities").child("player"));
 
         if (level == 1) {
-            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
-                enemyNode; enemyNode = enemyNode.next_sibling()) {
+            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling()) 
+            {
                 Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 enemy->SetParameters(enemyNode);
+                enemyList.push_back(enemy);
                 // Log para depuración
                 LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
             }

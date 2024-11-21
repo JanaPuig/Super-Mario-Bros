@@ -2,6 +2,9 @@
 
 #include "Module.h"
 #include "Player.h"
+#include <list>
+#include <vector>
+#include "Enemy.h"
 
 // Forward declaration of SDL_Texture structure
 struct SDL_Texture;
@@ -88,6 +91,7 @@ public:
 private:
     // Player instance
     Player* player;
+    std::vector<Enemy*> enemyList;
 
     // Transition-related variables
     SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
@@ -117,4 +121,5 @@ private:
     void HandleMainMenuSelection();
     void StartNewGame();
     void LoadGame();
+
 };

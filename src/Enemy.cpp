@@ -54,25 +54,19 @@ bool Enemy::Start() {
     rightBoundary = position.getX() + 500;
 
     // Añadir física
-    pbody = Engine::GetInstance().physics.get()->CreateCircle(
-        (int)position.getX() + texH / 2,
-        (int)position.getY() + texH / 2,
-        texH / 2,
-        bodyType::DYNAMIC
-    );
+    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+
     pbody->listener = this;
+    //Assign collider type
     pbody->ctype = ColliderType::ENEMY;
 
-    if (!parameters.attribute("gravity").as_bool()) {
-        pbody->body->SetGravityScale(0);
-    }
-    b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
-    pbody->body->SetTransform(bodyPos, 0);
+    if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+ 
 
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
-    Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(position.getX(), position.getY());
-    pathfinding->ResetPath(tilePos);
+
+    ResetPath();
 
     return true;
 }
@@ -82,7 +76,6 @@ bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition|| Engine::GetInstance().scene.get()->isLoading) {
         return true; // Si estamos en el menú, no hacer nada
     }
-
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         if (hitCount == 1)
@@ -120,19 +113,57 @@ bool Enemy::Update(float dt) {
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 
-    // Pathfinding
+    //Pathfinding testing inputs
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-        Vector2D pos = GetPosition();
-        Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-        pathfinding->ResetPath(tilePos);
+            Vector2D pos = GetPosition();
+            Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+            pathfinding->ResetPath(tilePos);
     }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_DOWN) {
         pathfinding->PropagateBFS();
     }
 
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_REPEAT &&
+        Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+        pathfinding->PropagateBFS();
+    }
+
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
         pathfinding->PropagateDijkstra();
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K) == KEY_REPEAT &&
+        Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+        pathfinding->PropagateDijkstra();
+    }
+    // L13: TODO 3:	Add the key inputs to propagate the A* algorithm with different heuristics (Manhattan, Euclidean, Squared)
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_DOWN) {
+        pathfinding->PropagateAStar(MANHATTAN);
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_REPEAT &&
+        Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+        pathfinding->PropagateAStar(MANHATTAN);
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_DOWN) {
+        pathfinding->PropagateAStar(EUCLIDEAN);
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_REPEAT &&
+        Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+        pathfinding->PropagateAStar(EUCLIDEAN);
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_DOWN) {
+        pathfinding->PropagateAStar(SQUARED);
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_REPEAT &&
+        Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
+        pathfinding->PropagateAStar(SQUARED);
     }
     // Dibujar pathfinding
     pathfinding->DrawPath();
@@ -147,11 +178,19 @@ bool Enemy::CleanUp() {
 }
 
 void Enemy::SetPosition(Vector2D pos) {
+    pos.setX(pos.getX() + texW / 2);
+    pos.setY(pos.getY() + texH / 2);
     b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
     pbody->body->SetTransform(bodyPos, 0);
 }
 
 Vector2D Enemy::GetPosition() {
     b2Vec2 bodyPos = pbody->body->GetTransform().p;
-    return Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+    Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+    return pos;
+}
+void Enemy::ResetPath() {
+    Vector2D pos = GetPosition();
+    Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+    pathfinding->ResetPath(tilePos);
 }
