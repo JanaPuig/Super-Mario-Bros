@@ -69,7 +69,7 @@ bool Player::Start() {
 }
 bool Player::Update(float dt) {
 
-	if (Engine::GetInstance().scene.get()->showMainMenu) {
+	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 	if (!isActive) return true;

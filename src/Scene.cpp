@@ -201,7 +201,8 @@ bool Scene::Update(float dt)
         // Si el tiempo de espera ha terminado, carga el estado del juego
         if (loadingTimer >= loadingScreenDuration) {
             isLoading = false; // Desactiva la pantalla de carga
-            LoadState();       // Llama a la función que carga el estado del juego
+            LoadState();
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);// Llama a la función que carga el estado del juego
         }
 
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
@@ -220,9 +221,7 @@ bool Scene::Update(float dt)
         ShowTransitionScreen();
 
     }
-
     Vector2D playerPos = player->GetPosition();
-
     // Handle help menu toggle
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
         ToggleMenu();
