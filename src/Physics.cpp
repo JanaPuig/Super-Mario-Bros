@@ -356,12 +356,12 @@ void Physics::BeginContact(b2Contact* contact)
 		}
 	}
 
-	if (physB && physB->listener != NULL) {
-		if(physA) // Ensure physA is also valid
-		{
-			physB->listener->OnCollision(physB, physA);
-		}
-	}
+	//if (physB && physB->listener != NULL) {
+	//	if(physA) // Ensure physA is also valid
+	//	{
+	//		physB->listener->OnCollision(physB, physA);
+	//	}
+	//}
 }
 
 // Callback function to collisions with Box2D
@@ -378,12 +378,12 @@ void Physics::EndContact(b2Contact* contact)
 		}
 	}
 
-	if (physB && physB->listener != NULL) {
-		if (physA) // Ensure physA is also valid
-		{
-			physB->listener->OnCollisionEnd(physB, physA);
-		}
-	}
+	//if (physB && physB->listener != NULL) {
+	//	if (physA) // Ensure physA is also valid
+	//	{
+	//		physB->listener->OnCollisionEnd(physB, physA);
+	//	}
+	//}
 }
 
 void Physics::DeletePhysBody(PhysBody* physBody) {
