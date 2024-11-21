@@ -300,11 +300,12 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
     Engine::GetInstance().textures.get()->UnLoad(mainMenu);
+    Engine::GetInstance().textures.get()->UnLoad(loadingScreen);
     Engine::GetInstance().textures.get()->UnLoad(newGameButton);
     Engine::GetInstance().textures.get()->UnLoad(loadGameButton);
     Engine::GetInstance().textures.get()->UnLoad(leaveGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(newGameButtonSelected); 
-    Engine::GetInstance().textures.get()->UnLoad(loadGameButtonSelected); 
+    Engine::GetInstance().textures.get()->UnLoad(newGameButtonSelected);
+    Engine::GetInstance().textures.get()->UnLoad(loadGameButtonSelected);
     Engine::GetInstance().textures.get()->UnLoad(leaveGameButtonSelected);
     Engine::GetInstance().textures.get()->UnLoad(helpMenuTexture);
     Engine::GetInstance().textures.get()->UnLoad(Title);

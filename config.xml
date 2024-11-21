@@ -18,7 +18,7 @@
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<entities>
-			<player name="mario" x="2335" y="431" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
+			<player name="mario" x="504" y="405" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
 					<idle loop="false">
 						<frame x="0" y="0" w="32" h="32" />
