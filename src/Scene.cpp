@@ -254,19 +254,19 @@ bool Scene::Update(float dt)
 // Handles teleportation logic
 void Scene::HandleTeleport(const Vector2D& playerPos)
 {
-    const float tolerance = 5.0f;
+    const float tolerance = 15.0f;
 
     if (IsInTeleportArea(playerPos, 1440, 290, tolerance) ||
         IsInTeleportArea(playerPos, 1472, 288, tolerance))
     {
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
             Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-            player->SetPosition(Vector2D(31, 11));
+            player->SetPosition(Vector2D(1550, 550));
         }
     }
-    else if (IsInTeleportArea(playerPos, 1856, 864, tolerance)) {
+    else if (IsInTeleportArea(playerPos, 1885, 864, tolerance)) {
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-            player->SetPosition(Vector2D(36, 6));
+            player->SetPosition(Vector2D(1800, 290));
             Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
         }
     }
@@ -356,13 +356,13 @@ void Scene::FinishTransition()
     }
     // Load the respective level
     if (level == 1) {
-        player->SetPosition(Vector2D(3, 8.65));
+        player->SetPosition(Vector2D(30, 430));
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
         CreateLevel1Items();
 
     }
     else if (level == 2) {
-        player->SetPosition(Vector2D(3, 14.5));
+        player->SetPosition(Vector2D(100, 740));
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
     }
     // Resume music after transition
@@ -390,7 +390,7 @@ void Scene::HandleMainMenuSelection()
 }
 void Scene::StartNewGame() {
     level = 1;  // Comienza un nuevo juego en el nivel 1
-    player->SetPosition(Vector2D(3, 8.3)); // Reinicia la posición del jugador
+    player->SetPosition(Vector2D(30, 430)); // Reinicia la posición del jugador
     showMainMenu = false;  // Oculta el menú principal
 }
 

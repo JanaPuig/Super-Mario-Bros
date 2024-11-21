@@ -141,6 +141,8 @@ bool Enemy::Update(float dt) {
 }
 
 bool Enemy::CleanUp() {
+    Engine::GetInstance().textures.get()->UnLoad(textureKoopa);
+    Engine::GetInstance().textures.get()->UnLoad(textureGoomba);
     return true;
 }
 

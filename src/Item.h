@@ -36,12 +36,12 @@ public:
 
 private:
 
-	SDL_Texture* texture;
+	SDL_Texture* coinTexture;
 	const char* texturePath;
 	int texW, texH;
 
 	pugi::xml_node parameters;
-	Animation* currentAnimation = nullptr;
+	Animation* currentAnimation = &idle;
 	Animation idle;
 
 

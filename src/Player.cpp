@@ -105,10 +105,10 @@ bool Player::Update(float dt) {
 			deathSoundPlayed = false;
 
 			if (Engine::GetInstance().scene.get()->level == 1) {
-				SetPosition(Vector2D(3, 8.65));
+				SetPosition(Vector2D(30, 430));
 			}
 			else if (Engine::GetInstance().scene.get()->level == 2) {
-				SetPosition(Vector2D(3, 14.45));
+				SetPosition(Vector2D(200, 740));
 			}
 			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
 			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");

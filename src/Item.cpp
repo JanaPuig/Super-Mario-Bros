@@ -22,7 +22,7 @@ bool Item::Awake() {
 bool Item::Start() {
 
 	//initilize textures
-	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	coinTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
@@ -30,7 +30,7 @@ bool Item::Start() {
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
 	currentAnimation = &idle;
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
-	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+	Engine::GetInstance().textures.get()->GetSize(coinTexture, texW, texH);
 	
 	//audio effect
 	pickCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Coin.wav");
@@ -59,13 +59,8 @@ bool Item::Update(float dt)
 	}
 
 	if (!isPicked) {
-		if (currentAnimation != nullptr) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+			Engine::GetInstance().render.get()->DrawTexture(coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 			currentAnimation->Update();
-		}
-		else {
-			LOG("Warning: currentAnimation is null.");
-		}
 	}
 
 	return true;
@@ -73,5 +68,6 @@ bool Item::Update(float dt)
 
 bool Item::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(coinTexture);
 	return true;
 }
