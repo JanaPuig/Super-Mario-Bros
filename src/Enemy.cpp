@@ -13,7 +13,6 @@ Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
 Enemy::~Enemy() {
     delete pathfinding;
-
 }
 
 bool Enemy::Awake() {

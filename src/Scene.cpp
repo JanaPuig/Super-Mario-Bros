@@ -208,19 +208,6 @@ bool Scene::Update(float dt)
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
 
-    // Debug controls for level changes
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-        LOG("F2 presionado");
-
-        ChangeLevel(2);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-        ChangeLevel(1);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-        ShowTransitionScreen();
-
-    }
     Vector2D playerPos = player->GetPosition();
     // Handle help menu toggle
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
@@ -286,6 +273,17 @@ bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float 
 // Post-update logic
 bool Scene::PostUpdate()
 {
+    // Debug controls for level changes
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+        LOG("F2 presionado");
+        ChangeLevel(2);
+    }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+        ChangeLevel(1);
+    }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+        ShowTransitionScreen();
+    }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         return false;
     }
@@ -392,11 +390,27 @@ void Scene::StartNewGame() {
     level = 1;  // Comienza un nuevo juego en el nivel 1
     player->SetPosition(Vector2D(30, 430)); // Reinicia la posición del jugador
     showMainMenu = false;  // Oculta el menú principal
+
+    //Como es un New Game, se tienen que borrar los datos guardados/inicializarlos
+    pugi::xml_document SaveFile;
+    pugi::xml_parse_result result = SaveFile.load_file("config.xml");
+    if (result == NULL) {
+        LOG("Error Saving config.xml: %s", result.description());
+        return;
+    }
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(1);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(30);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(430);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value();
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value();
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value();
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value();
+    SaveFile.save_file("config.xml");
 }
 
 void Scene::LoadGame() {
     isLoading = true;    // Activa la pantalla de carga
-    loadingTimer = 0.0f; // Reinicia el temporizador
+     // Reinicia el temporizador
     Engine::GetInstance().audio.get()->StopMusic(); 
     showMainMenu = false;
   
@@ -418,15 +432,16 @@ void Scene::LoadState()
     }
     // read the player position from the XML
     Vector2D posPlayer;
+    Vector2D posEnemy;
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
    int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
+   //cargar mas cosas; enemies, items...
 
    ChangeLevel(savedLevel);
-    // set the player position
-    player->SetPosition(posPlayer);
+   player->SetPosition(posPlayer);   // set the player position
    
-    //cargar mas cosas; enemies, items...
+  
 }
 
 void Scene::SaveState()
@@ -442,6 +457,10 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(level);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(playerPos.getY());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(playerPos.getX());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(playerPos.getY());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(playerPos.getX());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(playerPos.getY());
 
     // save the XML modification to disk
     SaveFile.save_file("config.xml");

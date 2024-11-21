@@ -246,6 +246,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ENEMY: {
 		LOG("Collision with ENEMY");
+
 		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
 		float playerBottom = this->position.getY() + this->texH / 2;
 		float enemyTop = enemy->GetPosition().getY();
