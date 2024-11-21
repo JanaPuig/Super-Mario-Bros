@@ -262,6 +262,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	}
 }
+
 void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype) {
 	case ColliderType::PLATFORM:
@@ -285,7 +286,6 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 		break;
 	}
 }
-
 void Player::SetPosition(const Vector2D& newPosition)
 {
 	if (pbody == nullptr || pbody->body == nullptr) {

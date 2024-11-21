@@ -80,7 +80,7 @@ bool Enemy::Update(float dt) {
     if (isDying) {
         deathTimer += dt;
 
-       if (deathTimer >= 700.0f) { // Esperar 1 segundo
+       if (deathTimer >= 800.0f) { // Esperar 1 segundo
             isEnemyDead = true;   // Marcar como muerto después del tiempo
             toBeDestroyed = true; // Marcar para eliminación
             return false;         // Detener ejecución
@@ -102,6 +102,7 @@ bool Enemy::Update(float dt) {
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         if (hitCount == 1) {
             currentAnimation = &walkingKoopaLeft;
+            pbody->body->SetGravityScale(1.0f);
         }
         else if (hitCount >= 2) {
             currentAnimation = &deadkoopa;
@@ -111,6 +112,7 @@ bool Enemy::Update(float dt) {
         }
         else {
             currentAnimation = &idlekoopaLeft;
+
         }
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
