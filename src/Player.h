@@ -79,7 +79,7 @@ private:
     int DeathId = 0;
     int hereWeGoAgain = 0;
     int ohNoId = 0;
-    int GoombaDeathSound = 0;
+    int EnemyDeathSound = 0;
     // Player state
     bool isMoving = false;
     bool isSprinting = false;

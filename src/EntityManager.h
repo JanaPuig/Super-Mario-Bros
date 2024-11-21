@@ -39,7 +39,7 @@ public:
 	
 
 public:
-
+		
 	std::list<Entity*> entities;
 
 };

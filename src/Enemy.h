@@ -66,8 +66,8 @@ public:
 
 	bool movingRight = true;
 	bool movingLeft = false;
-
-
+	bool isEnemyDead =false; // Temporizador para la animación de muerte
+	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 1.0f;
 	float leftBoundary = 0.0f;
 	float rightBoundary = 0.0f;

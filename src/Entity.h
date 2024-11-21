@@ -77,7 +77,7 @@ public:
 	};
 
 public:
-
+	bool toBeDestroyed = false;
 	std::string name;
 	EntityType type;
 	bool active = true;

@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "Map.h"
 #include "EntityManager.h"
+#include "Physics.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
@@ -72,34 +73,61 @@ bool Enemy::Start() {
 }
 
 bool Enemy::Update(float dt) {
-    frameTime += dt;
-    if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition|| Engine::GetInstance().scene.get()->isLoading) {
+    if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition || Engine::GetInstance().scene.get()->isLoading) {
         return true; // Si estamos en el menú, no hacer nada
     }
+    frameTime += dt;
+    if (isDying) {
+        deathTimer += dt;
+
+       if (deathTimer >= 700.0f) { // Esperar 1 segundo
+            isEnemyDead = true;   // Marcar como muerto después del tiempo
+            toBeDestroyed = true; // Marcar para eliminación
+            return false;         // Detener ejecución
+        }
+
+        // Mantén la animación de muerte activa
+        if (currentAnimation) {
+            currentAnimation->Update();
+        }
+
+        // Dibujar la animación de muerte
+        SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+        Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+
+        return true; // Continúa ejecutándose mientras muere
+    }
+   
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        if (hitCount == 1)
-        {
+        if (hitCount == 1) {
             currentAnimation = &walkingKoopaLeft;
         }
-        else if (hitCount >=2) {
+        else if (hitCount >= 2) {
             currentAnimation = &deadkoopa;
-            //Engine::GetInstance().entityManager->DestroyEntity();
+            isDying = true; // Inicia el proceso de muerte
+            deathTimer = 0.0f; // Reinicia el temporizador
+            return true; // Detener el resto de la lógica de actualización
         }
         else {
             currentAnimation = &idlekoopaLeft;
         }
     }
-    if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        if (hitCount >=1) {
+    else if (parameters.attribute("name").as_string() == std::string("goomba")) {
+        if (hitCount >= 1) {
             currentAnimation = &deadGoomba;
-            //Engine::GetInstance().entityManager->DestroyEntity();
+            isDying = true; // Inicia el proceso de muerte
+            deathTimer = 0.0f; // Reinicia el temporizador
+            return true; // Detener el resto de la lógica de actualización
         }
         else {
             currentAnimation = &idleGoomba;
         }
     }
-
+    if (isEnemyDead) {
+        toBeDestroyed = true;
+        return false;
+    }
     if (currentAnimation) {
         currentAnimation->Update();  // Actualizar animación
     }
@@ -172,6 +200,10 @@ bool Enemy::Update(float dt) {
 }
 
 bool Enemy::CleanUp() {
+    if (pbody != nullptr) {
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        pbody = nullptr;
+    }
     Engine::GetInstance().textures.get()->UnLoad(textureKoopa);
     Engine::GetInstance().textures.get()->UnLoad(textureGoomba);
     return true;
