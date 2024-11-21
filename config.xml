@@ -18,29 +18,29 @@
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<entities>
-			<player name="mario" x="98" y="446" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
+			<player name="mario" x="2335" y="431" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
-					<idle loop="true" speed="0.1">
+					<idle loop="false">
 						<frame x="0" y="0" w="32" h="32" />
 					</idle>
-					<idleL loop="true" speed="0.1">
+					<idleL loop="false">
 						<frame x="0" y="32" w="32" h="32" />
 					</idleL>
-					<walking loop="true" speed="0.25">
+					<walking loop="true" speed="0.20">
 						<frame x="32" y="0" w="32" h="32" />
 						<frame x="64" y="0" w="32" h="32" />
 						<frame x="0" y="0" w="32" h="32" />
 					</walking>
-					<walkingL loop="true" speed="0.25">
+					<walkingL loop="true" speed="0.20">
 						<frame x="32" y="32" w="32" h="32" />
 						<frame x="64" y="32" w="32" h="32" />
 						<frame x="0" y="32" w="32" h="32" />
 					</walkingL>
-					<jumping loop="false" speed="0.15">
+					<jumping loop="false" speed="0.13">
 						<frame x="96" y="0" w="32" h="32" />
 						<frame x="128" y="0" w="32" h="32" />
 					</jumping>
-					<jumpingL loop="false" speed="0.15">
+					<jumpingL loop="false" speed="0.13">
 						<frame x="128" y="32" w="32" h="32" />
 						<frame x="96" y="32" w="32" h="32" />
 					</jumpingL>

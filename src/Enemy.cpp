@@ -79,7 +79,7 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt) {
     frameTime += dt;
-    if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition) {
+    if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition|| Engine::GetInstance().scene.get()->isLoading) {
         return true; // Si estamos en el menú, no hacer nada
     }
 

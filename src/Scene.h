@@ -61,6 +61,11 @@ public:
 
     // Public member variables
     int level = 0;                   // Current map level
+    SDL_Texture* loadingScreen = NULL; //texture for the loading screen
+    bool isLoading = false; // Bandera para mostrar pantalla de carga
+    float loadingScreenDuration = 3100.0f; // Duración de la pantalla de carga (en segundos)
+    float loadingTimer = 0.0f;    // Temporizador para la pantalla de carga
+
 
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
     bool showHelpMenu = false;       // Whether the help menu is visible

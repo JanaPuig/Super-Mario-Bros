@@ -103,6 +103,7 @@ bool Scene::Start()
     newGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/NewGameButton.png");
     loadGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/LoadGameButton.png");
     leaveGameButton = Engine::GetInstance().textures.get()->Load("Assets/Textures/LeaveGameButton.png");
+    loadingScreen = Engine::GetInstance().textures.get()->Load("Assets/Textures/loadgame.png");
     return true;
 }
 
@@ -178,7 +179,6 @@ bool Scene::Update(float dt)
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
-
         Engine::GetInstance().render.get()->DrawTexture(
             (level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY
         );
@@ -187,6 +187,21 @@ bool Scene::Update(float dt)
             FinishTransition();
         }
         return true; // Skip the rest of the game logic during transition
+    }
+    //Handle Loading Screen
+    if (isLoading) {
+        loadingTimer += dt;
+
+        // Renderiza la pantalla de carga
+        Engine::GetInstance().render.get()->DrawTexture(loadingScreen, -cameraX, -cameraY);
+
+        // Si el tiempo de espera ha terminado, carga el estado del juego
+        if (loadingTimer >= loadingScreenDuration) {
+            isLoading = false; // Desactiva la pantalla de carga
+            LoadState();       // Llama a la función que carga el estado del juego
+        }
+
+        return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
 
     // Debug controls for level changes
@@ -323,9 +338,7 @@ void Scene::ShowTransitionScreen()
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
-    Engine::GetInstance().render.get()->DrawTexture(
-        (level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY
-    );
+    Engine::GetInstance().render.get()->DrawTexture((level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY);
 }
 
 // Finishes the transition and loads the next level
@@ -338,7 +351,6 @@ void Scene::FinishTransition()
     if (player != nullptr) {
         player->SetActive(true);
     }
-
     // Load the respective level
     if (level == 1) {
         player->SetPosition(Vector2D(3, 8.65));
@@ -368,7 +380,7 @@ void Scene::HandleMainMenuSelection()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
         case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
-        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);  break;
+        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);   break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }
     }
@@ -380,11 +392,11 @@ void Scene::StartNewGame() {
 }
 
 void Scene::LoadGame() {
-    //cargar juego guardado
-    Engine::GetInstance().audio.get()->StopMusic();
-    ShowTransitionScreen();
-    LoadState();
-    showMainMenu = false;  // Oculta el menú principal
+    isLoading = true;    // Activa la pantalla de carga
+    loadingTimer = 0.0f; // Reinicia el temporizador
+    Engine::GetInstance().audio.get()->StopMusic(); 
+    showMainMenu = false;
+  
 }
 
 // Return the player position
