@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "SDL2/SDL.h"
+#include "Animation.h"
 #include <vector> 
 
 struct SDL_Texture;
@@ -21,6 +22,9 @@ public:
 
 	bool CleanUp();
 
+	void SetParameters(pugi::xml_node parameters) {
+		this->parameters = parameters;
+	}
 
 
 public:
@@ -32,9 +36,14 @@ public:
 
 private:
 
-	SDL_Texture* Coin;
+	SDL_Texture* texture;
 	const char* texturePath;
 	int texW, texH;
+
+	pugi::xml_node parameters;
+	Animation* currentAnimation = nullptr;
+	Animation idle;
+
 
 	//L08 TODO 4: Add a physics to an item
 	//PhysBody* pbody;

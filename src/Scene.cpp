@@ -70,6 +70,9 @@ void Scene::CreateLevel1Items()
                 Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
                 item->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
 
+                pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
+                item->SetParameters(defaultItemNode);
+
                 // Log the item's creation
                 LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
             }

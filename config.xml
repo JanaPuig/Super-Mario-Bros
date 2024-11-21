@@ -18,6 +18,15 @@
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<entities>
+			<items>
+				<item name="coin" x="1600" y="768" w="32" h="32" texture="Assets/Textures/Coin.png" gravity="true">
+					<animations>
+						<idle loop="true" speed="0.5">
+							<frame x="0" y="0" w="32" h="32" />
+						</idle>
+					</animations>
+				</item>
+			</items>
 			<player name="mario" x="504" y="405" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
 					<idle loop="false">
