@@ -40,15 +40,15 @@ bool Player::Start() {
 	texH = parameters.attribute("h").as_int();
 
 	//Load Animations
-	idleTexture.LoadAnimations(parameters.child("animations").child("idle"));
-	idleLTexture.LoadAnimations(parameters.child("animations").child("idleL"));
-	walkingTexture.LoadAnimations(parameters.child("animations").child("walking"));
-	walkingLTexture.LoadAnimations(parameters.child("animations").child("walkingL"));
-	jumpTexture.LoadAnimations(parameters.child("animations").child("jumping"));
-	jumpLTexture.LoadAnimations(parameters.child("animations").child("jumpingL"));
-	deadTexture.LoadAnimations(parameters.child("animations").child("die"));
+	idleRAnimation.LoadAnimations(parameters.child("animations").child("idle"));
+	idleLAnimation.LoadAnimations(parameters.child("animations").child("idleL"));
+	walkingRAnimation.LoadAnimations(parameters.child("animations").child("walking"));
+	walkingLAnimation.LoadAnimations(parameters.child("animations").child("walkingL"));
+	jumpRAnimation.LoadAnimations(parameters.child("animations").child("jumping"));
+	jumpLAnimation.LoadAnimations(parameters.child("animations").child("jumpingL"));
+	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
 
-	currentAnimation = &idleTexture;
+	currentAnimation = &idleRAnimation;
 
 
 	gameOver = Engine::GetInstance().textures.get()->Load("Assets/Textures/gameOver.png");
@@ -97,7 +97,7 @@ bool Player::Update(float dt) {
 		//Drawn Death Texture
 		int cameraX = Engine::GetInstance().render.get()->camera.x;
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
-		currentAnimation = &deadTexture;
+		currentAnimation = &deadAnimation;
 		Engine::GetInstance().render.get()->DrawTexture(gameOver, -cameraX + 225, -cameraY);
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
@@ -119,10 +119,10 @@ bool Player::Update(float dt) {
 	if (isMoving && !isJumping) {
 		if (facingLeft)
 		{
-			currentAnimation = &walkingLTexture;
+			currentAnimation = &walkingLAnimation;
 		}
 		else {
-			currentAnimation = &walkingTexture;
+			currentAnimation = &walkingRAnimation;
 		}
 	}
 
@@ -139,20 +139,20 @@ bool Player::Update(float dt) {
 			jumpClip = { texW, 0, texW, texH };
 		}
 		if (facingLeft) {
-			currentAnimation = &jumpLTexture;
+			currentAnimation = &jumpLAnimation;
 		}
 		else {
-			currentAnimation = &jumpTexture;
+			currentAnimation = &jumpRAnimation;
 		}
 	}
 
 	// Idle Animation
 	else {
 		if (facingLeft) {
-			currentAnimation = &idleLTexture;
+			currentAnimation = &idleLAnimation;
 		}
 		else {
-			currentAnimation = &idleTexture;
+			currentAnimation = &idleRAnimation;
 		}
 	}
 

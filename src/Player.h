@@ -44,6 +44,7 @@ public:
 private:
 
     SDL_Texture* texturePlayer;
+    SDL_Texture* gameOver = nullptr;
     pugi::xml_node parameters;
     Animation* currentAnimation = nullptr;
 
@@ -62,15 +63,15 @@ private:
     // Physics body
     PhysBody* pbody = nullptr;
 
-    // Textures
-    Animation idleTexture;
-    Animation idleLTexture;
-    Animation jumpTexture;
-    Animation jumpLTexture;
-    Animation walkingTexture;
-    Animation walkingLTexture;
-    Animation deadTexture;
-    SDL_Texture* gameOver = nullptr;
+    // Animations
+    Animation idleRAnimation;
+    Animation idleLAnimation;
+    Animation jumpRAnimation;
+    Animation jumpLAnimation;
+    Animation walkingRAnimation;
+    Animation walkingLAnimation;
+    Animation deadAnimation;
+
 
     // Audio FX
     int pickCoinFxId= 0;

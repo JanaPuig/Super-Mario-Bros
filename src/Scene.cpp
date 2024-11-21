@@ -201,8 +201,8 @@ bool Scene::Update(float dt)
         // Si el tiempo de espera ha terminado, carga el estado del juego
         if (loadingTimer >= loadingScreenDuration) {
             isLoading = false; // Desactiva la pantalla de carga
-            LoadState();
-            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);// Llama a la función que carga el estado del juego
+            LoadState(); // Load Game State
+        
         }
 
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
@@ -418,12 +418,14 @@ void Scene::LoadState()
     }
     // read the player position from the XML
     Vector2D posPlayer;
-    posPlayer.setX(LoadFile.child("config").child("scene").child("entities").child("player").attribute("x").as_int());
-    posPlayer.setY(LoadFile.child("config").child("scene").child("entities").child("player").attribute("y").as_int());
+    posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
+    posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
+   int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
 
+   ChangeLevel(savedLevel);
     // set the player position
     player->SetPosition(posPlayer);
-
+   
     //cargar mas cosas; enemies, items...
 }
 
@@ -437,8 +439,9 @@ void Scene::SaveState()
     }
     // read the player position and set the value in the XML
     Vector2D playerPos = player->GetPosition();
-    SaveFile.child("config").child("scene").child("entities").child("player").attribute("x").set_value(playerPos.getX());
-    SaveFile.child("config").child("scene").child("entities").child("player").attribute("y").set_value(playerPos.getY());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(level);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(playerPos.getX());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(playerPos.getY());
 
     // save the XML modification to disk
     SaveFile.save_file("config.xml");

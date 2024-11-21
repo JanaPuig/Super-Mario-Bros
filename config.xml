@@ -15,6 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
+		<SaveFile level="2" playerX="100" playerY="719" enemy1State="" enemy2State=" " enemy1X="" enemy2X=" " enemy1Y="" enemy2Y=" " />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<entities>
