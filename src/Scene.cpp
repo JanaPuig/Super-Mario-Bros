@@ -436,6 +436,8 @@ void Scene::LoadState()
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
    int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
+   int GoombaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").as_int();
+   int KoopaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").as_int();
    //cargar mas cosas; enemies, items...
 
    ChangeLevel(savedLevel);
@@ -446,6 +448,7 @@ void Scene::LoadState()
 
 void Scene::SaveState()
 {
+
     pugi::xml_document SaveFile;
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     if (result == NULL) {
@@ -461,6 +464,8 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(playerPos.getY());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(playerPos.getY());
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(1);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(1);
 
     // save the XML modification to disk
     SaveFile.save_file("config.xml");

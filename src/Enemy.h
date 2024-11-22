@@ -7,7 +7,6 @@
 
 struct SDL_Texture;
 
-
 class Enemy : public Entity
 {
 public:
