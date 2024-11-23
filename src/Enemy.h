@@ -7,7 +7,6 @@
 
 struct SDL_Texture;
 
-
 class Enemy : public Entity
 {
 public:
@@ -25,18 +24,13 @@ public:
 	bool CleanUp();
 
 	void SetParameters(pugi::xml_node parameters) {
-		this->parameters = parameters;
-	}
+		this->parameters = parameters;	}
 
 	void SetPosition(Vector2D pos);
 
 	Vector2D GetPosition();
 
 	void ResetPath();
-
-	void UpdateColliderSize();
-
-	void RemoveCollision();
 
 public:
 	int hitCount = 0;
@@ -71,7 +65,7 @@ public:
 
 	bool movingRight = true;
 	bool movingLeft = false;
-	bool isEnemyDead = false; // Temporizador para la animación de muerte
+	bool isEnemyDead =false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 1.0f;
 	float leftBoundary = 0.0f;
