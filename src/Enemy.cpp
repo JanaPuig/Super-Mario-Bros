@@ -62,7 +62,7 @@ bool Enemy::Start() {
     pbody->ctype = ColliderType::ENEMY;
 
     if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
- 
+
 
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
@@ -72,15 +72,63 @@ bool Enemy::Start() {
     return true;
 }
 
+void Enemy::UpdateColliderSize() {
+    int newWidth = 32;
+    int newHeight = 32;
+    b2Transform pbodyPos;
+
+    if (parameters.attribute("name").as_string() == std::string("koopa")) {
+        if (hitCount == 1 && !isDying) {
+
+            newWidth = 64;
+            newHeight = 64;
+            if (pbody == NULL) {
+                pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + newHeight / 2, (int)position.getY() + newHeight / 2, newHeight / 2, bodyType::DYNAMIC);
+                pbody->listener = this;
+                //Assign collider type
+                pbody->ctype = ColliderType::ENEMY;
+            }
+            pbodyPos = pbody->body->GetTransform();
+            position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - newWidth / 2);
+            position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - newHeight / 2);
+
+        }
+
+
+    }
+
+    else if (parameters.attribute("name").as_string() == std::string("goomba"))
+    {
+        newWidth = 32;
+        newHeight = 32;
+        pbodyPos = pbody->body->GetTransform();
+        position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - newWidth / 2);
+        position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - newHeight / 2);
+
+    }
+
+
+
+}
+
+void Enemy::RemoveCollision() {
+    if (pbody != nullptr) {
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        pbody = nullptr;
+    }
+
+}
+
 bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition || Engine::GetInstance().scene.get()->isLoading) {
         return true; // Si estamos en el menú, no hacer nada
     }
     frameTime += dt;
     if (isDying) {
+
         deathTimer += dt;
 
-       if (deathTimer >= 800.0f) { // Esperar 1 segundo
+        if (deathTimer >= 800.0f) { // Esperar 1 segundo
             isEnemyDead = true;   // Marcar como muerto después del tiempo
             toBeDestroyed = true; // Marcar para eliminación
             return false;         // Detener ejecución
@@ -97,29 +145,38 @@ bool Enemy::Update(float dt) {
 
         return true; // Continúa ejecutándose mientras muere
     }
-   
+
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        if (hitCount == 1) {
+        if (hitCount == 1 && !isDying) {
+            RemoveCollision();
+            UpdateColliderSize();
+
+            pbody->body->SetGravityScale(1);
             currentAnimation = &walkingKoopaLeft;
-            pbody->body->SetGravityScale(1.0f);
+
         }
         else if (hitCount >= 2) {
+
             currentAnimation = &deadkoopa;
             isDying = true; // Inicia el proceso de muerte
             deathTimer = 0.0f; // Reinicia el temporizador
             return true; // Detener el resto de la lógica de actualización
         }
         else {
+
             currentAnimation = &idlekoopaLeft;
 
         }
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
+
         if (hitCount >= 1) {
             currentAnimation = &deadGoomba;
             isDying = true; // Inicia el proceso de muerte
             deathTimer = 0.0f; // Reinicia el temporizador
+
+
             return true; // Detener el resto de la lógica de actualización
         }
         else {
@@ -137,17 +194,18 @@ bool Enemy::Update(float dt) {
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
     Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
 
-    // Actualizar posición física
-    b2Transform pbodyPos = pbody->body->GetTransform();
+    //// Actualizar posición física
+    UpdateColliderSize();
+    /*b2Transform pbodyPos = pbody->body->GetTransform();
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
-    position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+    position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);*/
 
 
     //Pathfinding testing inputs
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
-            Vector2D pos = GetPosition();
-            Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
-            pathfinding->ResetPath(tilePos);
+        Vector2D pos = GetPosition();
+        Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+        pathfinding->ResetPath(tilePos);
     }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_J) == KEY_DOWN) {
