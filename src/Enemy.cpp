@@ -72,6 +72,27 @@ bool Enemy::Start() {
     return true;
 }
 
+void Enemy::UpdateColliderSize() {
+    // Elimina el colisionador anterior
+    Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+
+    // Nuevo tamaño para el colisionador
+    int newWidth = 32;
+    int newHeight = 32;
+
+    // Crea un nuevo colisionador de tipo círculo con el nuevo tamaño
+    pbody = Engine::GetInstance().physics.get()->CreateCircle(
+        (int)position.getX() + newWidth / 2,
+        (int)position.getY() + newHeight / 2,
+        newWidth / 2,
+        bodyType::DYNAMIC
+    );
+
+    // Asigna el nuevo listener y tipo de colisión
+    pbody->listener = this;
+    pbody->ctype = ColliderType::ENEMY;
+}
+
 bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->showingTransition || Engine::GetInstance().scene.get()->isLoading) {
         return true; // Si estamos en el menú, no hacer nada
@@ -79,6 +100,10 @@ bool Enemy::Update(float dt) {
     frameTime += dt;
     if (isDying) {
         deathTimer += dt;
+
+        b2Transform pbodyPos = pbody->body->GetTransform();
+        position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+        position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
        if (deathTimer >= 800.0f) { // Esperar 1 segundo
             isEnemyDead = true;   // Marcar como muerto después del tiempo
@@ -100,19 +125,22 @@ bool Enemy::Update(float dt) {
    
     // Actualizar animación según el estado
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        if (hitCount == 1) {
-            currentAnimation = &walkingKoopaLeft;
+        if (hitCount == 1) 
+        {
+            UpdateColliderSize();
+            b2Transform pbodyPos = pbody->body->GetTransform();
+            position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+            position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
             pbody->body->SetGravityScale(1.0f);
-        }
-        else if (hitCount >= 2) {
+
             currentAnimation = &deadkoopa;
+
             isDying = true; // Inicia el proceso de muerte
             deathTimer = 0.0f; // Reinicia el temporizador
             return true; // Detener el resto de la lógica de actualización
         }
         else {
             currentAnimation = &idlekoopaLeft;
-
         }
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {

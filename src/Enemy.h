@@ -32,6 +32,8 @@ public:
 
 	void ResetPath();
 
+	void UpdateColliderSize();
+
 public:
 	int hitCount = 0;
 

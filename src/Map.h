@@ -120,7 +120,6 @@ public:
 
     Vector2D WorldToMap(int x, int y);
 
-
     // L09: TODO 2: Implement function to the Tileset based on a tile id
     TileSet* GetTilesetFromTileId(int gid) const;
 
