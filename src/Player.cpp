@@ -170,9 +170,13 @@ bool Player::Update(float dt) {
 	}
 
 	// PLAYER MOVEMENT CODE
-	float movementSpeed = 0.2f;  // walking speed
+	float movementSpeed = 2.5f;  // walking speed
 	// Sprint
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) { movementSpeed = 0.35f; isSprinting = true; frameDuration = 80.0f; }
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) { 
+		movementSpeed = 4.0f; 
+		isSprinting = true; 
+		frameDuration = 80.0f; 
+	}
 	else {
 		isSprinting = false; frameDuration = 130.0f;
 	}
@@ -180,14 +184,18 @@ bool Player::Update(float dt) {
 	// Left
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead)
 	{
-		velocity.x = -movementSpeed * dt;
+		velocity.x = -movementSpeed;
 		isMoving = true;
 		facingLeft = true;
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) isMoving = false;
 
 	// Right
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) velocity.x = movementSpeed * dt, isMoving = true, facingLeft = false;
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
+		velocity.x = movementSpeed;
+		isMoving = true;
+		facingLeft = false;
+	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) isMoving = false;
 
 	// Jump
