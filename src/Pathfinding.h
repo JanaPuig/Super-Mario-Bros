@@ -62,3 +62,4 @@ public:
     int highCostGid = 50; //Gid of the tiles that have high cost - Important adjust this value to your map
 
 };
+

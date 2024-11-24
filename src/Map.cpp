@@ -53,6 +53,20 @@ bool Map::Update(float dt)
     return ret;
 }
 
+TileSet* Map::GetTilesetFromTileId(int gid) const
+{
+    TileSet* set = nullptr;
+
+    for (const auto& tileset : mapData.tilesets) {
+        if (gid >= tileset->firstGid && gid < (tileset->firstGid + tileset->tileCount)) {
+            set = tileset;
+            break;
+        }
+    }
+
+    return set;
+}
+
 // Called before quitting
 bool Map::CleanUp()
 {
@@ -292,6 +306,22 @@ Vector2D Map::WorldToMap(int x, int y)
         }
 
     return mapCoord;
+}
+
+bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
+{
+    bool ret = false;
+
+    for (pugi::xml_node propertieNode = node.child("properties").child("property"); propertieNode; propertieNode = propertieNode.next_sibling("property"))
+    {
+        Properties::Property* p = new Properties::Property();
+        p->name = propertieNode.attribute("name").as_string();
+        p->value = propertieNode.attribute("value").as_bool(); // (!!) I'm assuming that all values are bool !!
+
+        properties.propertyList.push_back(p);
+    }
+
+    return ret;
 }
 
 MapLayer* Map::GetNavigationLayer() {
