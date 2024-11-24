@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" enemy1X="200" enemy2X="400" enemy1Y="400" enemy2Y="400" />
+		<SaveFile level="1" playerX="466" playerY="302" enemy1X="466" enemy2X="466" enemy1Y="302" enemy2Y="302" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<textures>
@@ -75,7 +75,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="400" y="100" w="80" h="92" hitcount=" " texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="400" y="100" w="80" h="92" hitcount="1" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
@@ -131,7 +131,7 @@
 						</idlewinglesskoopaL>
 					</animations>
 				</enemy_koopa>
-				<enemy name="goomba" x="200" y="400" w="32" h="32" hitcount="" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy name="goomba" x="200" y="400" w="32" h="32" hitcount="1" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />

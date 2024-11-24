@@ -170,10 +170,10 @@ bool Player::Update(float dt) {
 	}
 
 	// PLAYER MOVEMENT CODE
-	float movementSpeed = 2.5f;  // walking speed
+	float movementSpeed = 3.5f;  // walking speed
 	// Sprint
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) { 
-		movementSpeed = 4.0f; 
+		movementSpeed = 5.5f; 
 		isSprinting = true; 
 		frameDuration = 80.0f; 
 	}

@@ -85,7 +85,6 @@ void Pathfinding::DrawPath() {
         //Remove the front element from the queue
         frontierCopy.pop();
     }
-
     // ---------------- Draw frontierDijsktra
 
     // Create a copy of the queue to iterate over

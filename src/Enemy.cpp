@@ -24,9 +24,8 @@ bool Enemy::Awake() {
 bool Enemy::Start() {
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
-        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
+        textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
         currentAnimation = &idlekoopaLeft;
-
         // Carga las animaciones de walkingkoopaLeft y deadkoopa
 
     }
@@ -60,10 +59,14 @@ bool Enemy::Start() {
     pbody->listener = this;
     //Assign collider type
     pbody->ctype = ColliderType::ENEMY;
-
-    if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
+    std::string enemyName = parameters.attribute("name").as_string();
+    if (enemyName == "koopa") {
+        pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+    }
+    else if (enemyName == "goomba") {
+        pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
+    }
  
-
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
 
@@ -105,7 +108,7 @@ bool Enemy::Update(float dt) {
         position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
         position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-       if (deathTimer >= 800.0f) { // Esperar 1 segundo
+       if (deathTimer >= 1000.0f) { // Esperar 1 segundo
             isEnemyDead = true;   // Marcar como muerto después del tiempo
             toBeDestroyed = true; // Marcar para eliminación
             return false;         // Detener ejecución
@@ -119,7 +122,7 @@ bool Enemy::Update(float dt) {
         // Dibujar la animación de muerte
         SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
         Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-
+        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX()+25, (int)position.getY()+25, &frameRect);
         return true; // Continúa ejecutándose mientras muere
     }
    
@@ -131,7 +134,7 @@ bool Enemy::Update(float dt) {
             b2Transform pbodyPos = pbody->body->GetTransform();
             position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
             position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-            pbody->body->SetGravityScale(1.0f);
+            pbody->body->SetGravityScale(1);
 
             currentAnimation = &deadkoopa;
 
@@ -164,6 +167,7 @@ bool Enemy::Update(float dt) {
 
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
     Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+    Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
 
     // Actualizar posición física
     b2Transform pbodyPos = pbody->body->GetTransform();
