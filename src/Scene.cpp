@@ -39,11 +39,15 @@ bool Scene::Awake()
         if (level == 1) {
             for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling()) 
             {
-                Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                enemy->SetParameters(enemyNode);
-                enemyList.push_back(enemy);
-                // Log para depuración
-                LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+                //if (enemyNode.attribute("hitcount").as_int() == 0) {
+                    Enemy*  enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                    enemy->SetParameters(enemyNode);
+                    enemyList.push_back(enemy);
+                    //hitcountList.push_back(enemy->hitCount);
+                    // Log para depuración
+                    LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+               /* }*/
+               
             }
         }
      
@@ -381,7 +385,7 @@ void Scene::HandleMainMenuSelection()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
         case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
-        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);   break;
+        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }
     }
@@ -405,6 +409,8 @@ void Scene::StartNewGame() {
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(400);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(400);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(400);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
     SaveFile.save_file("config.xml");
 }
 
@@ -464,8 +470,18 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(playerPos.getY());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(playerPos.getY());
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(1);
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(1);
+
+  /*  int i = 0;
+    while (i>2) {
+
+        if (hitcountList[i] == 0) {
+
+        }
+
+    }*/
+    /*SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(enemy->hitCount);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(enemy->hitCount);*/
+  
 
     // save the XML modification to disk
     SaveFile.save_file("config.xml");

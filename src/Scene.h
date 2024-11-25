@@ -91,7 +91,10 @@ public:
 private:
     // Player instance
     Player* player;
+    //Enemy* enemy;
     std::vector<Enemy*> enemyList;
+    std::vector<int> hitcountList;
+
 
     // Transition-related variables
     SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition

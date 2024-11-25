@@ -49,10 +49,6 @@ bool Enemy::Start() {
     walkingKoopaLeft.LoadAnimations(parameters.child("animations").child("walkingkoopaL"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
 
-    // Límite para caminar
-    leftBoundary = position.getX() - 500;
-    rightBoundary = position.getX() + 500;
-
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -69,7 +65,7 @@ bool Enemy::Start() {
  
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
-
+    
     ResetPath();
 
     return true;
@@ -94,6 +90,8 @@ void Enemy::UpdateColliderSize() {
     // Asigna el nuevo listener y tipo de colisión
     pbody->listener = this;
     pbody->ctype = ColliderType::ENEMY;
+
+    
 }
 
 bool Enemy::Update(float dt) {

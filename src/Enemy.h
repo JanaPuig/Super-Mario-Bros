@@ -34,7 +34,7 @@ public:
 	void UpdateColliderSize();
 
 public:
-	int hitCount = 0;
+	int hitCount;
 
 	SDL_Texture* textureGoomba;
 	SDL_Texture* textureKoopa;
@@ -69,7 +69,4 @@ public:
 	bool isEnemyDead =false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 1.0f;
-	float leftBoundary = 0.0f;
-	float rightBoundary = 0.0f;
-
 };

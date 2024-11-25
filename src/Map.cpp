@@ -34,17 +34,34 @@ bool Map::Update(float dt)
 {
     SDL_RenderClear(Engine::GetInstance().render.get()->renderer);
     bool ret = true;
-
     if (mapLoaded) {
+
         // L07 TODO 5: Prepare the loop to draw all tiles in a layer + DrawTexture()
+        // iterate all tiles in a layer
         for (const auto& mapLayer : mapData.layers) {
-            for (int i = 0; i < mapData.width; i++) {
-                for (int j = 0; j < mapData.height; j++) {
-                    // L07 TODO 9: Complete the draw function
-                    int gid = mapLayer->Get(i, j);
-                    SDL_Rect tileRect = mapData.tilesets.front()->GetRect(gid);
-                    Vector2D mapCoord = MapToWorld(i, j);
-                    Engine::GetInstance().render->DrawTexture(mapData.tilesets.front()->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
+            //Check if the property Draw exist get the value, if it's true draw the lawyer
+            if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
+                for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {
+
+                        // L07 TODO 9: Complete the draw function
+
+                        //Get the gid from tile
+                        int gid = mapLayer->Get(i, j);
+                        //Check if the gid is different from 0 - some tiles are empty
+                        if (gid != 0) {
+                            //L09: TODO 3: Obtain the tile set using GetTilesetFromTileId
+                            TileSet* tileSet = GetTilesetFromTileId(gid);
+                            if (tileSet != nullptr) {
+                                //Get the Rect from the tileSetTexture;
+                                SDL_Rect tileRect = tileSet->GetRect(gid);
+                                //Get the screen coordinates from the tile coordinates
+                                Vector2D mapCoord = MapToWorld(i, j);
+                                //Draw the texture
+                                Engine::GetInstance().render->DrawTexture(tileSet->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -140,6 +157,8 @@ bool Map::Load(std::string path, std::string fileName)
             mapLayer->name = layerNode.attribute("name").as_string();
             mapLayer->width = layerNode.attribute("width").as_int();
             mapLayer->height = layerNode.attribute("height").as_int();
+
+            LoadProperties(layerNode, mapLayer->properties);
 
             for (pugi::xml_node tileNode = layerNode.child("data").child("tile"); tileNode != NULL; tileNode = tileNode.next_sibling("tile")) {
                 mapLayer->tiles.push_back(tileNode.attribute("gid").as_int());
@@ -293,17 +312,9 @@ Vector2D Map::MapToWorld(int x, int y) const
 Vector2D Map::WorldToMap(int x, int y)
 {
     Vector2D mapCoord(0, 0);
-        if (mapData.orientation == MapOrientation::ORTOGRAPHIC)
-        {
             mapCoord.setX(x / mapData.tileWidth);
             mapCoord.setY(y / mapData.tileHeight);
-        }
-        if (mapData.orientation == MapOrientation::ISOMETRIC) {
-            float halfwidth = mapData.tileWidth / 2;
-            float halfheight = mapData.tileHeight / 2;
-            mapCoord.setX((x / halfwidth + y / halfheight)/2);
-            mapCoord.setY((y / halfheight - x / halfwidth) / 2);
-        }
+     
 
     return mapCoord;
 }
