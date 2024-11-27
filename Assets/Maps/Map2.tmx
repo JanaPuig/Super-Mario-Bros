@@ -4,6 +4,9 @@
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
  <layer id="1" name="Capa de patrones 1" width="212" height="30">
+  <properties>
+   <property name="Draw" type="bool" value="true"/>
+  </properties>
   <data>
    <tile gid="374"/>
    <tile gid="374"/>

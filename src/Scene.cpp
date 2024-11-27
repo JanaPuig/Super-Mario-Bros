@@ -220,7 +220,7 @@ bool Scene::Update(float dt)
     if (showHelpMenu) {
         int cameraX = Engine::GetInstance().render.get()->camera.x;
         int cameraY = Engine::GetInstance().render.get()->camera.y;
-        Engine::GetInstance().render.get()->DrawTexture(helpMenuTexture, -cameraX, -cameraY + 352);
+        Engine::GetInstance().render.get()->DrawTexture(helpMenuTexture, -cameraX, -cameraY+375);
         Engine::GetInstance().render.get()->DrawTexture(Title, -cameraX - 275, -cameraY - 250);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {
