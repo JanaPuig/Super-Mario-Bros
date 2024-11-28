@@ -103,7 +103,6 @@ void Pathfinding::DrawPath() {
         //Remove the front element from the queue
         frontierDijkstraCopy.pop();
     }
-
     // ---------------- Draw frontier AStar
 
     // Create a copy of the queue to iterate over
@@ -122,8 +121,6 @@ void Pathfinding::DrawPath() {
         //Remove the front element from the queue
         frontierAStarCopy.pop();
     }
-
-
     // Draw path
     for (const auto& pathTile : pathTiles) {
         Vector2D pathTileWorld = map->MapToWorld(pathTile.getX(), pathTile.getY());
@@ -146,10 +143,8 @@ bool Pathfinding::IsWalkable(int x, int y) {
         if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
             int gid = layerNav->Get(x, y);
             if (gid != blockedGid) isWalkable = true;
-            isWalkable = true;
         }
     }
-
     return isWalkable;
 }
 
@@ -169,7 +164,6 @@ void Pathfinding::PropagateBFS() {
             ComputePath(frontierTile.getX(), frontierTile.getY());
         }
     }
-
     // L11: TODO 1: If frontier queue contains elements pop the first element and find the neighbors
     if (frontier.size() > 0 && !foundDestination) {
 
@@ -191,7 +185,6 @@ void Pathfinding::PropagateBFS() {
         if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1)) {
             neighbors.push_back(Vector2D(frontierTile.getX(), frontierTile.getY() - 1));
         }
-
         // L11: TODO 2: For each neighbor, if not visited, add it to the frontier queue and visited list
         for (const auto& neighbor : neighbors) {
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {
@@ -201,7 +194,6 @@ void Pathfinding::PropagateBFS() {
                 breadcrumbs.push_back(frontierTile);
             }
         }
-
     }
 }
 
@@ -222,15 +214,12 @@ void Pathfinding::PropagateDijkstra() {
             ComputePath(frontierTile.getX(), frontierTile.getY());
         }
     }
-
     //If frontier queue contains elements pop the first element and find the neighbors
     if (frontier.size() > 0 && !foundDestination) {
-
         //Get the value of the firt element in the queue
         Vector2D frontierTile = frontierDijkstra.top().second;
         //remove the first element from the queue
         frontierDijkstra.pop();
-
         std::list<Vector2D> neighbors;
         if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
@@ -244,10 +233,8 @@ void Pathfinding::PropagateDijkstra() {
         if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1)) {
             neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
         }
-
         //For each neighbor, if not visited, add it to the frontier queue and visited list
         for (const auto& neighbor : neighbors) {
-
             int cost = costSoFar[(int)frontierTile.getX()][(int)frontierTile.getY()] + MovementCost((int)neighbor.getX(), (int)neighbor.getY());
 
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end() || cost < costSoFar[neighbor.getX()][neighbor.getY()]) {
@@ -257,17 +244,14 @@ void Pathfinding::PropagateDijkstra() {
                 breadcrumbs.push_back(frontierTile);
             }
         }
-
     }
 }
-
 void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
     // L13: TODO 2: Adapt Dijkstra algorithm for AStar. Consider the different heuristics
 
     Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
-
     bool foundDestination = false;
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
@@ -279,15 +263,12 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
             ComputePath(frontierTile.getX(), frontierTile.getY());
         }
     }
-
     //If frontier queue contains elements pop the first element and find the neighbors
     if (frontierAStar.size() > 0 && !foundDestination) {
-
         //Get the value of the firt element in the queue
         Vector2D frontierTile = frontierAStar.top().second;
         //remove the first element from the queue
         frontierAStar.pop();
-
         std::list<Vector2D> neighbors;
         if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
@@ -304,13 +285,10 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
         //For each neighbor, if not visited, add it to the frontier queue and visited list
         for (const auto& neighbor : neighbors) {
-
             // the movement cost from the start point A to the current tile.
             int g = costSoFar[(int)frontierTile.getX()][(int)frontierTile.getY()] + MovementCost((int)neighbor.getX(), (int)neighbor.getY());
-
             // the estimated movement cost from the current square to the destination point.
             int h = 0;
-
             switch (heuristic)
             {
             case ASTAR_HEURISTICS::MANHATTAN:
@@ -323,10 +301,8 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
                 h = neighbor.distanceSquared(playerPosTile);
                 break;
             }
-
             // A* Priority function
             int f = g + h;
-
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end() || g < costSoFar[neighbor.getX()][neighbor.getY()]) {
                 costSoFar[neighbor.getX()][neighbor.getY()] = g;
                 frontierAStar.push(std::make_pair(f, neighbor));
@@ -334,7 +310,6 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
                 breadcrumbs.push_back(frontierTile);
             }
         }
-
     }
 }
 
@@ -350,15 +325,13 @@ int Pathfinding::MovementCost(int x, int y)
         }
         else ret = 1;
     }
-
     return ret;
 }
-
 void Pathfinding::ComputePath(int x, int y)
 {
     // L12: TODO 2: Follow the breadcrumps to goal back to the origin
     // at each step, add the point into "pathTiles" (it will then draw automatically)
-
+    
     //Clear the pathTiles list
     pathTiles.clear();
     // Save tile position received and stored in current tile
@@ -379,7 +352,6 @@ void Pathfinding::ComputePath(int x, int y)
         index = Find(visited, currentTile);
     }
 }
-
 int Pathfinding::Find(std::vector<Vector2D> vector, Vector2D elem)
 {
     int index = 0;
@@ -391,8 +363,6 @@ int Pathfinding::Find(std::vector<Vector2D> vector, Vector2D elem)
         }
         index++;
     }
-
     if (found) return index;
     else return -1;
-
 }

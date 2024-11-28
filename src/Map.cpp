@@ -262,7 +262,6 @@ bool Map::Load(std::string path, std::string fileName)
             }
         }
         ret = true;
-
         // L06: TODO 5: LOG all the data loaded iterate all tilesetsand LOG everything
         if (ret == true)
         {

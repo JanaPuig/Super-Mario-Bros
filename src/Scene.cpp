@@ -130,8 +130,8 @@ void Scene::ChangeLevel(int newLevel)
     Engine::GetInstance().entityManager->RemoveAllEnemies();
 
     // Remove all items and clean up the current map
+    Engine::GetInstance().map->CleanUp();
     Engine::GetInstance().entityManager->RemoveAllItems();
-    Engine::GetInstance().map.get()->CleanUp();
     level = newLevel;
 
     // Show the transition screen
@@ -350,7 +350,6 @@ void Scene::ShowTransitionScreen()
 void Scene::FinishTransition()
 {
     showingTransition = false;
-    Engine::GetInstance().map->CleanUp();
     Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
     // Reactivate the player after transition
     if (player != nullptr) {
@@ -419,7 +418,6 @@ void Scene::LoadGame() {
      // Reinicia el temporizador
     Engine::GetInstance().audio.get()->StopMusic(); 
     showMainMenu = false;
-  
 }
 
 // Return the player position
@@ -442,6 +440,10 @@ void Scene::LoadState()
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
    int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
+   posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").as_int());
+   posEnemy.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").as_int());
+   posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").as_int());
+   posEnemy.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").as_int());
    int GoombaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").as_int();
    int KoopaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").as_int();
    //cargar mas cosas; enemies, items...
@@ -470,17 +472,8 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(playerPos.getY());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(playerPos.getY());
-
-  /*  int i = 0;
-    while (i>2) {
-
-        if (hitcountList[i] == 0) {
-
-        }
-
-    }*/
-    /*SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(enemy->hitCount);
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(enemy->hitCount);*/
+    //SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(/*valor hitcount*/);
+    //SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(/*valor hitcount*/);
   
 
     // save the XML modification to disk

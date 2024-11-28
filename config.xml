@@ -75,7 +75,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="400" y="100" w="80" h="92" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="400" y="100" w="80" h="85" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />

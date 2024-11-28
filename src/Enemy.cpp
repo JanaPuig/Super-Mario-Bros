@@ -62,10 +62,8 @@ bool Enemy::Start() {
     else if (enemyName == "goomba") {
         pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
     }
- 
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
-    
     ResetPath();
 
     return true;
