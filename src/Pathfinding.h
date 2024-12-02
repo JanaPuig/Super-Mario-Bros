@@ -5,6 +5,7 @@
 #include "Vector2D.h"
 #include "SDL2/SDL.h"
 #include "Map.h"
+#include "box2d/box2d.h"
 
 enum ASTAR_HEURISTICS {
     MANHATTAN = 0,
