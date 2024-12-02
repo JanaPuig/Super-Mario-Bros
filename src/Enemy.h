@@ -32,6 +32,16 @@ public:
 	void ResetPath();
 
 	void UpdateColliderSize();
+	int GetHitCount();
+	bool isDead() {
+		if (isDying) {
+			return true;
+		}
+		else {
+
+			return false;
+		}
+	}
 
 public:
 	int hitCount;

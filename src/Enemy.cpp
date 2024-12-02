@@ -34,11 +34,15 @@ bool Enemy::Start() {
         currentAnimation = &idleGoomba;
     }
 
+    //asigna nombre al enemigo
+    name = parameters.attribute("name").as_string();
+
     // Configuración inicial
     position.setX(parameters.attribute("x").as_int());
     position.setY(parameters.attribute("y").as_int());
     texW = parameters.attribute("w").as_int();
     texH = parameters.attribute("h").as_int();
+    hitCount = parameters.attribute("hitcount").as_int();
 
     // Cargar animaciones
     idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
@@ -67,6 +71,11 @@ bool Enemy::Start() {
     ResetPath();
 
     return true;
+}
+int Enemy::GetHitCount() 
+{
+   return hitCount;
+  
 }
 
 void Enemy::UpdateColliderSize() {
