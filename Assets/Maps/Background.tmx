@@ -143,7 +143,7 @@
   <object id="150" x="1472" y="576" width="32" height="320"/>
   <object id="151" x="1956.01" y="575.956" width="27.9766" height="320"/>
  </objectgroup>
- <layer id="1" name="Map" width="212" height="30" visible="0">
+ <layer id="1" name="Map" width="212" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
@@ -9993,6 +9993,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10058,11 +10061,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>

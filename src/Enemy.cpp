@@ -159,7 +159,7 @@ bool Enemy::Update(float dt) {
             return true; // Detener el resto de la lógica de actualización
         }
         else {
-            currentAnimation = &idleGoomba;
+            currentAnimation = &idleGoomba; 
         }
     }
     if (isEnemyDead) {
@@ -170,7 +170,7 @@ bool Enemy::Update(float dt) {
     if (currentAnimation) {
         currentAnimation->Update();  // Actualizar animación
     }
-
+     
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
     Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
     Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
