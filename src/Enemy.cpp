@@ -164,6 +164,7 @@ bool Enemy::Update(float dt) {
     }
     if (isEnemyDead) {
         toBeDestroyed = true;
+        Engine::GetInstance().scene.get()->SaveState();
         return false;
     }
     if (currentAnimation) {
