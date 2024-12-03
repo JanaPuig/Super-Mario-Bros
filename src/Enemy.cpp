@@ -63,7 +63,7 @@ bool Enemy::Start() {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
-        pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(3); // Gravedad normal para Goomba
     }
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
@@ -149,6 +149,17 @@ bool Enemy::Update(float dt) {
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
+ 
+
+    // Mostrar u ocultar path al presionar F9
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
+        showPath = !showPath;
+    }
+
+    // Dibujar el path si está habilitado
+    if (showPath) {
+        pathfinding->DrawPath();
+    }
     // Detección del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D enemyPosition = GetPosition();
@@ -163,17 +174,6 @@ bool Enemy::Update(float dt) {
     else {
         pbody->body->SetLinearVelocity(b2Vec2(0, 0));
     }
-
-    // Mostrar u ocultar path al presionar F9
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
-        showPath = !showPath;
-    }
-
-    // Dibujar el path si está habilitado
-    if (showPath) {
-        pathfinding->DrawPath();
-    }
-
     return true;
 }
 
