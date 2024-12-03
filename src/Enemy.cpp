@@ -233,7 +233,21 @@ bool Enemy::Update(float dt) {
         Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
         pathfinding->PropagateAStar(SQUARED);
     }
-    // Dibujar pathfinding
+    // Detección del jugador
+    Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
+    Vector2D enemyPosition = GetPosition();
+    float distanceToPlayer = (playerPosition - enemyPosition).magnitude();
+
+    if (distanceToPlayer <= detectionRange) {
+        Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
+        pathfinding->ResetPath(playerTile);
+        pathfinding->PropagateAStar(SQUARED);
+        pbody->body->SetLinearVelocity(MoveEnemy(enemyPosition, speed));
+    }
+    else {
+        pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+    }
+
     pathfinding->DrawPath();
 
     Vector2D pos = GetPosition();
@@ -243,21 +257,12 @@ bool Enemy::Update(float dt) {
     return true;
 }
 
-b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed)
-{
-    b2Vec2 movement = { 0,0 };
-
-    if (!pathfinding->pathTiles.empty())
-    {
-        //Obtener el siguiente punto del camino
+b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed) {
+    b2Vec2 movement = { 0, 0 };
+    if (!pathfinding->pathTiles.empty()) {
         Vector2D nextTileWorld = Engine::GetInstance().map->MapToWorldCenter(pathfinding->pathTiles.back().getX(), pathfinding->pathTiles.back().getY());
-
-        //Calcular dirección hacia el siguiente punto
         Vector2D direction = nextTileWorld - enemyPosition;
         float distance = direction.magnitude();
-
-        //Mover el enemigo en la dirección determinada
-        Vector2D determinate = direction * speed;
 
         if (distance < 6) {
             pathfinding->pathTiles.pop_back();
@@ -266,9 +271,7 @@ b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed)
             movement.x = direction.normalized().getX() * speed;
             movement.y = direction.normalized().getY() * speed;
         }
-
     }
-
     return movement;
 }
 
