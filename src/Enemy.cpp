@@ -177,30 +177,32 @@ bool Enemy::Update(float dt) {
     return true;
 }
 
-b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed)
-{
-    b2Vec2 movement = { 0,0 };
+b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed) {
+    b2Vec2 movement = { 0, 0 };
 
-    if (!pathfinding->pathTiles.empty())
-    {
-        //Obtener el siguiente punto del camino
-        Vector2D nextTileWorld = Engine::GetInstance().map->MapToWorldCenter(pathfinding->pathTiles.back().getX(), pathfinding->pathTiles.back().getY());
+    if (!pathfinding->pathTiles.empty()) {
+        // Obtener el siguiente punto del camino
+        Vector2D nextTileWorld = Engine::GetInstance().map->MapToWorldCenter(
+            pathfinding->pathTiles.back().getX(),
+            pathfinding->pathTiles.back().getY()
+        );
 
-        //Calcular dirección hacia el siguiente punto
+        // Calcular dirección hacia el siguiente punto
         Vector2D direction = nextTileWorld - enemyPosition;
         float distance = direction.magnitude();
-
-        //Mover el enemigo en la dirección determinada
-        Vector2D determinate = direction * speed;
 
         if (distance < 6) {
             pathfinding->pathTiles.pop_back();
         }
         else {
-            movement.x = direction.normalized().getX() * speed;
-            movement.y = direction.normalized().getY() * speed;
-        }
+            direction = direction.normalized();
+            movement.x = direction.getX() * speed;
 
+            // Limitar movimiento en Y para Goomba
+            if (parameters.attribute("name").as_string() != std::string("goomba")) {
+                movement.y = direction.getY() * speed;
+            }
+        }
     }
 
     return movement;

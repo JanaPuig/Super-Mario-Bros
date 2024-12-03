@@ -76,11 +76,11 @@ public:
 	float frameDuration = 200.0f;
 	int currentFrame = 0;
 	int totalFrames = 3;
-	float detectionRange = 400.0f; // Rango en pixeles
+	float detectionRange = 500.0f; // Rango en pixeles
 	bool movingRight = true;
 	bool movingLeft = false;
 	bool isEnemyDead =false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
-	float speed = 1.7f;
+	float speed = 1.8f;
 	bool showPath = false;
 };
