@@ -82,4 +82,5 @@ public:
 	bool isEnemyDead =false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 2.0f;
+	bool showPath = false;
 };
