@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="182">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="183">
  <tileset firstgid="1" name="MarioSprites" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -5411,8 +5411,8 @@
    <tile gid="374"/>
    <tile gid="374"/>
    <tile gid="374"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
+   <tile gid="1289"/>
+   <tile gid="1290"/>
    <tile gid="374"/>
    <tile gid="374"/>
    <tile gid="374"/>
@@ -5623,8 +5623,8 @@
    <tile gid="374"/>
    <tile gid="374"/>
    <tile gid="374"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
+   <tile gid="1473"/>
+   <tile gid="1474"/>
    <tile gid="374"/>
    <tile gid="374"/>
    <tile gid="374"/>
@@ -6370,6 +6370,9 @@
    <tile gid="4"/>
   </data>
  </layer>
+ <objectgroup id="7" name="Flag">
+  <object id="182" x="3302" y="800" width="20" height="64"/>
+ </objectgroup>
  <objectgroup id="2" name="Death">
   <object id="1" x="0" y="960" width="6780" height="20"/>
  </objectgroup>

@@ -349,6 +349,7 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
+    isFlaged = false;
     showingTransition = false;
     Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
     // Reactivate the player after transition
@@ -524,10 +525,7 @@ void Scene::SaveState()
 
         }
     }
-  
-
     // save the XML modification to disk
     SaveFile.save_file("config.xml");
 
-    //guardar mas cosas; enemies, items...
 }

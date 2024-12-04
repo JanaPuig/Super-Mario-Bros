@@ -31,6 +31,7 @@ bool Player::Start() {
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 	EnemyDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
+	CheckPoint = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Checkpoint.wav");
 	//Load Player Texture
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
@@ -104,6 +105,7 @@ bool Player::Update(float dt) {
 		pbody->ctype = ColliderType::PLAYER;
 
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
+
 			//Change collision 
 			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
 			pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
@@ -116,11 +118,21 @@ bool Player::Update(float dt) {
 			// Reiniciar enemigos
 			Engine::GetInstance().entityManager.get()->ResetEnemies();
 
-			if (Engine::GetInstance().scene.get()->level == 1) {
-				SetPosition(Vector2D(30, 430));
+			if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == true) 
+			{
+				SetPosition(Vector2D(3250, 430)); //Flag Position
 			}
-			else if (Engine::GetInstance().scene.get()->level == 2) {
-				SetPosition(Vector2D(200, 740));
+			else if(Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == false)
+			{
+				SetPosition(Vector2D(30, 430)); //Lvl 1 Start Position
+			}
+			if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == true) 
+			{
+				SetPosition(Vector2D(3300, 830)); //Flag Position
+			}
+			else if(Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == false)
+			{
+				SetPosition(Vector2D(200, 700)); //Lvl 2 Start Position
 			}
 			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
 			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
@@ -281,7 +293,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 		break;
 	}
-
+	case ColliderType::FLAG:
+		LOG("Collision with Flag");
+		Engine::GetInstance().scene->isFlaged = true;
+		Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0);
+		break;
 	default:
 		break;
 	}

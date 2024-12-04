@@ -260,6 +260,24 @@ bool Map::Load(std::string path, std::string fileName)
 
                 }
             }
+            else if (objectGroupName == "Flag")
+            {
+                // Cargar los objetos de muerte (Death)
+                for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
+                {
+                    int x = objectNode.attribute("x").as_int();
+                    int y = objectNode.attribute("y").as_int();
+                    int width = objectNode.attribute("width").as_int();
+                    int height = objectNode.attribute("height").as_int();
+
+                    // Crear colisionador de muerte
+                    PhysBody* FlagCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
+                    FlagCollider->ctype = ColliderType::FLAG;
+
+                    Engine::GetInstance().physics->listToDelete.push_back(FlagCollider);
+
+                }
+            }
         }
         ret = true;
         // L06: TODO 5: LOG all the data loaded iterate all tilesetsand LOG everything

@@ -74,6 +74,7 @@ public:
     bool showHelpMenu = false;       // Whether the help menu is visible
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
     bool showingTransition = false;       // Whether the transition screen is visible
+    bool isFlaged = false;
 
     SDL_Texture* Title = NULL; // Texture for the main menu
     SDL_Texture* gameOver = NULL;

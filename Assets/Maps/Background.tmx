@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="174">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="175">
  <tileset firstgid="1" name="Background" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -64,6 +64,9 @@
   <object id="145" x="5184" y="384" width="64" height="8"/>
   <object id="146" x="5696" y="384" width="64" height="8"/>
   <object id="149" x="1600" y="800" width="224" height="8"/>
+ </objectgroup>
+ <objectgroup id="13" name="Flag">
+  <object id="174" x="3238.09" y="384" width="20" height="64"/>
  </objectgroup>
  <objectgroup id="6" name="Roof" visible="0">
   <object id="92" x="2496" y="198.5" width="256" height="25.5"/>
@@ -2794,8 +2797,8 @@
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="557"/>
-   <tile gid="557"/>
-   <tile gid="557"/>
+   <tile gid="1289"/>
+   <tile gid="1290"/>
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="557"/>
@@ -3006,8 +3009,8 @@
    <tile gid="188"/>
    <tile gid="557"/>
    <tile gid="741"/>
-   <tile gid="557"/>
-   <tile gid="557"/>
+   <tile gid="1473"/>
+   <tile gid="1474"/>
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="737"/>
@@ -8789,9 +8792,9 @@
    <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9001,10 +9004,10 @@
    <tile gid="10121"/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9213,9 +9216,9 @@
    <tile/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile gid="10121"/>
    <tile/>
@@ -9330,9 +9333,6 @@
    <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -9360,6 +9360,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9425,9 +9428,9 @@
    <tile/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile gid="10121"/>
@@ -9569,9 +9572,6 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
@@ -9637,8 +9637,10 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
@@ -9697,6 +9699,7 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9781,10 +9784,10 @@
    <tile/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9849,8 +9852,8 @@
    <tile/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
    <tile/>
    <tile/>
