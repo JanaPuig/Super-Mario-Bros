@@ -63,8 +63,6 @@ public:
 
 	Animation idlekoopaLeft;
 	Animation idlekoopaRight;
-	Animation walkingKoopaLeft;
-	Animation walkingKoopaRight;
 	Animation deadkoopa;
 
 	PhysBody* pbody;

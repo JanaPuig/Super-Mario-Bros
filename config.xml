@@ -75,7 +75,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="400" y="100" w="80" h="85" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="1500" y="100" w="80" h="85" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
@@ -100,38 +100,42 @@
 							<frame x="643" y="431" w="66" h="80" />
 							<frame x="721" y="437" w="72" h="66" />
 						</idlekoopaR>
-						<walkingkoopaL loop="true" speed="0.15">
-							<frame x="336" y="158" w="42" h="64" />
-							<frame x="256" y="158" w="42" h="62" />
-							<frame x="176" y="160" w="42" h="58" />
-							<frame x="94" y="160" w="44" h="60" />
-							<frame x="334" y="78" w="44" h="64" />
-							<frame x="256" y="78" w="42" h="62" />
-							<frame x="176" y="80" w="42" h="58" />
-							<frame x="94" y="80" w="46" h="58" />
-						</walkingkoopaL>
-						<walkingkoopa loop="true" speed="0.15">
-							<frame x="414" y="158" w="42" h="64" />
-							<frame x="494" y="158" w="42" h="62" />
-							<frame x="574" y="160" w="42" h="58" />
-							<frame x="654" y="160" w="44" h="60" />
-							<frame x="414" y="78" w="44" h="64" />
-							<frame x="494" y="78" w="42" h="62" />
-							<frame x="574" y="80" w="42" h="58" />
-							<frame x="652" y="80" w="46" h="58" />
-						</walkingkoopa>
 						<deadkoopa>
 							<frame x="20" y="134" w="64" h="60" />
 						</deadkoopa>
-						<idlewinglesskoopa>
-							<frame x="414" y="0" w="44" h="60" />
-						</idlewinglesskoopa>
-						<idlewinglesskoopaL>
-							<frame x="334" y="0" w="44" h="60" />
-						</idlewinglesskoopaL>
 					</animations>
 				</enemy_koopa>
-				<enemy name="goomba" x="200" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy_koopa name="koopa2" x="4500" y="100" w="80" h="85" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+					<animations>
+						<idlekoopaL loop="true" speed="0.25">
+							<frame x="240" y="334" w="72" h="72" />
+							<frame x="158" y="340" w="76" h="58" />
+							<frame x="78" y="338" w="76" h="62" />
+							<frame x="2" y="330" w="68" h="78" />
+							<frame x="318" y="434" w="76" h="72" />
+							<frame x="236" y="438" w="80" h="62" />
+							<frame x="160" y="438" w="72" h="64" />
+							<frame x="84" y="430" w="66" h="80" />
+							<frame x="0" y="436" w="72" h="74" />
+						</idlekoopaL>
+						<idlekoopaR loop="true" speed="0.25">
+							<frame x="407" y="325" w="60" h="92" />
+							<frame x="481" y="335" w="72" h="72" />
+							<frame x="559" y="341" w="76" h="58" />
+							<frame x="639" y="339" w="76" h="62" />
+							<frame x="723" y="331" w="68" h="78" />
+							<frame x="399" y="435" w="77" h="72" />
+							<frame x="477" y="439" w="80" h="62" />
+							<frame x="561" y="439" w="72" h="64" />
+							<frame x="643" y="431" w="66" h="80" />
+							<frame x="721" y="437" w="72" h="66" />
+						</idlekoopaR>
+						<deadkoopa>
+							<frame x="20" y="134" w="64" h="60" />
+						</deadkoopa>
+					</animations>
+				</enemy_koopa>
+				<enemy name="goomba" x="2000" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />
@@ -143,7 +147,7 @@
 						</dead>
 					</animations>
 				</enemy>
-				<enemy name="goomba2" x="2000" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy name="goomba2" x="5500" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />

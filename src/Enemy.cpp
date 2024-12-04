@@ -26,7 +26,10 @@ bool Enemy::Start() {
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
         currentAnimation = &idlekoopaLeft;
-
+    }
+    else if (parameters.attribute("name").as_string() == std::string("koopa2")) {
+        textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
+        currentAnimation = &idlekoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -52,8 +55,6 @@ bool Enemy::Start() {
     deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
     idlekoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     idlekoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
-    walkingKoopaRight.LoadAnimations(parameters.child("animations").child("walkingkoopaR"));
-    walkingKoopaLeft.LoadAnimations(parameters.child("animations").child("walkingkoopaL"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
 
     // Añadir física
@@ -64,6 +65,9 @@ bool Enemy::Start() {
     pbody->ctype = ColliderType::ENEMY;
     std::string enemyName = parameters.attribute("name").as_string();
     if (enemyName == "koopa") {
+        pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+    }
+    else if (enemyName == "koopa2") {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
@@ -132,6 +136,14 @@ bool Enemy::Update(float dt) {
 
     // Lógica de muerte
     if (parameters.attribute("name").as_string() == std::string("koopa") && hitCount == 1) {
+        UpdateColliderSize();
+        pbody->body->SetGravityScale(1);
+        currentAnimation = &deadkoopa;
+        isDying = true;
+        deathTimer = 0.0f;
+        return true;
+    }
+    else if (parameters.attribute("name").as_string() == std::string("koopa2") && hitCount == 1) {
         UpdateColliderSize();
         pbody->body->SetGravityScale(1);
         currentAnimation = &deadkoopa;
