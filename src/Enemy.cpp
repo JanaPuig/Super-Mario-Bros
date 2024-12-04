@@ -270,25 +270,6 @@ void Enemy::ResetPath() {
 }
 
 void Enemy::ResetPosition() {
-    if (parameters.attribute("name").as_string() != std::string("goomba2"))
-    {
-        // Restablece solo la posición
-        position.setX(parameters.attribute("x").as_int() + 32);
-        position.setY(parameters.attribute("y").as_int() + 32);
-    }
-
-    else {
-        // Restablece solo la posición
-        position.setX(parameters.attribute("x").as_int() + 16);
-        position.setY(parameters.attribute("y").as_int() + 32);
-
-    }
-
-    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-
-    pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
-    pbody->listener = this;
-    pbody->ctype = ColliderType::ENEMY;
 
     // Restablece el estado de la animación
     if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
@@ -298,6 +279,41 @@ void Enemy::ResetPosition() {
         currentAnimation = &idleGoomba;
     }
 
-    hitCount = parameters.attribute("hitcount").as_int(); 
+    if (parameters.attribute("name").as_string() != std::string("goomba2"))
+    {
+        // Restablece la posición
+        position.setX(parameters.attribute("x").as_int() + 32);
+        position.setY(parameters.attribute("y").as_int() + 32);
+    }
+
+    else {
+        // Restablece la posición
+        position.setX(parameters.attribute("x").as_int() + 16);
+        position.setY(parameters.attribute("y").as_int() + 32);
+    }
+
+    // Restablecer otras variables
+    isDying = false;
+    isEnemyDead = false;
+    toBeDestroyed = false;
+    hitCount = 0;
+
+    if (pbody) {
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        pbody = nullptr;
+    }
+    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+    pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
+    pbody->listener = this;
+    pbody->ctype = ColliderType::ENEMY;
+
+    //Gravedad de los enemigos
+    std::string enemyName = parameters.attribute("name").as_string();
+    if (enemyName == "koopa" || enemyName == "koopa2") {
+        pbody->body->SetGravityScale(0);
+    }
+    else if (enemyName == "goomba" || enemyName == "goomba2") {
+        pbody->body->SetGravityScale(6);
+    }
 
 }
