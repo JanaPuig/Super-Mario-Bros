@@ -32,6 +32,10 @@ bool Enemy::Start() {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
         currentAnimation = &idleGoomba;
     }
+    else if (parameters.attribute("name").as_string() == std::string("goomba2")) {
+        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+        currentAnimation = &idleGoomba;
+    }
 
     //asigna nombre al enemigo
     name = parameters.attribute("name").as_string();
@@ -63,6 +67,9 @@ bool Enemy::Start() {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
+        pbody->body->SetGravityScale(3); // Gravedad normal para Goomba
+    }
+    else if (enemyName == "goomba2") {
         pbody->body->SetGravityScale(3); // Gravedad normal para Goomba
     }
     // Inicializar pathfinding
@@ -138,6 +145,12 @@ bool Enemy::Update(float dt) {
         deathTimer = 0.0f;
         return true;
     }
+    else if (parameters.attribute("name").as_string() == std::string("goomba2") && hitCount >= 1) {
+        currentAnimation = &deadGoomba;
+        isDying = true;
+        deathTimer = 0.0f;
+        return true;
+    }
 
     if (currentAnimation) currentAnimation->Update();
 
@@ -199,7 +212,16 @@ b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed) {
             movement.x = direction.getX() * speed;
 
             // Limitar movimiento en Y para Goomba
-            if (parameters.attribute("name").as_string() != std::string("goomba")) {
+            if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+                movement.y = 0;
+                if (GetPosition().getY() > 490)
+                {
+                    //currentAnimation = &deadGoomba;
+                    isEnemyDead = true;
+                    toBeDestroyed = true;
+                }
+            }
+            else {
                 movement.y = direction.getY() * speed;
             }
         }
