@@ -284,8 +284,11 @@ void Enemy::ResetPosition() {
 
     }
 
-    // Restablecer la física si es necesario
+    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+
     pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
+    pbody->listener = this;
+    pbody->ctype = ColliderType::ENEMY;
 
     // Restablece el estado de la animación
     if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
@@ -295,7 +298,6 @@ void Enemy::ResetPosition() {
         currentAnimation = &idleGoomba;
     }
 
-    // Restablecer otras variables si es necesario
-    hitCount = parameters.attribute("hitcount").as_int();  // Ejemplo: restablecer el contador de golpes
+    hitCount = parameters.attribute("hitcount").as_int(); 
 
 }
