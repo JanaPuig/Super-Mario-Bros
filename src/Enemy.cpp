@@ -268,3 +268,34 @@ void Enemy::ResetPath() {
     Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
     pathfinding->ResetPath(tilePos);
 }
+
+void Enemy::ResetPosition() {
+    if (parameters.attribute("name").as_string() != std::string("goomba2"))
+    {
+        // Restablece solo la posición
+        position.setX(parameters.attribute("x").as_int() + 32);
+        position.setY(parameters.attribute("y").as_int() + 32);
+    }
+
+    else {
+        // Restablece solo la posición
+        position.setX(parameters.attribute("x").as_int() + 16);
+        position.setY(parameters.attribute("y").as_int() + 32);
+
+    }
+
+    // Restablecer la física si es necesario
+    pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
+
+    // Restablece el estado de la animación
+    if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
+        currentAnimation = &idlekoopaLeft;
+    }
+    else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+        currentAnimation = &idleGoomba;
+    }
+
+    // Restablecer otras variables si es necesario
+    hitCount = parameters.attribute("hitcount").as_int();  // Ejemplo: restablecer el contador de golpes
+
+}

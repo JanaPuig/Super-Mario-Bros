@@ -160,3 +160,16 @@ void EntityManager::RemoveAllEnemies() {
 
 	LOG("All enemies removed.");
 }
+
+void EntityManager::ResetEnemies()
+{
+	for (Entity* entity : entities) {
+		if (entity->type == EntityType::ENEMY) {
+			Enemy* enemy = dynamic_cast<Enemy*>(entity);
+			if (enemy != nullptr) {
+
+				enemy->ResetPosition(); // Solo restablece la posición
+			}
+		}
+	}
+}

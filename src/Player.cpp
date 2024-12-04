@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Enemy.h"
+#include "EntityManager.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -99,6 +100,9 @@ bool Player::Update(float dt) {
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			isDead = false;
 			deathSoundPlayed = false;
+
+			// Reiniciar enemigos
+			Engine::GetInstance().entityManager.get()->ResetEnemies();
 
 			if (Engine::GetInstance().scene.get()->level == 1) {
 				SetPosition(Vector2D(30, 430));

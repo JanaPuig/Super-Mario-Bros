@@ -45,6 +45,7 @@ public:
 
 	b2Vec2 MoveEnemy(Vector2D enemyPosition, float speed);
 
+	void ResetPosition();
 
 public:
 	int hitCount;
