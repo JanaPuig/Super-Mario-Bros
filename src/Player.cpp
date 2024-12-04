@@ -97,7 +97,19 @@ bool Player::Update(float dt) {
 		currentAnimation = &deadAnimation;
 		Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
 
+		//Change collision 
+		Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + 16, (int)position.getY() + 16, texW / 2, bodyType::STATIC);
+		pbody->listener = this;
+		pbody->ctype = ColliderType::PLAYER;
+
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
+			//Change collision 
+			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+			pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
+			pbody->listener = this;
+			pbody->ctype = ColliderType::PLAYER;			
+			
 			isDead = false;
 			deathSoundPlayed = false;
 
