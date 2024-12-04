@@ -71,10 +71,10 @@ bool Enemy::Start() {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
-        pbody->body->SetGravityScale(3); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(6); // Gravedad normal para Goomba
     }
     else if (enemyName == "goomba2") {
-        pbody->body->SetGravityScale(3); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(6); // Gravedad normal para Goomba
     }
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
