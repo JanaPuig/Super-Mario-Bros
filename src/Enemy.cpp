@@ -25,11 +25,11 @@ bool Enemy::Start() {
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
-        currentAnimation = &idlekoopaLeft;
+        currentAnimation = &flyingkoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("koopa2")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
-        currentAnimation = &idlekoopaLeft;
+        currentAnimation = &flyingkoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -53,8 +53,8 @@ bool Enemy::Start() {
     // Cargar animaciones
     idleGoomba.LoadAnimations(parameters.child("animations").child("idle"));
     deadGoomba.LoadAnimations(parameters.child("animations").child("dead"));
-    idlekoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
-    idlekoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
+    flyingkoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
+    flyingkoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
 
     // Añadir física
@@ -200,7 +200,17 @@ bool Enemy::Update(float dt) {
         Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
         pathfinding->ResetPath(playerTile);
         pathfinding->PropagateAStar(SQUARED);
-        pbody->body->SetLinearVelocity(MoveEnemy(enemyPosition, speed));
+        b2Vec2 velocity = MoveEnemy(enemyPosition, speed);
+
+        if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) { // Cambiar animación según dirección del movimiento
+            if (velocity.x > 0) {
+                currentAnimation = &flyingkoopaRight;
+            }
+            else if (velocity.x < 0) {
+                currentAnimation = &flyingkoopaLeft;
+            }
+        }
+        pbody->body->SetLinearVelocity(velocity);
     }
     else {
         pbody->body->SetLinearVelocity(b2Vec2(0, 0));
@@ -278,10 +288,9 @@ void Enemy::ResetPath() {
 }
 
 void Enemy::ResetPosition() {
-
     // Restablece el estado de la animación
     if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
-        currentAnimation = &idlekoopaLeft;
+        currentAnimation = &flyingkoopaLeft;
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
         currentAnimation = &idleGoomba;

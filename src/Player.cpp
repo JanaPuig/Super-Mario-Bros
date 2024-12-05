@@ -297,7 +297,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 	case ColliderType::FLAG:
 		LOG("Collision with Flag");
-		Engine::GetInstance().scene->isFlaged = true;
+		Engine::GetInstance().scene.get()->isFlaged = true;
 		Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0);
 		break;
 	default:

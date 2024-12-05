@@ -17,7 +17,6 @@ Map::~Map()
 {
 
 }
-
 // Called before render is available
 bool Map::Awake()
 {
@@ -222,6 +221,7 @@ bool Map::Load(std::string path, std::string fileName)
                     deathCollider->ctype = ColliderType::ROOF;  // Asignar tipo de colisionador ROOF
 
                     Engine::GetInstance().physics->listToDelete.push_back(deathCollider);
+
                 }
             }
             else if (objectGroupName == "Wall")
@@ -244,7 +244,7 @@ bool Map::Load(std::string path, std::string fileName)
             }
             else if (objectGroupName == "Lucky")
             {
-                // Cargar los objetos de muerte (Death)
+                // Cargar los objetos de Lucky
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
                 {
                     int x = objectNode.attribute("x").as_int();
@@ -252,7 +252,7 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador de muerte
+                    // Crear colisionador de Lucky
                     PhysBody* deathCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     deathCollider->ctype = ColliderType::LUCKY;
 
@@ -262,7 +262,7 @@ bool Map::Load(std::string path, std::string fileName)
             }
             else if (objectGroupName == "Flag")
             {
-                // Cargar los objetos de muerte (Death)
+                // Cargar los objetos de Flag
                 for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object"))
                 {
                     int x = objectNode.attribute("x").as_int();
@@ -270,12 +270,11 @@ bool Map::Load(std::string path, std::string fileName)
                     int width = objectNode.attribute("width").as_int();
                     int height = objectNode.attribute("height").as_int();
 
-                    // Crear colisionador de muerte
+                    // Crear colisionador de Flag
                     PhysBody* FlagCollider = Engine::GetInstance().physics->CreateRectangle(x + (width / 2), y + (height / 2), width, height, STATIC);
                     FlagCollider->ctype = ColliderType::FLAG;
 
                     Engine::GetInstance().physics->listToDelete.push_back(FlagCollider);
-
                 }
             }
         }
@@ -343,8 +342,6 @@ Vector2D Map::WorldToMap(int x, int y)
     Vector2D mapCoord(0, 0);
             mapCoord.setX(x / mapData.tileWidth);
             mapCoord.setY(y / mapData.tileHeight);
-     
-
     return mapCoord;
 }
 
