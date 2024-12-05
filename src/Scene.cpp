@@ -446,8 +446,6 @@ void Scene::LoadGame() {
     saveNode.attribute("enemy2X").set_value(400);
     saveNode.attribute("enemy2Y").set_value(400);
 
-  /*  LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
-    LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);*/   
     // Si hay más datos a cargar, puedes hacerlo aquí.
     showMainMenu = false;
     LOG("Game loaded successfully."); 
