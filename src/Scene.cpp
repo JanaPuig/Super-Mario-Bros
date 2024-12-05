@@ -205,6 +205,7 @@ bool Scene::Update(float dt)
         // Si el tiempo de espera ha terminado, carga el estado del juego
         if (loadingTimer >= loadingScreenDuration) {
             isLoading = false; // Desactiva la pantalla de carga
+            Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
             LoadState(); // Load Game State
         
         }
@@ -386,7 +387,7 @@ void Scene::HandleMainMenuSelection()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
         switch (selectedOption) {
         case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
-        case 1: LoadGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart);break;
+        case 1: LoadGame(); Engine::GetInstance().audio.get()->StopMusic(); isLoading = true; Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
         case 2: Engine::GetInstance().CleanUp(); break;
         }
     }
