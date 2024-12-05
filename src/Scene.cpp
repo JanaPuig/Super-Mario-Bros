@@ -391,7 +391,7 @@ void Scene::HandleMainMenuSelection()
         }
     }
 }
-void Scene::StartNewGame() {
+void Scene::StartNewGame() { 
 
     level = 1;
     player->SetPosition(Vector2D(30, 430));
@@ -419,7 +419,6 @@ void Scene::StartNewGame() {
     int enemy3Y = saveNode.attribute("enemy3Y").as_int();
     int enemy4X = saveNode.attribute("enemy4X").as_int();
     int enemy4Y = saveNode.attribute("enemy4Y").as_int();
-
 
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);

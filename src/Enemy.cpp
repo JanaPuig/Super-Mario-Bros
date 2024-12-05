@@ -265,11 +265,11 @@ void Enemy::SetPosition(Vector2D pos) {
 }
 
 Vector2D Enemy::GetPosition() {
-    if (pbody != NULL) {
-        b2Vec2 bodyPos = pbody->body->GetTransform().p;
-        Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
-        return pos;
-    }
+   
+    b2Vec2 bodyPos = pbody->body->GetTransform().p;
+    Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+    return pos;
+    
 }
 void Enemy::ResetPath() {
     Vector2D pos = GetPosition();
