@@ -95,7 +95,9 @@ private:
     // Player instance
     Player* player;
     //Enemy* enemy;
-    std::vector<Enemy*> enemyList;
+    //std::vector<Enemy*> enemyList;
+    std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
+
     std::vector<int> hitcountList;
 
 
