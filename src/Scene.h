@@ -62,6 +62,8 @@ public:
     // Toggles the help menu
     void ToggleMenu();
 
+    void UpdateEnemyHitCount(std::string enemyName, int hitCount);
+
     // Public member variables
     int level = 0;                   // Current map level
     SDL_Texture* loadingScreen = NULL; //texture for the loading screen

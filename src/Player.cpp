@@ -287,6 +287,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
 			Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 			enemy->hitCount++; // Incrementa el contador de impactos
+			Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+
 		}
 		else {
 			isDead = true; // Si el jugador no está encima, muere

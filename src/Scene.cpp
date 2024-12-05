@@ -391,6 +391,40 @@ void Scene::HandleMainMenuSelection()
     }
 }
 void Scene::StartNewGame() {
+
+    isLoading = false;    // Activa la pantalla de carga
+    // Reinicia el temporizador
+    Engine::GetInstance().audio.get()->StopMusic();
+    showMainMenu = false;
+    //level = 1;  // Comienza un nuevo juego en el nivel 1
+    //player->SetPosition(Vector2D(30, 430)); // Reinicia la posición del jugador
+    //showMainMenu = false;  // Oculta el menú principal
+
+    ////Como es un New Game, se tienen que borrar los datos guardados/inicializarlos
+    //pugi::xml_document SaveFile;
+    //pugi::xml_parse_result result = SaveFile.load_file("config.xml");
+    //if (result == NULL) {
+    //    LOG("Error Saving config.xml: %s", result.description());
+    //    return;
+    //}
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(1);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(30);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(430);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(200);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(400);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(400);
+    //SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(400);
+    //SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
+    //SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
+    //SaveFile.save_file("config.xml");
+}
+
+void Scene::LoadGame() {
+    //isLoading = true;    // Activa la pantalla de carga
+    // // Reinicia el temporizador
+    //Engine::GetInstance().audio.get()->StopMusic(); 
+    //showMainMenu = false;
+
     level = 1;  // Comienza un nuevo juego en el nivel 1
     player->SetPosition(Vector2D(30, 430)); // Reinicia la posición del jugador
     showMainMenu = false;  // Oculta el menú principal
@@ -414,13 +448,6 @@ void Scene::StartNewGame() {
     SaveFile.save_file("config.xml");
 }
 
-void Scene::LoadGame() {
-    isLoading = true;    // Activa la pantalla de carga
-     // Reinicia el temporizador
-    Engine::GetInstance().audio.get()->StopMusic(); 
-    showMainMenu = false;
-}
-
 // Return the player position
 Vector2D Scene::GetPlayerPosition()
 {
@@ -429,60 +456,79 @@ Vector2D Scene::GetPlayerPosition()
 void Scene::LoadState()
 {
     pugi::xml_document LoadFile;
-    pugi::xml_parse_result result=LoadFile.load_file("config.xml");
+    pugi::xml_parse_result result = LoadFile.load_file("config.xml");
 
     if (result == NULL) {
         LOG("Error Loading config.xml: %s", result.description());
         return;
     }
+
     // read the player position from the XML
     Vector2D posPlayer;
     Vector2D posEnemy;
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
-   int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
-   Vector2D posKoopa, posGoomba;
-   int KoopaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").as_int();
-   int GoombaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").as_int();
+    int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
+    Vector2D posKoopa, posGoomba;
+    int KoopaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").as_int();
+    int GoombaHitcount = LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").as_int();
 
-   pugi::xml_node enemiesNode = LoadFile.child("config").child("scene").child("entities").child("enemies");
+    pugi::xml_node enemiesNode = LoadFile.child("config").child("scene").child("entities").child("enemies");
 
-   for (Enemy* enemy : enemyList)
-   {
-       for (pugi::xml_node node : enemiesNode.children())
-       {
-           if (node.attribute("name").as_string() == enemy->name)
-           {
-               enemy->hitCount = GoombaHitcount;
-           }
+    for (std::pair<std::string, int> enemy : enemyStateList)
+    {
+        //Buscar el enemigo en la lista de enemigos usando su nombre
+        Enemy* enemEntity = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName(enemy.first);
 
-           else if (node.attribute("name").as_string() == enemy->name)
-           {
-               enemy->hitCount = KoopaHitcount;
-           }
-       }
-   }
+        //Si el enemigo existe, actualizar su hitcount
+        if (enemEntity != nullptr) {
+            for (pugi::xml_node node : enemiesNode.children())
+            {
+                if (node.attribute("name").as_string() == enemEntity->name)
+                {
+                    enemEntity->hitCount = GoombaHitcount;
+                }
 
-   if (KoopaHitcount == 0) {
-       posKoopa.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").as_int());
-       posKoopa.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").as_int());
-   }
+                else if (node.attribute("name").as_string() == enemEntity->name)
+                {
+                    enemEntity->hitCount = KoopaHitcount;
+                }
+            }
+        }
+    }
 
-   if (GoombaHitcount == 0) {
-       posGoomba.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").as_int());
-       posGoomba.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").as_int());
-   }
+    if (KoopaHitcount == 0) {
+        posKoopa.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").as_int());
+        posKoopa.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").as_int());
+    }
 
-   //cargar mas cosas; enemies, items...   
-   ChangeLevel(savedLevel);
-   player->SetPosition(posPlayer);   // set the player position
-   
-  
+    if (GoombaHitcount == 0) {
+        posGoomba.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").as_int());
+        posGoomba.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").as_int());
+    }
+
+    //cargar mas cosas; enemies, items...   
+    ChangeLevel(savedLevel);
+    player->SetPosition(posPlayer);   // set the player position
+
+}
+
+void Scene::UpdateEnemyHitCount(std::string enemyName, int hitCount) {
+
+    int i = 0;
+    for (std::pair<std::string, int> enemy : enemyStateList)
+    {
+        if (enemy.first == enemyName)
+        {
+            enemyStateList[i].second = hitCount;
+            break;
+        }
+        i++;
+    }
 }
 
 void Scene::SaveState()
 {
-
     pugi::xml_document SaveFile;
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     if (result == NULL) {
@@ -497,35 +543,52 @@ void Scene::SaveState()
     //Actualizar enemigos
     pugi::xml_node enemiesNode = SaveFile.child("config").child("scene").child("entities").child("enemies");
 
-    for (Enemy* enemy : enemyList)
+    for (std::pair<std::string, int> enemy : enemyStateList)
     {
+        //Buscar el enemigo en la lista de enemigos usando su nombre
+        Enemy* enemyEntity = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName(enemy.first);
+
         for (pugi::xml_node node : enemiesNode.children())
         {
-            if (node.attribute("name").as_string() == enemy->name)
+            if (node.attribute("name").as_string() == enemy.first)
             {
+                if (enemy.first == "koopa")
+                {
+                    //Guardo el hitcount que tengo en la lista de enemigos
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(enemy.second);
+                }
+                else if (enemy.first == "koopa2")
+                {
+                    //Guardo el hitcount que tengo en la lista de enemigos
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(enemy.second);
+                }
+                else if (enemy.first == "goomba")
+                {
+                    //Guardo el hitcount que tengo en la lista de enemigos
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(enemy.second);
+                }
+                else if (enemy.first == "goomba2")
+                {
+                    //Guardo el hitcount que tengo en la lista de enemigos
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(enemy.second);
+                }
 
-                Vector2D enemyPos = enemy->GetPosition();
-
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(enemy->GetHitCount());
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemy->GetPosition().getX());
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemy->GetPosition().getY());
+                // Si el enemigo no esta muerto actualizo su posicion 
+                if (enemy.second == 0)
+                {
+                    Vector2D enemyPos = enemyEntity->GetPosition();
+                    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemyEntity->GetPosition().getX());
+                    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemyEntity->GetPosition().getY());
+                }
 
             }
-
-            else if (node.attribute("name").as_string() == enemy->name)
-            {
-
-                Vector2D enemyPos = enemy->GetPosition();
-
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(enemy->GetHitCount());
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(enemy->GetPosition().getX());
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(enemy->GetPosition().getY());
-
-            }
-
         }
     }
+
+
     // save the XML modification to disk
     SaveFile.save_file("config.xml");
+
+    //guardar mas cosas; enemies, items...
 
 }

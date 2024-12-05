@@ -23,7 +23,8 @@ public:
 	bool CleanUp();
 
 	void SetParameters(pugi::xml_node parameters) {
-		this->parameters = parameters;	}
+		this->parameters = parameters;
+	}
 
 	void SetPosition(Vector2D pos);
 
@@ -78,7 +79,7 @@ public:
 	float detectionRange = 500.0f; // Rango en pixeles
 	bool movingRight = true;
 	bool movingLeft = false;
-	bool isEnemyDead =false; // Temporizador para la animación de muerte
+	bool isEnemyDead = false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 1.8f;
 	bool showPath = false;

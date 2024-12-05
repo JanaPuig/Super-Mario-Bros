@@ -164,6 +164,12 @@ bool Enemy::Update(float dt) {
         return true;
     }
 
+    if (isEnemyDead) {
+        toBeDestroyed = true;
+        Engine::GetInstance().scene.get()->SaveState();
+        return false;
+    }
+
     if (currentAnimation) currentAnimation->Update();
 
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();

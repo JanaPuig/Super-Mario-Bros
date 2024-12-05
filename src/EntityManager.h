@@ -38,6 +38,7 @@ public:
 
 	void AddEntity(Entity* entity);
 	
+	Entity* GetEntityByName(std::string name);
 
 public:
 		

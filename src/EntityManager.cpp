@@ -161,6 +161,15 @@ void EntityManager::RemoveAllEnemies() {
 	LOG("All enemies removed.");
 }
 
+Entity* EntityManager::GetEntityByName(std::string name)
+{
+	for (const auto entity : entities)
+	{
+		if (entity->name == name) return entity;
+	}
+	return nullptr;
+}
+
 void EntityManager::ResetEnemies()
 {
 	for (Entity* entity : entities) {
