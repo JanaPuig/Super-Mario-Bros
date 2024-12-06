@@ -72,11 +72,8 @@ bool Item::Update(float dt)
 			LOG("Item picked up!");
 			Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
 			// update the score
-
 			currentAnimation_flag = &lower_flag;
-
 		}
-
 		if (currentAnimation_flag == &lower_flag && currentAnimation_flag->HasFinished()) {
 			currentAnimation_flag = &lower_lower_flag; // Cambiar la animación a "lower_lower_flag"
 		}
@@ -102,5 +99,6 @@ bool Item::Update(float dt)
 bool Item::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(coinTexture);
+	Engine::GetInstance().textures.get()->UnLoad(flagpoleTexture);
 	return true;
 }

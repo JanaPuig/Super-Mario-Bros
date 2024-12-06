@@ -67,9 +67,9 @@
   <object id="149" x="1600" y="800" width="224" height="8"/>
  </objectgroup>
  <objectgroup id="13" name="Flag">
-  <object id="174" x="3233.84" y="441.5" width="20" height="6.25"/>
+  <object id="174" x="3233.84" y="447.864" width="20" height="2.88636"/>
  </objectgroup>
- <objectgroup id="6" name="Roof" visible="0">
+ <objectgroup id="6" name="Roof">
   <object id="92" x="2496" y="198.5" width="256" height="25.5"/>
   <object id="93" x="2848" y="198.5" width="128" height="25.5"/>
   <object id="94" x="2944" y="326.5" width="32" height="25.5"/>
@@ -92,7 +92,7 @@
   <object id="113" x="1472" y="512" width="32" height="64"/>
   <object id="116" x="0.00336667" y="490.352" width="2688" height="21.6481"/>
  </objectgroup>
- <objectgroup id="9" name="Coin" visible="0">
+ <objectgroup id="9" name="Coin">
   <object id="152" x="1600" y="640" width="32" height="32"/>
   <object id="153" x="1600" y="672" width="32" height="32"/>
   <object id="154" x="1600" y="704" width="32" height="32"/>
@@ -116,11 +116,11 @@
   <object id="172" x="1664" y="704" width="32" height="32"/>
   <object id="173" x="1696" y="704" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="5" name="Death" visible="0">
+ <objectgroup id="5" name="Death">
   <object id="80" x="2688" y="512" width="98.6667" height="37"/>
   <object id="81" x="4864" y="512" width="64" height="32"/>
  </objectgroup>
- <objectgroup id="7" name="Lucky" visible="0">
+ <objectgroup id="7" name="Lucky">
   <object id="118" x="4096" y="218" width="32" height="6"/>
   <object id="119" x="4128" y="218" width="32" height="6"/>
   <object id="120" x="3424" y="218" width="32" height="6"/>
@@ -136,7 +136,7 @@
   <object id="132" x="608" y="346" width="32" height="6"/>
   <object id="133" x="448" y="346" width="32" height="6"/>
  </objectgroup>
- <objectgroup id="8" name="Wall" visible="0">
+ <objectgroup id="8" name="Wall">
   <object id="134" name="pipe" x="1760" y="328" width="64" height="120"/>
   <object id="135" name="pipe" x="1408" y="328" width="64" height="120"/>
   <object id="136" name="pipe" x="832" y="392" width="64" height="56"/>

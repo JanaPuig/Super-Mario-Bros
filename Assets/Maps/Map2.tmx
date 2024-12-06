@@ -6371,7 +6371,7 @@
   </data>
  </layer>
  <objectgroup id="7" name="Flag">
-  <object id="182" x="3302" y="800" width="20" height="64"/>
+  <object id="182" x="3300.56" y="863.713" width="23.4" height="5.90909"/>
  </objectgroup>
  <objectgroup id="2" name="Death">
   <object id="1" x="0" y="960" width="6780" height="20"/>
