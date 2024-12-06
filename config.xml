@@ -42,6 +42,26 @@
 						</idle>
 					</animations>
 				</item>
+				<flag name="flag" x="3280" y="448" w="36" h="64" texture_flag="Assets/Textures/flag.png" gravity="false">
+					<animations>
+						<idle_flag loop="true" speed="1">
+							<frame x="0" y="0" w="36" h="64" />
+						</idle_flag>
+						<lower_flag loop="true" speed="1">
+							<frame x="0" y="128" w="36" h="64" />
+						</lower_flag>
+						<lower_lower_flag loop="true" speed="1">
+							<frame x="0" y="320" w="36" h="64" />
+						</lower_lower_flag>
+					</animations>
+				</flag>
+				<flagpole name="flagpole" x="3216" y="448-128" w="24" h="64" texture_flagpole="Assets/Textures/flagpole.png" gravity="false">
+					<animations>
+						<idle_flagpole loop="true" speed="1">
+							<frame x="0" y="0" w="24" h="64" />
+						</idle_flagpole>
+					</animations>
+				</flagpole>
 			</items>
 			<player name="mario" x="271" y="431" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>

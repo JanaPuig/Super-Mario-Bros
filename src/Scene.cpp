@@ -65,7 +65,24 @@ void Scene::CreateLevel1Items()
                 LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
             }
         }
-    }
+
+        // Crear flagpole
+        const int positionX_flagpole = 3232, positionY_flagpole = 448 - 64;
+        Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+
+        pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+        flagpole->SetParameters(flagpoleNode);
+        LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+
+        // Crear flag
+        const int positionX_flag = 3280 - 32, positionY_flag = 448 - 64;
+        Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flag->position = Vector2D(positionX_flag, positionY_flag);
+
+        pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+        flag->SetParameters(flagNode); 
+    } 
 }
 // Called before the first frame
 bool Scene::Start()

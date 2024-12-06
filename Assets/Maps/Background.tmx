@@ -4,6 +4,7 @@
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
  <tileset firstgid="10121" source="MapMetadata.tsx"/>
+ <tileset firstgid="10123" source="../../../../../Downloads/Super-Mario-Bros-main flag/Super-Mario-Bros-main/Assets/Maps/flagpole base.tsx"/>
  <objectgroup id="2" name="Collisions" visible="0">
   <object id="3" x="0" y="448" width="2688" height="42.303"/>
   <object id="5" x="2784" y="448" width="2080" height="64"/>
@@ -66,7 +67,7 @@
   <object id="149" x="1600" y="800" width="224" height="8"/>
  </objectgroup>
  <objectgroup id="13" name="Flag">
-  <object id="174" x="3238.09" y="384" width="20" height="64"/>
+  <object id="174" x="3233.84" y="441.5" width="20" height="6.25"/>
  </objectgroup>
  <objectgroup id="6" name="Roof" visible="0">
   <object id="92" x="2496" y="198.5" width="256" height="25.5"/>
@@ -2797,8 +2798,8 @@
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="557"/>
-   <tile gid="1289"/>
-   <tile gid="1290"/>
+   <tile gid="1662"/>
+   <tile gid="1662"/>
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="557"/>
@@ -3009,8 +3010,8 @@
    <tile gid="188"/>
    <tile gid="557"/>
    <tile gid="741"/>
-   <tile gid="1473"/>
-   <tile gid="1474"/>
+   <tile gid="1660"/>
+   <tile gid="1662"/>
    <tile gid="557"/>
    <tile gid="557"/>
    <tile gid="737"/>
