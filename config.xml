@@ -42,7 +42,7 @@
 						</idle>
 					</animations>
 				</item>
-				<flag name="flag" x="3280" y="448" w="36" h="64" texture_flag="Assets/Textures/flag.png" gravity="false">
+				<flag name="flag" x="3248" y="384" w="36" h="64" texture_flag="Assets/Textures/flag.png" gravity="false">
 					<animations>
 						<idle_flag loop="true" speed="1">
 							<frame x="0" y="0" w="36" h="64" />
@@ -55,7 +55,7 @@
 						</lower_lower_flag>
 					</animations>
 				</flag>
-				<flagpole name="flagpole" x="3216" y="448-128" w="24" h="64" texture_flagpole="Assets/Textures/flagpole.png" gravity="false">
+				<flagpole name="flagpole" x="3232" y="384" w="24" h="64" texture_flagpole="Assets/Textures/flagpole.png" gravity="false">
 					<animations>
 						<idle_flagpole loop="true" speed="1">
 							<frame x="0" y="0" w="24" h="64" />

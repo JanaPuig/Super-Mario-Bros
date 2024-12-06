@@ -67,7 +67,7 @@ void Scene::CreateLevel1Items()
         }
 
         // Crear flagpole
-        const int positionX_flagpole = 3232, positionY_flagpole = 448 - 64;
+        const int positionX_flagpole = 3232, positionY_flagpole = 384;
         Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
 
@@ -76,7 +76,7 @@ void Scene::CreateLevel1Items()
         LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
 
         // Crear flag
-        const int positionX_flag = 3280 - 32, positionY_flag = 448 - 64;
+        const int positionX_flag = 3248, positionY_flag = 384;
         Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         flag->position = Vector2D(positionX_flag, positionY_flag);
 
