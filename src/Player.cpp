@@ -31,7 +31,7 @@ bool Player::Start() {
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 	EnemyDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
-	CheckPoint = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Checkpoint.wav");
+
 	//Load Player Texture
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
@@ -296,9 +296,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	}
 	case ColliderType::FLAG:
-		LOG("Collision with Flag");
-		Engine::GetInstance().scene.get()->isFlaged = true;
-		Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0);
+	
 		break;
 	default:
 		break;

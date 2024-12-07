@@ -67,7 +67,7 @@
   <object id="149" x="1600" y="800" width="224" height="8"/>
  </objectgroup>
  <objectgroup id="13" name="Flag">
-  <object id="174" x="3233.84" y="447.864" width="20" height="2.88636"/>
+  <object id="174" x="3233.86" y="447.953" width="20" height="2.88636"/>
  </objectgroup>
  <objectgroup id="6" name="Roof">
   <object id="92" x="2496" y="198.5" width="256" height="25.5"/>

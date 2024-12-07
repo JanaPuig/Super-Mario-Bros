@@ -80,7 +80,7 @@ private:
     int hereWeGoAgain = 0;
     int ohNoId = 0;
     int EnemyDeathSound = 0;
-    int CheckPoint = 0;
+
     // Player state
     bool isMoving = false;
     bool isSprinting = false;

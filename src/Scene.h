@@ -23,7 +23,7 @@ public:
     bool Awake();
 
     // Creates items specific to Level 1
-    void CreateLevel1Items();
+    void CreateLevelItems();
 
     // Called before the first frame
     bool Start();

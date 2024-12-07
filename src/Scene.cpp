@@ -44,12 +44,12 @@ bool Scene::Awake()
     }
     // Load level-specific items
     if (level == 1) {
-        CreateLevel1Items();
+        CreateLevelItems();
     }
     return true;
 }
 // Creates items for Level 1
-void Scene::CreateLevel1Items()
+void Scene::CreateLevelItems()
 {
     if (level == 1) {
         const int startX = 1600, startY = 768;
@@ -57,12 +57,13 @@ void Scene::CreateLevel1Items()
         const int numRows = 3, rowSpacing = 64;
         for (int row = 0; row < numRows; ++row) {
             for (int i = 0; i < numItems; ++i) {
-                Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-                item->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
+                Item* coin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+                coin->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
                 pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
-                item->SetParameters(defaultItemNode);
+                coin->SetParameters(defaultItemNode);
+                coin->isCoin = true;
                 // Log the item's creation
-                LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+                LOG("Creating item at position: (%f, %f)", coin->position.getX(), coin->position.getY());
             }
         }
 
@@ -83,6 +84,29 @@ void Scene::CreateLevel1Items()
         pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
         flag->SetParameters(flagNode); 
     } 
+    if (level == 2)
+    {
+        // Crear flagpole para level 2
+        const int positionX_flagpole = 2500; // Cambiar a una posición diferente
+        const int positionY_flagpole = 500;
+        Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+
+        pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+        flagpole->SetParameters(flagpoleNode);
+        LOG("Creating flagpole for level 2 at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+
+        // Crear flag para level 2
+        const int positionX_flag = 2516; // Cambiar a una posición diferente
+        const int positionY_flag = 500;
+        Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flag->position = Vector2D(positionX_flag, positionY_flag);
+
+        pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+        flag->SetParameters(flagNode);
+        LOG("Creating flag for level 2 at position: (%f, %f)", flag->position.getX(), flag->position.getY());
+    }
+
 }
 // Called before the first frame
 bool Scene::Start()
@@ -310,6 +334,7 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
+    CreateLevelItems();
     isFlaged = false;
     showingTransition = false;
     Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
@@ -321,7 +346,6 @@ void Scene::FinishTransition()
     if (level == 1) {
         player->SetPosition(Vector2D(30, 430));
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
-        CreateLevel1Items();
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
