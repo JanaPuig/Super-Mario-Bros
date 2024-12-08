@@ -69,7 +69,7 @@ public:
 
 	PhysBody* pbody;
 	Pathfinding* pathfinding;
-
+	Vector2D lastPlayerTile;
 	//Animation enemy walking
 	float deathTimer = 0.0f;
 	float frameTime = 0;
