@@ -389,6 +389,8 @@ void Scene::StartNewGame() {
     saveNode.attribute("level").set_value(1);
     saveNode.attribute("playerX").set_value(30);
     saveNode.attribute("playerY").set_value(430);
+    saveNode.attribute("checkpoint").set_value(false);
+  
     // Reiniciar enemigos
     int enemy1X = saveNode.attribute("enemy1X").as_int();
     int enemy1Y = saveNode.attribute("enemy1Y").as_int();
@@ -403,6 +405,7 @@ void Scene::StartNewGame() {
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
     SaveFile.save_file("config.xml");
+    isFlaged = saveNode.attribute("checkpoint").as_bool();
 }
 void Scene::LoadGame() {
     pugi::xml_document LoadFile;

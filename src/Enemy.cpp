@@ -78,7 +78,6 @@ bool Enemy::Start() {
     }
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
-    ResetPath();
 
     return true;
 }
@@ -200,16 +199,15 @@ bool Enemy::Update(float dt) {
 
     if (distanceToPlayer <= detectionRange) {
         Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
-        pathfinding->ResetPath(playerTile);
+        ResetPath();
 
         int steps = 0;  // Numero de pasos max del pathfinding, para casos en que no encuentra un path
-        int maxSteps = 1000; //-> Ajustar segun les parezca
+        int maxSteps = 100; //-> Ajustar segun les parezca
         while (pathfinding->pathTiles.empty() && steps < maxSteps) 
         {
             pathfinding->PropagateAStar(SQUARED);
             steps++;
         }
-
         b2Vec2 velocity = MoveEnemy(enemyPosition, speed);
 
         if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) { // Cambiar animación según dirección del movimiento
