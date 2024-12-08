@@ -206,6 +206,7 @@ bool Scene::Update(float dt)
         if (loadingTimer >= loadingScreenDuration) {     // Si el tiempo de espera ha terminado, carga el estado del juego
             isLoading = false; // Desactiva la pantalla de carga
             Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
             LoadState(); // Load Game State
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
@@ -284,7 +285,7 @@ bool Scene::PostUpdate()
         return false;
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-        LoadState();
+        LoadGame();
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
         SaveState();
@@ -426,6 +427,8 @@ void Scene::LoadGame() {
     saveNode.attribute("enemy4X").set_value(400);
     saveNode.attribute("enemy4Y").set_value(400);
     // Si hay más datos a cargar, puedes hacerlo aquí.
+    //cargar checkpoint
+    isFlaged= saveNode.attribute("checkpoint").as_bool();
     showMainMenu = false;
     LOG("Game loaded successfully."); 
 }
@@ -526,6 +529,7 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(level);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(playerPos.getY());
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("checkpoint").set_value(isFlaged);
     //Actualizar enemigos
     pugi::xml_node enemiesNode = SaveFile.child("config").child("scene").child("entities").child("enemies");
     for (std::pair<std::string, int> enemy : enemyStateList)

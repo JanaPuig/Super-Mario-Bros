@@ -204,11 +204,11 @@ bool Enemy::Update(float dt) {
 
         int steps = 0;  // Numero de pasos max del pathfinding, para casos en que no encuentra un path
         int maxSteps = 1000; //-> Ajustar segun les parezca
-        while (pathfinding->pathTiles.empty() && steps < maxSteps) {
+        while (pathfinding->pathTiles.empty() && steps < maxSteps) 
+        {
             pathfinding->PropagateAStar(SQUARED);
             steps++;
         }
-  
 
         b2Vec2 velocity = MoveEnemy(enemyPosition, speed);
 
