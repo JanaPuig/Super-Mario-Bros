@@ -392,14 +392,15 @@ void Scene::StartNewGame() {
     saveNode.attribute("checkpoint").set_value(false);
   
     // Reiniciar enemigos
-    int enemy1X = saveNode.attribute("enemy1X").as_int();
-    int enemy1Y = saveNode.attribute("enemy1Y").as_int();
-    int enemy2X = saveNode.attribute("enemy2X").as_int();
-    int enemy2Y = saveNode.attribute("enemy2Y").as_int();
-    int enemy3X = saveNode.attribute("enemy3X").as_int();
-    int enemy3Y = saveNode.attribute("enemy3Y").as_int();
-    int enemy4X = saveNode.attribute("enemy4X").as_int();
-    int enemy4Y = saveNode.attribute("enemy4Y").as_int();
+    saveNode.attribute("enemy1X").set_value(1500);
+    saveNode.attribute("enemy1Y").set_value(100);
+    saveNode.attribute("enemy2X").set_value(4500);
+    saveNode.attribute("enemy2Y").set_value(100);
+    saveNode.attribute("enemy3X").set_value(2000);
+    saveNode.attribute("enemy3Y").set_value(415);
+    saveNode.attribute("enemy4X").set_value(5500);
+    saveNode.attribute("enemy4Y").set_value(415);
+
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
@@ -420,15 +421,37 @@ void Scene::LoadGame() {
     int playerX = saveNode.attribute("playerX").as_int();
     int playerY = saveNode.attribute("playerY").as_int();
     player->SetPosition(Vector2D(playerX, playerY)); 
-    // Cargar enemigos
-    saveNode.attribute("enemy1X").set_value(200);
-    saveNode.attribute("enemy1Y").set_value(400);
-    saveNode.attribute("enemy2X").set_value(400);
-    saveNode.attribute("enemy2Y").set_value(400);
-    saveNode.attribute("enemy3X").set_value(200);
-    saveNode.attribute("enemy3Y").set_value(400);
-    saveNode.attribute("enemy4X").set_value(400);
-    saveNode.attribute("enemy4Y").set_value(400);
+
+    //Cargar enemigos
+    for (int i = 1; i <= 4; ++i) {
+        std::string enemyPosX = "enemy" + std::to_string(i) + "X";
+        std::string enemyPosY = "enemy" + std::to_string(i) + "Y";
+
+        int posX = saveNode.attribute(enemyPosX.c_str()).as_int();
+        int posY = saveNode.attribute(enemyPosY.c_str()).as_int();
+
+        //koopa
+        if (i == 1) {
+            Enemy* enemyKoopa = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa");
+            enemyKoopa->SetPosition(Vector2D(posX, posY));
+        }
+        //Koopa2
+        else if (i == 2) {
+            Enemy* enemyKoopa2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa2");
+            enemyKoopa2->SetPosition(Vector2D(posX, posY));
+        }
+        //Goomba
+        else if (i == 3) {
+            Enemy* enemyGoomba = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba");
+            enemyGoomba->SetPosition(Vector2D(posX, posY));
+        }
+        //Goomba2
+        else if (i == 4) {
+            Enemy* enemyGoomba2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba2");
+            enemyGoomba2->SetPosition(Vector2D(posX, posY));
+        }
+
+    }
     // Si hay más datos a cargar, puedes hacerlo aquí.
     //cargar checkpoint
     isFlaged= saveNode.attribute("checkpoint").as_bool();
@@ -490,18 +513,30 @@ void Scene::LoadState()
     if (KoopaHitcount == 0) {
         posKoopa.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").as_int());
         posKoopa.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").as_int());
+
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").as_int());
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").as_int());
     }
     if (KoopaHitcount2 == 0) {
         posKoopa.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").as_int());
         posKoopa.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").as_int());
+
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").as_int());
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").as_int());
     }
     if (GoombaHitcount == 0) {
         posGoomba.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").as_int());
         posGoomba.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").as_int());
+
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").as_int());
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").as_int());
     }
     if (GoombaHitcount2 == 0) {
         posGoomba.setX(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").as_int());
         posGoomba.setY(LoadFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").as_int());
+
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
+        posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
     }
     //cargar mas cosas; enemies, items...   
     ChangeLevel(savedLevel);
@@ -566,9 +601,28 @@ void Scene::SaveState()
                 // Si el enemigo no esta muerto actualizo su posicion 
                 if (enemy.second == 0)
                 {
-                    Vector2D enemyPos = enemyEntity->GetPosition();
-                    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemyEntity->GetPosition().getX());
-                    SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemyEntity->GetPosition().getY());
+                    Vector2D posEnemy;
+                    if (enemy.first == "koopa")
+                    {
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").as_int());
+                    }
+                    else if (enemy.first == "koopa2")
+                    {
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").as_int());
+
+                    }
+                    else if (enemy.first == "goomba")
+                    {
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").as_int());
+                    }
+                    else if (enemy.first == "goomba2")
+                    {
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
+                    }
                 }
             }
         }
