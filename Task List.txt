@@ -1,52 +1,34 @@
 We have done all the tasks together (Toni Llovera and Jana Puig)
 
 List of Implemented Features:
-	- Tiled background
-
-	- Coin Grab
-
-	- Pipes Teleport
-
-	- Castle Teleport to start
-
-	- Camera follows the player + camera limits
-
-	- Music: "GroundTheme"
-
-	- Jump Fx when jumping
-
-	- Coin Fx when grabbing a coin
-
-	- Pipe Fx when teleporting in and out of pipes
-
-	- Castle Fx when entering the castle
-
-	- Debug: Show/hide collisions with F9
-
-	- Debug: 30 fps cap with F11
-
-	- Debug: God Mode with F10
-
-	- Debug: Show/hide Help Menu with H
-
-	- Jumping animation
-
-	- Walking animation
-
-	- Idle animation
-
-	- Main Menu/Title
-
-	- Death collisions and logic
-
-	- Death Fx and Voice Fx
-
-	- Random jump Voice Fx
-
-	- Start Voice Fx
-
-	- Death animation
-
-	- Game Over screen
-
-	- Try Again logic
+	* Pathfinding
+* Enemies
+  * Goomba movement & Animations
+  * Koopa movement & Animations
+  * Enemies Death Fx
+* Positions
+  * Save & Load player position
+  * Save & Load enemy position
+* Checkpoints
+  * Flag texture (checkpoint)
+  * Checkpoint functionality
+  * Flag Fx
+  * Save & Load Checkpoint State
+* Textures
+  * Add all game textures (config xml)
+* Game Menu
+  * New Game (Deletes previous Saved State)
+  * Load (Loads previous Saved State)
+  * Exit
+  * Menu Music
+  * Menu Fx
+* Levels
+  * Level 2 implementation (no enemies yet)
+  * Shortcuts to switch levels:
+    * F1: Switch to level 1
+    * F2: Switch to level 2
+  * F3: Reset current Level
+  * Save & Load level
+* Advanced Options
+  * F5: Save state (even across levels)
+  * F6: Load the previous state (even across levels)
