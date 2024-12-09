@@ -59,27 +59,27 @@ For now, only level 1 has been implemented, but the levels include different typ
 * Enemies
   * Goomba movement
   * Koopa movement
-* Enemies music
+  * Enemies music
 * Positions
-* Save player position
-* Save enemy position
+  * Save player position
+  * Save enemy position
 * Checkpoints
-* Flag texture (checkpoint)
-* Checkpoint functionality
-* Flag music
+  * Flag texture (checkpoint)
+  * Checkpoint functionality
+  * Flag music
 * Textures
-* Add all game textures (config xml)
+  * Add all game textures (config xml)
 * Game Menu
-* Entry
-* Exit
+  * Entry
+  * Exit
 * Levels
-* Level 2 functionality
-* Shortcuts to switch levels:
-* F1: Switch to level 1
-* F2: Switch to level 2
+  * Level 2 functionality
+  * Shortcuts to switch levels:
+    * F1: Switch to level 1
+    * F2: Switch to level 2
 * Advanced Options
-* F11: Enable/Disable FPS cap (30 FPS)
-* F6: Load the previous state (even across levels)
+  * F11: Enable/Disable FPS cap (30 FPS)
+  * F6: Load the previous state (even across levels)
 
 
 ## Team Members
