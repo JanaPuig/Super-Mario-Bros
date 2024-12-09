@@ -392,14 +392,15 @@ void Scene::StartNewGame() {
     saveNode.attribute("checkpoint").set_value(false);
   
     // Reiniciar enemigos
-    int enemy1X = saveNode.attribute("enemy1X").as_int();
-    int enemy1Y = saveNode.attribute("enemy1Y").as_int();
-    int enemy2X = saveNode.attribute("enemy2X").as_int();
-    int enemy2Y = saveNode.attribute("enemy2Y").as_int();
-    int enemy3X = saveNode.attribute("enemy3X").as_int();
-    int enemy3Y = saveNode.attribute("enemy3Y").as_int();
-    int enemy4X = saveNode.attribute("enemy4X").as_int();
-    int enemy4Y = saveNode.attribute("enemy4Y").as_int();
+    saveNode.attribute("enemy1X").set_value(1500);
+    saveNode.attribute("enemy1Y").set_value(100);
+    saveNode.attribute("enemy2X").set_value(4500);
+    saveNode.attribute("enemy2Y").set_value(100);
+    saveNode.attribute("enemy3X").set_value(2000);
+    saveNode.attribute("enemy3Y").set_value(415);
+    saveNode.attribute("enemy4X").set_value(5500);
+    saveNode.attribute("enemy4Y").set_value(415);
+
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
@@ -600,27 +601,27 @@ void Scene::SaveState()
                 // Si el enemigo no esta muerto actualizo su posicion 
                 if (enemy.second == 0)
                 {
-                    Vector2D enemyPos = enemyEntity->GetPosition();
-
+                    Vector2D posEnemy;
                     if (enemy.first == "koopa")
                     {
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemyEntity->GetPosition().getX());
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemyEntity->GetPosition().getY());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").as_int());
                     }
                     else if (enemy.first == "koopa2")
                     {
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(enemyEntity->GetPosition().getX());
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(enemyEntity->GetPosition().getY());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").as_int());
+
                     }
                     else if (enemy.first == "goomba")
                     {
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").set_value(enemyEntity->GetPosition().getX());
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").set_value(enemyEntity->GetPosition().getY());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").as_int());
                     }
                     else if (enemy.first == "goomba2")
                     {
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").set_value(enemyEntity->GetPosition().getX());
-                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").set_value(enemyEntity->GetPosition().getY());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
+                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
                     }
                 }
             }
