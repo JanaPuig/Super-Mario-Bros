@@ -217,10 +217,10 @@ bool Enemy::Update(float dt) {
             }
 
             // Actualizar animación en base a dirección Y (solo para Koopas)
-            if (velocity.y > 0) {
+            if (velocity.x < 0) {
                 currentAnimation = &flyingkoopaLeft; // O animación hacia abajo
             }
-            else if (velocity.y < 0) {
+            else if (velocity.x > 0) {
                 currentAnimation = &flyingkoopaRight; // O animación hacia arriba
             }
 
