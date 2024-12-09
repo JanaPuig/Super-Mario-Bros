@@ -57,9 +57,9 @@ For now, only level 1 has been implemented, but the levels include different typ
 ## List of Features Implemented Assignment 2 
 * Pathfinding
 * Enemies
-  * Goomba movement
-  * Koopa movement
-  * Enemies Fx
+  * Goomba movement & Animations
+  * Koopa movement & Animations
+  * Enemies Death Fx
 * Positions
   * Save & Load player position
   * Save & Load enemy position
@@ -84,8 +84,6 @@ For now, only level 1 has been implemented, but the levels include different typ
   * F3: Reset current Level
   * Save & Load level
 * Advanced Options
-  * F11: Enable/Disable FPS cap (30 FPS)
-
   * F5: Save state (even across levels)
   * F6: Load the previous state (even across levels)
 
