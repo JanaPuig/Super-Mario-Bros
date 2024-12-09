@@ -441,12 +441,12 @@ void Scene::LoadGame() {
         }
         //Goomba
         else if (i == 3) {
-            Enemy* enemyGoomba = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("Goomba");
+            Enemy* enemyGoomba = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba");
             enemyGoomba->SetPosition(Vector2D(posX, posY));
         }
         //Goomba2
         else if (i == 4) {
-            Enemy* enemyGoomba2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("Goomba2");
+            Enemy* enemyGoomba2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba2");
             enemyGoomba2->SetPosition(Vector2D(posX, posY));
         }
 
