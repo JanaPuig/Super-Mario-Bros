@@ -134,7 +134,7 @@ bool Enemy::Update(float dt) {
     }
 
     // Lógica de muerte
-    if (parameters.attribute("name").as_string() == std::string("koopa") && hitCount == 1) {
+    if ((parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) && hitCount == 1) {
         UpdateColliderSize();
         pbody->body->SetGravityScale(1);
         currentAnimation = &deadkoopa;
@@ -142,21 +142,7 @@ bool Enemy::Update(float dt) {
         deathTimer = 0.0f;
         return true;
     }
-    else if (parameters.attribute("name").as_string() == std::string("koopa2") && hitCount == 1) {
-        UpdateColliderSize();
-        pbody->body->SetGravityScale(1);
-        currentAnimation = &deadkoopa;
-        isDying = true;
-        deathTimer = 0.0f;
-        return true;
-    }
-    else if (parameters.attribute("name").as_string() == std::string("goomba") && hitCount >= 1) {
-        currentAnimation = &deadGoomba;
-        isDying = true;
-        deathTimer = 0.0f;
-        return true;
-    }
-    else if (parameters.attribute("name").as_string() == std::string("goomba2") && hitCount >= 1) {
+    else if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) && hitCount >= 1) {
         currentAnimation = &deadGoomba;
         isDying = true;
         deathTimer = 0.0f;
@@ -179,8 +165,6 @@ bool Enemy::Update(float dt) {
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
- 
-
     // Mostrar u ocultar path al presionar F9
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
         showPath = !showPath;
@@ -190,81 +174,84 @@ bool Enemy::Update(float dt) {
     if (showPath) {
         pathfinding->DrawPath();
     }
+
     // Detección del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
-
     Vector2D enemyPosition = GetPosition();
+    Vector2D enemyPositionTiles = Engine::GetInstance().map.get()->WorldToMap(enemyPosition.getX(), enemyPosition.getY());
     float distanceToPlayer = (playerPosition - enemyPosition).magnitude();
 
     if (distanceToPlayer <= detectionRange) {
-        Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
         ResetPath();
 
-        int steps = 0;  // Numero de pasos max del pathfinding, para casos en que no encuentra un path
-        int maxSteps = 100; //-> Ajustar segun les parezca
-        while (pathfinding->pathTiles.empty() && steps < maxSteps) 
-        {
+        int steps = 0;  // Número de pasos máximo del pathfinding
+        int maxSteps = 100; // -> Ajustar según les parezca
+        while (pathfinding->pathTiles.empty() && steps < maxSteps) {
             pathfinding->PropagateAStar(SQUARED);
             steps++;
         }
-        b2Vec2 velocity = MoveEnemy(enemyPosition, speed);
 
-        if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) { // Cambiar animación según dirección del movimiento
-            if (velocity.x > 0) {
-                currentAnimation = &flyingkoopaRight;
+        int i = 0;
+        for (const auto& pos : pathfinding->pathTiles) {
+            if (i == pathfinding->pathTiles.size() - 2) {
+                nextPos = pos;
             }
-            else if (velocity.x < 0) {
-                currentAnimation = &flyingkoopaLeft;
-            }
+            i++;
         }
+
+        // Modificar solo el movimiento en el eje Y para Koopas
+        if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
+            velocity = b2Vec2(0, 0); // Resetear la velocidad en X
+            if (nextPos.getX() > enemyPositionTiles.getX()) {
+                velocity = b2Vec2(2, 0);
+            }
+            else if (nextPos.getX() < enemyPositionTiles.getX()) {
+                velocity = b2Vec2(-2, 0);
+            }
+            else if (nextPos.getY() > enemyPositionTiles.getY()) {
+                velocity = b2Vec2(0, 2); // Movimiento solo en el eje Y
+            }
+            else if (nextPos.getY() < enemyPositionTiles.getY()) {
+                velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
+            }
+
+            // Actualizar animación en base a dirección Y (solo para Koopas)
+            if (velocity.y > 0) {
+                currentAnimation = &flyingkoopaLeft; // O animación hacia abajo
+            }
+            else if (velocity.y < 0) {
+                currentAnimation = &flyingkoopaRight; // O animación hacia arriba
+            }
+
+        }
+        else {
+            // Comportamiento normal para otros enemigos (no Koopa)
+            if (nextPos.getX() > enemyPositionTiles.getX()) {
+                velocity = b2Vec2(2, 0);
+            }
+            else if (nextPos.getX() < enemyPositionTiles.getX()) {
+                velocity = b2Vec2(-2, 0);
+            }
+          
+        }
+
         pbody->body->SetLinearVelocity(velocity);
     }
     else {
         pbody->body->SetLinearVelocity(b2Vec2(0, 0));
     }
+    if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+        if (GetPosition().getY() > 490)
+        {
+            //currentAnimation = &deadGoomba;
+            isEnemyDead = true;
+            toBeDestroyed = true;
+        }
+    }
     return true;
 }
 
-b2Vec2 Enemy::MoveEnemy(Vector2D enemyPosition, float speed) {
-    b2Vec2 movement = { 0, 0 };
-
-    if (!pathfinding->pathTiles.empty()) {
-        // Obtener el siguiente punto del camino
-        Vector2D nextTileWorld = Engine::GetInstance().map->MapToWorldCenter(
-            pathfinding->pathTiles.back().getX(),
-            pathfinding->pathTiles.back().getY()
-        );
-
-        // Calcular dirección hacia el siguiente punto
-        Vector2D direction = nextTileWorld - enemyPosition;
-        float distance = direction.magnitude();
-
-        if (distance < 6) {
-            pathfinding->pathTiles.pop_back();
-        }
-        else {
-            direction = direction.normalized();
-            movement.x = direction.getX() * speed;
-
-            // Limitar movimiento en Y para Goomba
-            if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-                movement.y = 0;
-                if (GetPosition().getY() > 490)
-                {
-                    //currentAnimation = &deadGoomba;
-                    isEnemyDead = true;
-                    toBeDestroyed = true;
-                }
-            }
-            else {
-                movement.y = direction.getY() * speed;
-            }
-        }
-    }
-
-    return movement;
-}
 bool Enemy::CleanUp() {
     if (pbody != nullptr) {
         Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
@@ -283,7 +270,7 @@ void Enemy::SetPosition(Vector2D pos) {
 }
 
 Vector2D Enemy::GetPosition() {
-   
+ 
     b2Vec2 bodyPos = pbody->body->GetTransform().p;
     Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
     return pos;
@@ -294,7 +281,6 @@ void Enemy::ResetPath() {
     Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
     pathfinding->ResetPath(tilePos);
 }
-
 void Enemy::ResetPosition() {
     // Restablece el estado de la animación
     if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
@@ -303,26 +289,22 @@ void Enemy::ResetPosition() {
     else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
         currentAnimation = &idleGoomba;
     }
-
     if (parameters.attribute("name").as_string() != std::string("goomba2"))
     {
         // Restablece la posición
         position.setX(parameters.attribute("x").as_int() + 32);
         position.setY(parameters.attribute("y").as_int() + 32);
     }
-
     else {
         // Restablece la posición
         position.setX(parameters.attribute("x").as_int() + 16);
         position.setY(parameters.attribute("y").as_int() + 32);
     }
-
     // Restablecer otras variables
     isDying = false;
     isEnemyDead = false;
     toBeDestroyed = false;
     hitCount = 0;
-
     if (pbody) {
         Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
         pbody = nullptr;
@@ -331,14 +313,13 @@ void Enemy::ResetPosition() {
     pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
     pbody->listener = this;
     pbody->ctype = ColliderType::ENEMY;
-
     //Gravedad de los enemigos
     std::string enemyName = parameters.attribute("name").as_string();
     if (enemyName == "koopa" || enemyName == "koopa2") {
         pbody->body->SetGravityScale(0);
     }
     else if (enemyName == "goomba" || enemyName == "goomba2") {
-        pbody->body->SetGravityScale(6);
+        pbody->body->SetGravityScale(1);
     }
 
 }

@@ -66,7 +66,8 @@ public:
 	Animation flyingkoopaLeft;
 	Animation flyingkoopaRight;
 	Animation deadkoopa;
-
+	b2Vec2 velocity = b2Vec2(0, 0);
+	Vector2D nextPos;
 	PhysBody* pbody;
 	Pathfinding* pathfinding;
 	Vector2D lastPlayerTile;
@@ -81,6 +82,6 @@ public:
 	bool movingLeft = false;
 	bool isEnemyDead = false; // Temporizador para la animación de muerte
 	bool isDying = false;    // Indica si está en proceso de morir
-	float speed = 1.8f;
+	float speed = 3.0f;
 	bool showPath = false;
 };
