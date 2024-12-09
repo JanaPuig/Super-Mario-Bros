@@ -26,7 +26,7 @@ For now, only level 1 has been implemented, but the levels include different typ
 * F10 God Mode (fly around, cannot be killed)
 * F11 Enable/Disable FPS cap to 30
 
-## List of Features Implemented
+## List of Features Implemented Assignment 1 
 * Tiled background
 * Coin Grab
 * Pipes Teleport
@@ -53,6 +53,34 @@ For now, only level 1 has been implemented, but the levels include different typ
 * Game Over screen
 * Try Again logic
 * Double Jump
+
+## List of Features Implemented Assignment 2 
+* Pathfinding
+* Enemies
+  * Goomba movement
+  * Koopa movement
+* Enemies music
+* Positions
+* Save player position
+* Save enemy position
+* Checkpoints
+* Flag texture (checkpoint)
+* Checkpoint functionality
+* Flag music
+* Textures
+* Add all game textures (config xml)
+* Game Menu
+* Entry
+* Exit
+* Levels
+* Level 2 functionality
+* Shortcuts to switch levels:
+* F1: Switch to level 1
+* F2: Switch to level 2
+* Advanced Options
+* F11: Enable/Disable FPS cap (30 FPS)
+* F6: Load the previous state (even across levels)
+
 
 ## Team Members
 ### Jana Puig & Toni Llovera
