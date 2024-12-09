@@ -604,24 +604,33 @@ void Scene::SaveState()
                     Vector2D posEnemy;
                     if (enemy.first == "koopa")
                     {
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").as_int());
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").as_int());
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").as_int();
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").as_int();
+
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemyEntity->GetPosition().getX() - 44);
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemyEntity->GetPosition().getY() - 44);
                     }
                     else if (enemy.first == "koopa2")
                     {
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").as_int());
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").as_int());
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").as_int();
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").as_int();
+
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(enemyEntity->GetPosition().getX() - 44);
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(enemyEntity->GetPosition().getY() - 44);
 
                     }
                     else if (enemy.first == "goomba")
                     {
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").as_int());
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").as_int());
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").as_int();
+
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").set_value(enemyEntity->GetPosition().getX() - 16);
+
                     }
                     else if (enemy.first == "goomba2")
                     {
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
-                        posEnemy.setX(SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
+                        SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").as_int();
+
+                        SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").set_value(enemyEntity->GetPosition().getX() - 16);
                     }
                 }
             }
