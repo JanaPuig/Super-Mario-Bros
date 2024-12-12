@@ -13,6 +13,7 @@
 #include "Map.h"
 #include "Physics.h"
 #include "GuiManager.h"
+#include "tracy/Tracy.hpp"
 
 // Constructor
 Engine::Engine() {
@@ -124,7 +125,7 @@ bool Engine::Start() {
 
 // Called each loop iteration
 bool Engine::Update() {
-
+    ZoneScoped;
     bool ret = true;
     PrepareUpdate();
 

@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Render.h"
 #include "Log.h"
+#include "tracy/Tracy.hpp"
 
 #define VSYNC false
 

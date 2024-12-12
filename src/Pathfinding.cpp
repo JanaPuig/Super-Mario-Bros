@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
+#include "tracy/Tracy.hpp"
 
 Pathfinding::Pathfinding() {
 

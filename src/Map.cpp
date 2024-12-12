@@ -6,7 +6,7 @@
 #include "Physics.h"
 #include "Window.h"
 #include <math.h>
-
+#include "tracy/Tracy.hpp"
 Map::Map() : Module(), mapLoaded(false)
 {
     name = "map";

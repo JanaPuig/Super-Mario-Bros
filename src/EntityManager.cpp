@@ -6,7 +6,7 @@
 #include "Log.h"
 #include "Item.h"
 #include "Enemy.h"
-
+#include "tracy/Tracy.hpp"
 EntityManager::EntityManager() : Module()
 {
 	name = "entitymanager";

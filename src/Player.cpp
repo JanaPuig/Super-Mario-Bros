@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "Enemy.h"
 #include "EntityManager.h"
+#include "tracy/Tracy.hpp"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {

@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "EntityManager.h"
 #include "Physics.h"
+#include "tracy/Tracy.hpp"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 

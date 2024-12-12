@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "Window.h"
 #include "box2D/box2d.h"
-
+#include "tracy/Tracy.hpp"
 
 Physics::Physics() : Module()
 {
