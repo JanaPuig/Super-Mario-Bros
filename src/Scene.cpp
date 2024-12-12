@@ -49,8 +49,12 @@ bool Scene::Awake()
         CreateLevelItems();
     }
     // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
-    SDL_Rect btPos = { 520, 350, 120,20 };
-    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "MyButton", btPos, this);
+    SDL_Rect NewGamePos = { 50, 350, 300, 150 };
+    SDL_Rect LoadPos = { 50, 500, 300, 150 };
+    SDL_Rect LeavePos = { 50, 650, 300, 150 };
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", NewGamePos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", LoadPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", LeavePos, this);
     return true;
 }
 // Creates items for Level 1
