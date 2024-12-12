@@ -12,6 +12,8 @@
 #include "Map.h"
 #include "Item.h"
 #include "Enemy.h"
+#include "GuiControl.h"
+#include "GuiManager.h"
 using namespace std;
 // Constructor: Initializes the Scene object and default values
 Scene::Scene()
@@ -46,6 +48,9 @@ bool Scene::Awake()
     if (level == 1) {
         CreateLevelItems();
     }
+    // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
+    SDL_Rect btPos = { 520, 350, 120,20 };
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "MyButton", btPos, this);
     return true;
 }
 // Creates items for Level 1
@@ -640,4 +645,10 @@ void Scene::SaveState()
     SaveFile.save_file("config.xml");
     //guardar mas cosas; enemies, items...
 
+}
+bool Scene::OnGuiMouseClickEvent(GuiControl* control)
+{
+    // L15: DONE 5: Implement the OnGuiMouseClickEvent method
+    LOG("Press Gui Control: %d", control->id);
+    return true;
 }

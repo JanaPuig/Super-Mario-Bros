@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include "Enemy.h"
+#include "GuiControlButton.h"
 
 // Forward declaration of SDL_Texture structure
 struct SDL_Texture;
@@ -53,6 +54,8 @@ public:
     // Guardar Escena
     void SaveState();
 
+    bool OnGuiMouseClickEvent(GuiControl* control);
+
     // Returns the player instance
     Player* GetPlayer() const { return player; }
 
@@ -91,6 +94,8 @@ public:
     int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
 
+
+    GuiControlButton* guiBt;
 private:
     // Player instance
     Player* player;
