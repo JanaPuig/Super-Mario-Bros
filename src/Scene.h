@@ -5,6 +5,7 @@
 #include <list>
 #include <vector>
 #include "Enemy.h"
+#include "Item.h"
 #include "GuiControlButton.h"
 
 // Forward declaration of SDL_Texture structure
@@ -66,6 +67,8 @@ public:
     void ToggleMenu();
 
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
+    void UpdateItem(std::string itemName, int isPicked);
+
 
     // Public member variables
     int level = 0;                   // Current map level
@@ -99,9 +102,12 @@ public:
 private:
     // Player instance
     Player* player;
+    Item* item;
+
     //Enemy* enemy;
     //std::vector<Enemy*> enemyList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
+    std::vector<std::pair<std::string, int>> itemStateList; 
 
     std::vector<int> hitcountList;
 

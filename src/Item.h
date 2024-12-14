@@ -25,13 +25,19 @@ public:
     void SetParameters(pugi::xml_node parameters) {
         this->parameters = parameters;
     }
+   
+    int GetisPicked();
+
+    void SetIsPicked(bool picked) { isPicked = picked; }
+
+    void SavePickedStateToFile();
 
 public:
     // Audio Fx
     int pickCoinFxId= 0;
     int CheckPoint= 0;
     // Indica si el ítem ha sido recogido
-    bool isPicked = false;
+    int isPicked;
 
     // Indica si el ítem es una moneda
     bool isCoin = false;

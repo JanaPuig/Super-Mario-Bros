@@ -24,6 +24,8 @@ bool Item::Start() {
     // Cargar configuraciones desde XML
     texW = parameters.attribute("w").as_int();
     texH = parameters.attribute("h").as_int();
+    isPicked = parameters.attribute("isPicked").as_int(0);
+
 
     // Inicializar texturas
     coinTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -72,10 +74,11 @@ bool Item::Update(float dt)
         float distance = sqrt(pow(position.getX() - player->position.getX(), 2) + pow(position.getY() - player->position.getY(), 2));
 
         // Si la distancia es menor al umbral, recoger el ítem
-        if (distance < 35.0f && !isPicked) {
-            isPicked = true;
+        if (distance < 35.0f && isPicked==0) {
+            isPicked = 1;
             LOG("Item picked up!");
-
+            Engine::GetInstance().scene->UpdateItem(name, isPicked);
+            SavePickedStateToFile();
             // Reproducir el sonido solo si es una moneda
             if (isCoin) {
                 Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId);
@@ -96,7 +99,7 @@ bool Item::Update(float dt)
     }
 
     // Dibujar el ítem dependiendo de si fue recogido
-    if (!isPicked) {
+    if (isPicked==0) {
         Engine::GetInstance().render.get()->DrawTexture(coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
         currentAnimation->Update();
 
@@ -113,6 +116,25 @@ bool Item::Update(float dt)
     currentAnimation_flagpole->Update();
 
     return true;
+}
+
+void Item::SavePickedStateToFile() {
+    pugi::xml_document doc;
+    if (!doc.load_file("config.xml")) {
+        LOG("Error al cargar config.xml para guardar el estado del ítem.");
+        return;
+    }
+
+    pugi::xml_node itemNode = doc.child("config").child("scene").child("entities").child("items").child("item");
+    itemNode.attribute("isPicked").set_value(isPicked);
+
+    // Guardar el archivo
+    doc.save_file("config.xml");
+}
+
+int Item::GetisPicked()
+{
+    return isPicked;
 }
 
 bool Item::CleanUp()

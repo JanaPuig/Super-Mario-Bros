@@ -61,20 +61,16 @@ bool Scene::Awake()
 void Scene::CreateLevelItems()
 {
     if (level == 1) {
-        const int startX = 1600, startY = 768;
-        const int numItems = 7, spacing = 32;
-        const int numRows = 3, rowSpacing = 64;
-        for (int row = 0; row < numRows; ++row) {
-            for (int i = 0; i < numItems; ++i) {
-                Item* coin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-                coin->position = Vector2D(startX + i * spacing, startY - row * rowSpacing);
-                pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
-                coin->SetParameters(defaultItemNode);
-                coin->isCoin = true;
-                // Log the item's creation
-                LOG("Creating item at position: (%f, %f)", coin->position.getX(), coin->position.getY());
-            }
-        }
+        const int startX = 1664, startY = 672;
+        
+        pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item"); /*defaultItemNode; defaultItemNode = defaultItemNode.next_sibling();*/
+
+        Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        item->position = Vector2D(startX, startY);
+        item->SetParameters(defaultItemNode);
+        itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
+        // Log the item's creation
+        LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
 
         // Crear flagpole
         const int positionX_flagpole = 3232, positionY_flagpole = 384;
@@ -414,6 +410,9 @@ void Scene::StartNewGame() {
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
+
+    SaveFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").set_value(0);
+
     SaveFile.save_file("config.xml");
     isFlaged = saveNode.attribute("checkpoint").as_bool();
 }
@@ -547,6 +546,14 @@ void Scene::LoadState()
         posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
         posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
     }
+
+    //Item
+    int isPicked = LoadFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").as_int();
+    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name")); // Obtén la referencia al ítem
+    if (item != nullptr) {
+        item->SetIsPicked(isPicked); // Sincroniza el estado del ítem
+    }
+
     //cargar mas cosas; enemies, items...   
     ChangeLevel(savedLevel);
     player->SetPosition(posPlayer);   // set the player position
@@ -563,6 +570,23 @@ void Scene::UpdateEnemyHitCount(std::string enemyName, int hitCount) {
         i++;
     }
 }
+
+void Scene::UpdateItem(std::string itemName, int isPicked) {
+    int i = 0;
+    for (std::pair<std::string, int> item : itemStateList)
+    {
+        if (item.first == itemName)
+        {
+            //itemStateList[i].second = isPicked;  // Update the state in the list
+
+            itemStateList[i].second = isPicked;
+
+            break;
+        }
+        i++;
+    }
+}
+
 void Scene::SaveState()
 {
     pugi::xml_document SaveFile;
@@ -645,6 +669,14 @@ void Scene::SaveState()
             }
         }
     }
+    //Item
+    pugi::xml_node itemNode = SaveFile.child("config").child("scene").child("entities").child("items").child("item");
+    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name"));
+    if (item != nullptr) {
+        itemNode.attribute("isPicked").set_value(item->GetisPicked());
+    }
+
+
     // save the XML modification to disk
     SaveFile.save_file("config.xml");
     //guardar mas cosas; enemies, items...
