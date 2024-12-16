@@ -40,26 +40,41 @@ bool Map::Update(float dt)
         for (const auto& mapLayer : mapData.layers) {
             //Check if the property Draw exist get the value, if it's true draw the lawyer
             if (mapLayer->properties.GetProperty("Draw") != NULL && mapLayer->properties.GetProperty("Draw")->value == true) {
-                for (int i = 0; i < mapData.width; i++) {
-                    for (int j = 0; j < mapData.height; j++) {
+               /* for (int i = 0; i < mapData.width; i++) {
+                    for (int j = 0; j < mapData.height; j++) {*/
 
-                        // L07 TODO 9: Complete the draw function
+                        Vector2D camPos = Vector2D(Engine::GetInstance().render->camera.x * -1, Engine::GetInstance().render->camera.y * -1);
+                        if (camPos.getX() < 0) camPos.setX(0);
+                        if (camPos.getY() < 0) camPos.setY(0);
+                        Vector2D camPosTile = WorldToMap(camPos.getX(), camPos.getY());
+                        Vector2D camSize = Vector2D(Engine::GetInstance().render->camera.w, Engine::GetInstance().render->camera.h);
+                        Vector2D camSizeTile = WorldToMap(camSize.getX(), camSize.getY());
+                        Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX(), camPosTile.getY() + camSizeTile.getY());
+                        if (limits.getX() > mapData.width) limits.setX(mapData.width);
+                       if (limits.getY() > mapData.height) limits.setY(mapData.height);
+                for (int i = camPosTile.getX(); i < limits.getX(); i++)
+                {
+                    for (int j = camPosTile.getY(); j < limits.getY(); j++)
+                    {
+                                // L07 TODO 9: Complete the draw function
 
-                        //Get the gid from tile
-                        int gid = mapLayer->Get(i, j);
-                        //Check if the gid is different from 0 - some tiles are empty
-                        if (gid != 0) {
-                            //L09: TODO 3: Obtain the tile set using GetTilesetFromTileId
-                            TileSet* tileSet = GetTilesetFromTileId(gid);
-                            if (tileSet != nullptr) {
-                                //Get the Rect from the tileSetTexture;
-                                SDL_Rect tileRect = tileSet->GetRect(gid);
-                                //Get the screen coordinates from the tile coordinates
-                                Vector2D mapCoord = MapToWorld(i, j);
-                                //Draw the texture
-                                Engine::GetInstance().render->DrawTexture(tileSet->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
-                            }
-                        }
+                                //Get the gid from tile
+                                int gid = mapLayer->Get(i, j);
+                                //Check if the gid is different from 0 - some tiles are empty
+                                if (gid != 0) {
+                                    //L09: TODO 3: Obtain the tile set using GetTilesetFromTileId
+                                    TileSet* tileSet = GetTilesetFromTileId(gid);
+                                    if (tileSet != nullptr) {
+                                        //Get the Rect from the tileSetTexture;
+                                        SDL_Rect tileRect = tileSet->GetRect(gid);
+                                        //Get the screen coordinates from the tile coordinates
+                                        Vector2D mapCoord = MapToWorld(i, j);
+                                        //Draw the texture
+                                        Engine::GetInstance().render->DrawTexture(tileSet->texture, mapCoord.getX(), mapCoord.getY(), &tileRect);
+                                    }
+                                }
+                            
+                        
                     }
                 }
             }

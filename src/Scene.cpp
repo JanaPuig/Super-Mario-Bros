@@ -63,7 +63,7 @@ void Scene::CreateLevelItems()
     if (level == 1) {
         const int startX = 1664, startY = 672;
         
-        pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item"); /*defaultItemNode; defaultItemNode = defaultItemNode.next_sibling();*/
+        pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
 
         Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         item->position = Vector2D(startX, startY);
@@ -193,6 +193,8 @@ bool Scene::Update(float dt)
             Engine::GetInstance().render.get()->DrawTexture(leaveGameButton, -cameraX + 15, -cameraY + 640);
         }
         HandleMainMenuSelection();// Manejar la selección de opciones
+        
+
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
     // Handle level transition screen
