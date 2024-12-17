@@ -52,7 +52,7 @@ bool Render::Awake()
 	//Initialize the TTF library
 	TTF_Init();
 	//Load a font into memory
-	font = TTF_OpenFont("Assets/Fonts/SuperMario/SuperMario256.ttf", 25);
+	font = TTF_OpenFont("Assets/Fonts/SuperMario/SuperMario256.ttf", 72);
 	return ret;
 }
 

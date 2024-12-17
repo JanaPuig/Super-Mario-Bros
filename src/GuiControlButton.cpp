@@ -57,7 +57,7 @@ void GuiControlButton::Draw()
 		Engine::GetInstance().render->DrawRectangle(bounds, 150, 150, 150, 100, true, false);
 		break;
 	case GuiControlState::NORMAL:
-		Engine::GetInstance().render->DrawRectangle(bounds, 0, 120, 255, 100, true, false);
+		Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);
 		break;
 	case GuiControlState::FOCUSED:
 		Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
