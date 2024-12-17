@@ -48,6 +48,15 @@ bool Scene::Awake()
     if (level == 1) {
         CreateLevelItems();
     }
+
+    // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
+    SDL_Rect NewGamePos = { 50, 350, 300, 150 };
+    SDL_Rect LoadPos = { 50, 500, 300, 150 };
+    SDL_Rect LeavePos = { 50, 650, 300, 150 };
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", NewGamePos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", LoadPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", LeavePos, this);
+
     return true;
 }
 // Creates items for Level 1
@@ -177,11 +186,6 @@ bool Scene::Update(float dt)
     }
     // Si estamos en el menú principal, no se procesan otras lógicas
     if (showMainMenu) {
-        // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
-       /* guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", { 50, 350, 300, 150 }, this);
-        guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", { 50, 500, 300, 150 }, this);
-        guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", { 50, 650, 300, 150 }, this);*/
-        // Handle help menu toggle
         // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
@@ -189,24 +193,9 @@ bool Scene::Update(float dt)
             }
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
         // Dibujar los botones con la textura correcta según la opción seleccionada
-        if (selectedOption == 0) {
-            Engine::GetInstance().render.get()->DrawTexture(newGameButtonSelected, -cameraX + 65, -cameraY + 335);
-        }
-        else {
-            Engine::GetInstance().render.get()->DrawTexture(newGameButton, -cameraX + 25, -cameraY + 350);
-        }
-        if (selectedOption == 1) {
-            Engine::GetInstance().render.get()->DrawTexture(loadGameButtonSelected, -cameraX + 55, -cameraY + 480);
-        }
-        else {
-            Engine::GetInstance().render.get()->DrawTexture(loadGameButton, -cameraX + 25, -cameraY + 490);
-        }
-        if (selectedOption == 2) {
-            Engine::GetInstance().render.get()->DrawTexture(leaveGameButtonSelected, -cameraX + 50, -cameraY + 630);
-        }
-        else {
-            Engine::GetInstance().render.get()->DrawTexture(leaveGameButton, -cameraX + 15, -cameraY + 640);
-        }
+        Engine::GetInstance().guiManager->Update(dt);
+        Engine::GetInstance().guiManager->Draw();
+
         HandleMainMenuSelection();// Manejar la selección de opciones
         
 
@@ -412,14 +401,6 @@ void Scene::HandleMainMenuSelection()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) {
         selectedOption = (selectedOption + 2) % 3; // Mover hacia arriba
         Engine::GetInstance().audio.get()->PlayFx(SelectFxId2, 0.f);
-    }
-    // Si se presiona Enter, ejecutar la opción seleccionada
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
-        switch (selectedOption) {
-        case 0: StartNewGame(); Engine::GetInstance().audio.get()->PlayFx(MenuStart); Engine::GetInstance().audio.get()->PlayFx(marioTime); ShowTransitionScreen(); break;
-        case 1: LoadGame(); Engine::GetInstance().audio.get()->StopMusic(); isLoading = true; Engine::GetInstance().audio.get()->PlayFx(MenuStart); break;
-        case 2: Engine::GetInstance().CleanUp(); break;
-        }
     }
 }
 void Scene::StartNewGame() { 
@@ -728,6 +709,26 @@ void Scene::SaveState()
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
-    LOG("Press Gui Control: %d", control->id);
-    return true;
+    switch (control->id) {
+    case 1: // New Game
+        LOG("New Game button clicked");
+        StartNewGame();
+        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+        Engine::GetInstance().audio.get()->PlayFx(marioTime);
+        ShowTransitionScreen();
+        break;
+    case 2: // Load Game
+        LOG("Load Game button clicked");
+        LoadGame();
+        Engine::GetInstance().audio.get()->StopMusic();
+        isLoading = true;
+        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+        break;
+    case 3: // Leave Game
+        LOG("Leave button clicked");
+        Engine::GetInstance().CleanUp();
+        exit(0);
+
+        break;
+    }    return true;
 }

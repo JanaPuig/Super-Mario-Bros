@@ -41,27 +41,32 @@ bool GuiControlButton::Update(float dt)
 			state = GuiControlState::NORMAL;
 		}
 
-		//L16: TODO 4: Draw the button according the GuiControl State
-		switch (state)
-		{
-		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 255, true, false);
-			break;
-		case GuiControlState::NORMAL:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 255, 255, true, false);
-			break;
-		case GuiControlState::FOCUSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 20, 255, true, false);
-			break;
-		case GuiControlState::PRESSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 0, 255, true, false);
-			break;
-		}
-
-		Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);
-
 	}
 
 	return false;
 }
 
+
+void GuiControlButton::Draw()
+{
+	//L16: TODO 4: Draw the button according the GuiControl State
+
+	switch (state)
+	{
+	case GuiControlState::DISABLED:
+		Engine::GetInstance().render->DrawRectangle(bounds, 150, 150, 150, 100, true, false);
+		break;
+	case GuiControlState::NORMAL:
+		Engine::GetInstance().render->DrawRectangle(bounds, 0, 120, 255, 100, true, false);
+		break;
+	case GuiControlState::FOCUSED:
+		Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
+		break;
+	case GuiControlState::PRESSED:
+		Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 150, 100, true, false);
+		break;
+	}
+
+	// Dibujar el texto del botón
+	Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);
+}

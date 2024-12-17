@@ -72,6 +72,8 @@ public:
 		observer->OnGuiMouseClickEvent(this);
 	}
 
+	virtual void Draw() = 0;
+
 public:
 
 	int id;

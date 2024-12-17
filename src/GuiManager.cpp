@@ -48,6 +48,15 @@ bool GuiManager::Update(float dt)
 
 	return true;
 }
+void GuiManager::Draw()
+{
+	for (const auto& control : guiControlsList)
+	{
+		
+		control->Draw();
+		
+	}
+}
 
 bool GuiManager::CleanUp()
 {
