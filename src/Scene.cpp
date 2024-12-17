@@ -28,8 +28,9 @@ bool Scene::Awake()
 {
     LOG("Loading Scene");
 
-    if (level == 1 || level == 2) 
+    if (level == 1 || level == 2||level ==3) 
     {
+        CreateLevelItems();
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
@@ -43,10 +44,6 @@ bool Scene::Awake()
                 LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
             }
         }
-    }
-    // Load level-specific items
-    if (level == 1) {
-        CreateLevelItems();
     }
 
     // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
@@ -66,7 +63,7 @@ bool Scene::Awake()
 // Creates items for Level 1
 void Scene::CreateLevelItems()
 {
-    if (level == 1) {
+    if (level == 1||level==3) {
         const int startX = 1664, startY = 672;
         
         pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
@@ -170,7 +167,7 @@ void Scene::ChangeLevel(int newLevel)
     Engine::GetInstance().map->CleanUp();
     Engine::GetInstance().entityManager->RemoveAllItems();
     level = newLevel;
-    ShowTransitionScreen();  // Show the transition screen
+    ShowTransitionScreen();
 }
 // Main update logic for the Scene
 bool Scene::Update(float dt)
@@ -215,7 +212,6 @@ bool Scene::Update(float dt)
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
 
     }
-
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -390,6 +386,7 @@ void Scene::ShowTransitionScreen()
 void Scene::FinishTransition()
 {
     CreateLevelItems();
+    elapsedTime = 0.0f;
     isFlaged = false;
     showingTransition = false;
     Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
@@ -401,25 +398,22 @@ void Scene::FinishTransition()
     if (level == 1) {
         player->SetPosition(Vector2D(30, 430));
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+    
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
     }
-    // Resume music after transition
-    Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+    else if (level == 3) {
+        player->SetPosition(Vector2D(100, 550));
+        Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
+    }
+
 }
-void Scene::HandleMainMenuSelection()
-{
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN) {
-        selectedOption = (selectedOption + 1) % 3; // Mover hacia abajo
-        Engine::GetInstance().audio.get()->PlayFx(SelectFxId, 0.f);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) {
-        selectedOption = (selectedOption + 2) % 3; // Mover hacia arriba
-        Engine::GetInstance().audio.get()->PlayFx(SelectFxId2, 0.f);
-    }
-}
+
 void Scene::StartNewGame() { 
     level = 1;
     player->SetPosition(Vector2D(30, 430));

@@ -44,6 +44,16 @@
 						</idle>
 					</animations>
 				</item>
+				<bigcoin name ="BigCoin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/BigCoin.png" gravity="false">>
+					<animations>
+						<idle loop="true" speed="0.5">
+							<frame x="0" y="0" w="64" h="64"/>
+							<frame x="64" y="0" w="64" h="64"/>
+							<frame x="128" y="0" w="64" h="64"/>
+							<frame x="192" y="0" w="64" h="64"/>
+						</idle>
+					</animations>
+				</bigcoin>
 				<flag name="flag" x="3248" y="384" w="36" h="64" texture_flag="Assets/Textures/flag.png" gravity="false">
 					<animations>
 						<idle_flag loop="true" speed="1">
@@ -193,6 +203,28 @@
 						</dead>
 					</animations>
 				</enemy2>
+				<Bowser name="bowser" x="5500" y="600" w="64" h="64" hitcount="0" texture="Assets/Textures/Bowser.png" gravity="true">>
+					<animations>
+						<idle>
+							
+						</idle>
+						<walkL>
+							
+						</walkL>
+						<walkR>
+							
+						</walkR>
+						<jump>
+							
+						</jump>
+						<hit>
+							
+						</hit>
+						<dead>
+
+						</dead>
+					</animations>
+				</Bowser>
 			</enemies>
 		</entities>
 	</scene>

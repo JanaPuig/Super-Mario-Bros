@@ -6372,7 +6372,7 @@
    <tile/>
   </data>
  </layer>
- <layer id="1" name="Map" width="212" height="30" visible="0">
+ <layer id="1" name="Map" width="212" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
