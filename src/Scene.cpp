@@ -50,12 +50,16 @@ bool Scene::Awake()
     }
 
     // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
-    SDL_Rect NewGamePos = { 50, 350, 300, 150 };
-    SDL_Rect LoadPos = { 50, 500, 300, 150 };
-    SDL_Rect LeavePos = { 50, 650, 300, 150 };
+    SDL_Rect NewGamePos = { 150, 350, 250, 120 };
+    SDL_Rect LoadPos = { 150, 485, 250, 120 };
+    SDL_Rect SettingsPos = { 150, 620, 250, 120 };
+    SDL_Rect CreditsPos = { 150, 755, 250, 120 };
+    SDL_Rect LeavePos = { 150, 890, 250, 120 };
     guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", NewGamePos, this);
     guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", LoadPos, this);
-    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", LeavePos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Settings", SettingsPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "Credits", CreditsPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Leave", LeavePos, this);
 
     return true;
 }
@@ -724,11 +728,17 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         isLoading = true;
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         break;
-    case 3: // Leave Game
+    case 3: //Setings Gamme
+        break;
+    case 4:// Credits Game
+
+        break;
+    case 5:// Leave Game
         LOG("Leave button clicked");
         Engine::GetInstance().CleanUp();
         exit(0);
-
         break;
-    }    return true;
+    } 
+
+    return true;
 }
