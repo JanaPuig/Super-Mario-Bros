@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Entity.h"
+#include "Scene.h"
 #include <list>
 
 class EntityManager : public Module
@@ -41,7 +42,7 @@ public:
 	Entity* GetEntityByName(std::string name);
 
 public:
-		
+
 	std::list<Entity*> entities;
 
 };

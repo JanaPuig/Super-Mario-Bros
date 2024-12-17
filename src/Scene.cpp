@@ -148,6 +148,7 @@ bool Scene::Start()
     loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
+    black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
 
     showGroupLogo = true;
     logoTimer = 0.0f;
@@ -188,23 +189,33 @@ bool Scene::Update(float dt)
         }
         return true;  // Evitar que se ejecute el resto del código mientras el logo está activo
     }
+   
     // Si estamos en el menú principal, no se procesan otras lógicas
     if (showMainMenu) {
         // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
-            }
+        }
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
-        // Dibujar los botones con la textura correcta según la opción seleccionada
+        // Dibujar los botones con la textura correcta según la opción 
+
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
 
         HandleMainMenuSelection();// Manejar la selección de opciones
-        
+
+        if (showCredits) {
+            Credits(); // Si showCredits es true, dibuja la pantalla de créditos
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+                showCredits = false; // Vuelve al menú si se presiona ESC
+            }
+        }
 
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
+
     }
+
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -349,6 +360,8 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
+    Engine::GetInstance().textures.get()->UnLoad(black);
+
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -710,8 +723,17 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
+void Scene::Credits() 
+{
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+    Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+
+    Engine::GetInstance().render.get()->DrawText("Credits", 1580, 20, 225, 30);
+}
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
+   
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // New Game
@@ -731,6 +753,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //Setings Gamme
         break;
     case 4:// Credits Game
+        showCredits = true;
 
         break;
     case 5:// Leave Game
