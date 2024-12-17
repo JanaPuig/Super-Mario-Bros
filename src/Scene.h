@@ -27,8 +27,12 @@ public:
     // Creates items specific to Level 1
     void CreateLevelItems();
 
+    void InitializeGuiButtons();
+
     // Called before the first frame
     bool Start();
+
+    void LoadAssets();
 
     // Called before all updates
     bool PreUpdate();
@@ -141,7 +145,6 @@ private:
     int selectedOption = 0; // Opción seleccionada (0: Nuevo Juego, 1: Cargar Juego, 2: Salir)
 
     // Métodos para manejar la selección de opciones
-    void HandleMainMenuSelection();
     void StartNewGame();
     void LoadGame();
 
