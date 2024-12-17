@@ -71,6 +71,10 @@ bool Player::Update(float dt) {
 	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
+	if (Engine::GetInstance().scene.get()->timeUp) {
+		isDead = true;
+		
+	}
 	if (!isActive) return true;
 
 	if (pbody == nullptr) {
@@ -115,6 +119,7 @@ bool Player::Update(float dt) {
 			
 			isDead = false;
 			deathSoundPlayed = false;
+			Engine::GetInstance().scene.get()->timeUp == false;
 
 			// Reiniciar enemigos
 			Engine::GetInstance().entityManager.get()->ResetEnemies();

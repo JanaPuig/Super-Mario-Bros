@@ -32,6 +32,7 @@
 			<leaveGameButton path="Assets/Textures/LeaveGameButton.png" />
 			<loadingScreen path="Assets/Textures/loadgame.png" />
 			<gameOver path="Assets/Textures/gameOver.png" />
+			<GroupLogo path="Assets/Textures/Logo.png" />
 		</textures>
 		<entities>
 			<items>

@@ -76,7 +76,9 @@ public:
     bool isLoading = false; // Bandera para mostrar pantalla de carga
     float loadingScreenDuration = 3100.0f; // Duración de la pantalla de carga (en segundos)
     float loadingTimer = 0.0f;    // Temporizador para la pantalla de carga
-
+    float levelTime = 90000.0f;    // Tiempo total para completar el nivel (en segundos)
+    float elapsedTime = 0.0f;    // Tiempo acumulado desde el inicio del nivel
+    bool showRemainingTime = true;  // Mostrar tiempo restante o acumulado (true = restante, false = acumulado)
 
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
     bool showHelpMenu = false;       // Whether the help menu is visible
@@ -87,7 +89,10 @@ public:
     SDL_Texture* Title = NULL; // Texture for the main menu
     SDL_Texture* gameOver = NULL;
     bool showMainMenu = true;        // Whether the main menu is visible
-
+    bool showGroupLogo =false;  
+    bool timeUp = false;// Controla si se muestra el logo
+    float logoTimer = 0;                // Temporizador para el logo
+    float logoDuration = 3000.0f;      // Duración del logo en segundos
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
     int CastleFxId = 0;   
     int SelectFxId = 0;
@@ -104,23 +109,20 @@ private:
     Player* player;
     Item* item;
 
-    //Enemy* enemy;
     //std::vector<Enemy*> enemyList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList; 
 
     std::vector<int> hitcountList;
 
-
     // Transition-related variables
     SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
     SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
-
+    SDL_Texture* GroupLogo = NULL;
     int gameIntroMusicId = 0; // Identificador de la música GameIntro
     int menuMusicId = 0; // Identificador de la música MenuMusic
     float transitionDuration = 3100;      // Duration of the transition screen (in ms)
     float transitionTimer = 0.0f;         // Timer for tracking transition time
-
     bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
     // Displays the transition screen
     void ShowTransitionScreen();

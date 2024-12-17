@@ -48,13 +48,6 @@ bool Scene::Awake()
     if (level == 1) {
         CreateLevelItems();
     }
-    // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
-    SDL_Rect NewGamePos = { 50, 350, 300, 150 };
-    SDL_Rect LoadPos = { 50, 500, 300, 150 };
-    SDL_Rect LeavePos = { 50, 650, 300, 150 };
-    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", NewGamePos, this);
-    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", LoadPos, this);
-    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", LeavePos, this);
     return true;
 }
 // Creates items for Level 1
@@ -141,7 +134,12 @@ bool Scene::Start()
     leaveGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButton").attribute("path").as_string());
     loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
+    GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
+
+    showGroupLogo = true;
+    logoTimer = 0.0f;
     return true;
+
 }
 // Called before each frame update
 bool Scene::PreUpdate()
@@ -165,8 +163,25 @@ bool Scene::Update(float dt)
 {
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
+    if (showGroupLogo)
+    {
+        logoTimer += dt;
+        Engine::GetInstance().render.get()->DrawTexture(GroupLogo, -cameraX, -cameraY);
+        // Si el temporizador supera la duración del logo, ocultarlo
+        if (logoTimer >= logoDuration)
+        {
+            showGroupLogo = false;
+            showMainMenu = true;  // Mostrar el menú principal
+        }
+        return true;  // Evitar que se ejecute el resto del código mientras el logo está activo
+    }
     // Si estamos en el menú principal, no se procesan otras lógicas
     if (showMainMenu) {
+        // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
+       /* guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", { 50, 350, 300, 150 }, this);
+        guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", { 50, 500, 300, 150 }, this);
+        guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Leave", { 50, 650, 300, 150 }, this);*/
+        // Handle help menu toggle
         // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
@@ -218,8 +233,9 @@ bool Scene::Update(float dt)
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
+
     Vector2D playerPos = player->GetPosition();
-    // Handle help menu toggle
+   
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
         ToggleMenu();
         ToggleHelpMenu = true;
@@ -242,6 +258,30 @@ bool Scene::Update(float dt)
     if (level == 1) {
         HandleTeleport(playerPos);
     }
+    // Temporizador del nivel
+    elapsedTime += dt;  // Aumenta el tiempo acumulado
+    float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
+
+    // Lógica si se acaba el tiempo
+    if ((currentTime/1000) <= 0.0f)
+    {
+        std::cout << "Time's up! Game over!" << std::endl;
+        timeUp = true;
+        if (timeUp == false)
+        {
+         showMainMenu = true; // Regresa al menú principal o termina el nivel
+        }
+    }
+
+    // Renderizar el tiempo en pantalla
+    char timerText[64];
+    if (showRemainingTime)
+        sprintf_s(timerText, "%0.f", currentTime/1000);
+  
+    Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20,30,30);
+    Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
+
+
     return true;
 }
 // Handles teleportation logic
@@ -315,6 +355,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(level1Transition);
     Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
+    Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
