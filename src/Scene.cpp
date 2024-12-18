@@ -691,8 +691,10 @@ void Scene::Credits()
 {
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
-    Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
-    Engine::GetInstance().render.get()->DrawText("Credits", 1580, 20, 225, 30);
+    Engine::GetInstance().render.get()->DrawTexture(black,0,0);
+    Engine::GetInstance().render.get()->DrawText("Credits", 787 + 32, 194+100+50, 225 + 64, 30 + 64);
+    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 787, 394+100, 225 + 64 + 64, 30 + 32);
+    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 787, 394+100+100, 225+64+64, 30+32);
 
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
@@ -716,7 +718,9 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //Setings Gamme
         break;
     case 4:// Credits Game
-        Credits();
+        showCredits = true;
+        //Credits();
+
         break;
     case 5:// Leave Game
         LOG("Leave button clicked");
