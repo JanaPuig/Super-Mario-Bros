@@ -56,7 +56,7 @@ public:
     void SaveState();
 
     bool OnGuiMouseClickEvent(GuiControl* control);
-
+    void Settings();
     void DrawLives();
     void GameOver();
 
@@ -90,11 +90,13 @@ public:
     bool showingTransition = false;       // Whether the transition screen is visible
     bool isFlaged = false;
     SDL_Texture* black = NULL;
+    SDL_Texture* blur = NULL;
     SDL_Texture* Title = NULL; // Texture for the main menu
     SDL_Texture* gameOver = NULL;
     bool showMainMenu = true;        // Whether the main menu is visible
     bool showGroupLogo =false;  
     bool timeUp = false;// Controla si se muestra el logo
+    bool showSettings = false;
     float logoTimer = 0;                // Temporizador para el logo
     float logoDuration = 3000.0f;      // Duración del logo en segundos
     int pipeFxId = 0;                // Sound effect ID for pipe interaction

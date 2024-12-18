@@ -34,6 +34,7 @@
 			<gameOver path="Assets/Textures/gameOver.png" />
 			<GroupLogo path="Assets/Textures/Logo.png" />
 			<black path="Assets/Textures/black.png" />
+			<blur path="Assets/Textures/blur.png" />
 		</textures>
 		<entities>
 			<items>

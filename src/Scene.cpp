@@ -126,6 +126,7 @@ bool Scene::Start()
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
+    blur = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("blur").attribute("path").as_string());
 
 
     showGroupLogo = true;
@@ -167,8 +168,14 @@ bool Scene::Update(float dt)
         Engine::GetInstance().guiManager->Draw();
         if (showCredits) {
             Credits(); // Si showCredits es true, dibuja la pantalla de cr�ditos
-            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-                showCredits = false; // Vuelve al men� si se presiona ESC
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+                showCredits = false; // Vuelve al menu si se presiona backspace
+            }
+        }
+        if (showSettings) {
+            Settings();
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+                showSettings = false; // Vuelve al menu si se presiona backspace
             }
         }
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
@@ -193,6 +200,9 @@ bool Scene::Update(float dt)
             LoadState(); // Load Game State
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
+    }
+    if (!showCredits) {
+
     }
 
     Vector2D playerPos = player->GetPosition();
@@ -551,14 +561,12 @@ void Scene::LoadState()
         posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").as_int());
         posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
     }
-
     //Item
     int isPicked = LoadFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").as_int();
     Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name")); // Obtén la referencia al ítem
     if (item != nullptr) {
         item->SetIsPicked(isPicked); // Sincroniza el estado del ítem
     }
-
     //cargar mas cosas; enemies, items...   
     ChangeLevel(savedLevel);
     player->SetPosition(posPlayer);   // set the player position
@@ -680,8 +688,6 @@ void Scene::SaveState()
     if (item != nullptr) {
         itemNode.attribute("isPicked").set_value(item->GetisPicked());
     }
-
-
     // save the XML modification to disk
     SaveFile.save_file("config.xml");
     //guardar mas cosas; enemies, items...
@@ -692,10 +698,16 @@ void Scene::Credits()
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
     Engine::GetInstance().render.get()->DrawTexture(black,0,0);
-    Engine::GetInstance().render.get()->DrawText("Credits", 787 + 32, 344, 289, 30 + 64);
-    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 787, 494, 353, 62);
-    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 787, 594, 353, 62);
-
+    Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
+    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
+}
+void Scene::Settings()
+{
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+    Engine::GetInstance().render.get()->DrawTexture(blur, 0, 0);
+    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 250, 352, 128);
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
@@ -716,11 +728,10 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         break;
     case 3: //Setings Gamme
+        showSettings = true;
         break;
     case 4:// Credits Game
         showCredits = true;
-        //Credits();
-
         break;
     case 5:// Leave Game
         LOG("Leave button clicked");
@@ -733,7 +744,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 void Scene::GameOver() {
     // Mostrar pantalla de Game Over y/o volver al menú
     showMainMenu = true;  // Regresar al menú principal
-
     Engine::GetInstance().audio.get()->StopMusic(0.2f);  // Detener música
 }
 void Scene::DrawLives() {
