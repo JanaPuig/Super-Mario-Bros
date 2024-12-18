@@ -692,9 +692,9 @@ void Scene::Credits()
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
     Engine::GetInstance().render.get()->DrawTexture(black,0,0);
-    Engine::GetInstance().render.get()->DrawText("Credits", 787 + 32, 194+100+50, 225 + 64, 30 + 64);
-    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 787, 394+100, 225 + 64 + 64, 30 + 32);
-    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 787, 394+100+100, 225+64+64, 30+32);
+    Engine::GetInstance().render.get()->DrawText("Credits", 787 + 32, 344, 289, 30 + 64);
+    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 787, 494, 353, 62);
+    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 787, 594, 353, 62);
 
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
