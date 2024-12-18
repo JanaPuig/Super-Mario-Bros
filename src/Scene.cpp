@@ -201,19 +201,12 @@ bool Scene::Update(float dt)
             isGameIntroPlaying = true;
             }
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
-        // Dibujar los botones con la textura correcta según la opción 
-
+        // Dibujar los botones con la textura correcta según la opción seleccionada
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
 
         HandleMainMenuSelection();// Manejar la selección de opciones
-
-        if (showCredits) {
-            Credits(); // Si showCredits es true, dibuja la pantalla de créditos
-            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-                showCredits = false; // Vuelve al menú si se presiona ESC
-            }
-        }
+        
 
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
@@ -379,8 +372,6 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
-    Engine::GetInstance().textures.get()->UnLoad(black);
-
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
