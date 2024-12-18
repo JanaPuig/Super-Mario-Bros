@@ -73,7 +73,6 @@ public:
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
 
-    void Credits();
 
     // Public member variables
     int level = 0;                   // Current map level
@@ -84,7 +83,7 @@ public:
     float levelTime = 90000.0f;    // Tiempo total para completar el nivel (en segundos)
     float elapsedTime = 0.0f;    // Tiempo acumulado desde el inicio del nivel
     bool showRemainingTime = true;  // Mostrar tiempo restante o acumulado (true = restante, false = acumulado)
-    bool showCredits = false;
+
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
     bool showHelpMenu = false;       // Whether the help menu is visible
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
@@ -123,7 +122,6 @@ private:
     // Transition-related variables
     SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
     SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
-    SDL_Texture* black = NULL; // Texture for Level 2 transition
     SDL_Texture* GroupLogo = NULL;
     int gameIntroMusicId = 0; // Identificador de la música GameIntro
     int menuMusicId = 0; // Identificador de la música MenuMusic

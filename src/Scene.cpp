@@ -103,7 +103,31 @@ bool Scene::Start()
 {
     Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
-    LoadAssets();
+    // Load sound effects
+    pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
+    CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
+    MenuStart = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/StartNewGame.wav");
+    SelectFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectDown.wav");
+    SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
+    marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
+    hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
+
+    // Load textures for menus and transitions
+    mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
+    Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
+    helpMenuTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("helpMenu").attribute("path").as_string());
+    level1Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level1Transition").attribute("path").as_string());
+    level2Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level2Transition").attribute("path").as_string());
+    newGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButtonSelected").attribute("path").as_string());
+    loadGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButtonSelected").attribute("path").as_string());
+    leaveGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButtonSelected").attribute("path").as_string());
+    newGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButton").attribute("path").as_string());
+    loadGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButton").attribute("path").as_string());
+    leaveGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButton").attribute("path").as_string());
+    loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
+    gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
+    GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
+
     showGroupLogo = true;
     logoTimer = 0.0f;
 
@@ -175,17 +199,22 @@ bool Scene::Update(float dt)
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
-        }
+            }
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
         // Dibujar los botones con la textura correcta según la opción 
+
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
+
+        HandleMainMenuSelection();// Manejar la selección de opciones
+
         if (showCredits) {
             Credits(); // Si showCredits es true, dibuja la pantalla de créditos
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
                 showCredits = false; // Vuelve al menú si se presiona ESC
             }
         }
+
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
     // Handle level transition screen
@@ -336,13 +365,24 @@ bool Scene::PostUpdate()
 // Cleans up the scene
 bool Scene::CleanUp()
 {
-    Engine::GetInstance().textures->UnLoad(mainMenu);
-    Engine::GetInstance().textures->UnLoad(loadingScreen);
-    Engine::GetInstance().textures->UnLoad(helpMenuTexture);
-    Engine::GetInstance().textures->UnLoad(Title);
-    Engine::GetInstance().textures->UnLoad(level1Transition);
-    Engine::GetInstance().textures->UnLoad(level2Transition);
-    Engine::GetInstance().textures->UnLoad(black);
+    Engine::GetInstance().textures.get()->UnLoad(mainMenu);
+    Engine::GetInstance().textures.get()->UnLoad(loadingScreen);
+    Engine::GetInstance().textures.get()->UnLoad(newGameButton);
+    Engine::GetInstance().textures.get()->UnLoad(loadGameButton);
+    Engine::GetInstance().textures.get()->UnLoad(leaveGameButton);
+    Engine::GetInstance().textures.get()->UnLoad(newGameButtonSelected);
+    Engine::GetInstance().textures.get()->UnLoad(loadGameButtonSelected);
+    Engine::GetInstance().textures.get()->UnLoad(leaveGameButtonSelected);
+    Engine::GetInstance().textures.get()->UnLoad(helpMenuTexture);
+    Engine::GetInstance().textures.get()->UnLoad(Title);
+    Engine::GetInstance().textures.get()->UnLoad(level1Transition);
+    Engine::GetInstance().textures.get()->UnLoad(level2Transition);
+    Engine::GetInstance().textures.get()->UnLoad(gameOver);
+    Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
+    Engine::GetInstance().textures.get()->UnLoad(black);
+
+    Engine::GetInstance().audio.get()->StopMusic();
+    LOG("Freeing scene");
     return true;
 }
 // Toggles the help menu visibility
@@ -698,17 +738,8 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
-void Scene::Credits() 
-{
-    int cameraX = Engine::GetInstance().render.get()->camera.x;
-    int cameraY = Engine::GetInstance().render.get()->camera.y;
-    Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
-
-    Engine::GetInstance().render.get()->DrawText("Credits", 1580, 20, 225, 30);
-}
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
-   
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // New Game
@@ -728,7 +759,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //Setings Gamme
         break;
     case 4:// Credits Game
-        showCredits = true;
 
         break;
     case 5:// Leave Game
