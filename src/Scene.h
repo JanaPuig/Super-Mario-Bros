@@ -69,6 +69,7 @@ public:
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
 
+    void Credits();
 
     // Public member variables
     int level = 0;                   // Current map level
@@ -79,13 +80,13 @@ public:
     float levelTime = 90000.0f;    // Tiempo total para completar el nivel (en segundos)
     float elapsedTime = 0.0f;    // Tiempo acumulado desde el inicio del nivel
     bool showRemainingTime = true;  // Mostrar tiempo restante o acumulado (true = restante, false = acumulado)
-
+    bool showCredits = false;
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
     bool showHelpMenu = false;       // Whether the help menu is visible
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
     bool showingTransition = false;       // Whether the transition screen is visible
     bool isFlaged = false;
-
+    SDL_Texture* black = NULL;
     SDL_Texture* Title = NULL; // Texture for the main menu
     SDL_Texture* gameOver = NULL;
     bool showMainMenu = true;        // Whether the main menu is visible
@@ -101,8 +102,6 @@ public:
     int hereWeGo = 0;
     int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
-
-
     GuiControlButton* guiBt;
 private:
     // Player instance
@@ -139,7 +138,6 @@ private:
     int selectedOption = 0; // Opción seleccionada (0: Nuevo Juego, 1: Cargar Juego, 2: Salir)
 
     // Métodos para manejar la selección de opciones
-    void HandleMainMenuSelection();
     void StartNewGame();
     void LoadGame();
 

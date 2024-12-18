@@ -1,4 +1,4 @@
-#include "Engine.h"
+ï»¿#include "Engine.h"
 #include "Input.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -40,7 +40,7 @@ bool Scene::Awake()
                 Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 enemy->SetParameters(enemyNode);
                 enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-                // Log para depuración
+                // Log para depuraciÃ³n
                 LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
             }
         }
@@ -96,7 +96,7 @@ void Scene::CreateLevelItems()
     if (level == 2)
     {
         // Crear flagpole para level 2
-        const int positionX_flagpole = 2500; // Cambiar a una posición diferente
+        const int positionX_flagpole = 2500; // Cambiar a una posiciÃ³n diferente
         const int positionY_flagpole = 500;
         Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
@@ -106,7 +106,7 @@ void Scene::CreateLevelItems()
         LOG("Creating flagpole for level 2 at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
 
         // Crear flag para level 2
-        const int positionX_flag = 2516; // Cambiar a una posición diferente
+        const int positionX_flag = 2516; // Cambiar a una posiciÃ³n diferente
         const int positionY_flag = 500;
         Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         flag->position = Vector2D(positionX_flag, positionY_flag);
@@ -180,32 +180,31 @@ bool Scene::Update(float dt)
     {
         logoTimer += dt;
         Engine::GetInstance().render.get()->DrawTexture(GroupLogo, -cameraX, -cameraY);
-        // Si el temporizador supera la duración del logo, ocultarlo
+        // Si el temporizador supera la duraciÃ³n del logo, ocultarlo
         if (logoTimer >= logoDuration)
         {
             showGroupLogo = false;
-            showMainMenu = true;  // Mostrar el menú principal
+            showMainMenu = true;  // Mostrar el menÃº principal
         }
-        return true;  // Evitar que se ejecute el resto del código mientras el logo está activo
+        return true;  // Evitar que se ejecute el resto del cÃ³digo mientras el logo estÃ¡ activo
     }
-    // Si estamos en el menú principal, no se procesan otras lógicas
+    // Si estamos en el menÃº principal, no se procesan otras lÃ³gicas
     if (showMainMenu) {
         // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
             }
-        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
+        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menÃº principal
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
-        HandleMainMenuSelection();// Manejar la selección de opciones
         if (showCredits) {
-            Credits(); // Si showCredits es true, dibuja la pantalla de créditos
+            Credits(); // Si showCredits es true, dibuja la pantalla de crï¿½ditos
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-                showCredits = false; // Vuelve al menú si se presiona ESC
+                showCredits = false; // Vuelve al menï¿½ si se presiona ESC
             }
         }
-        return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
+        return true; // Evita que se ejecute el cÃ³digo del resto del juego mientras el menÃº estÃ© activo
     }
     // Handle level transition screen
     if (showingTransition) {
@@ -226,7 +225,7 @@ bool Scene::Update(float dt)
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
             LoadState(); // Load Game State
         }
-        return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
+        return true; // Detenemos el resto de la lÃ³gica mientras estÃ¡ la pantalla de carga
     }
 
     Vector2D playerPos = player->GetPosition();
@@ -257,14 +256,14 @@ bool Scene::Update(float dt)
     elapsedTime += dt;  // Aumenta el tiempo acumulado
     float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
 
-    // Lógica si se acaba el tiempo
+    // LÃ³gica si se acaba el tiempo
     if ((currentTime/1000) <= 0.0f)
     {
         std::cout << "Time's up! Game over!" << std::endl;
         timeUp = true;
         if (timeUp == false)
         {
-         showMainMenu = true; // Regresa al menú principal o termina el nivel
+         showMainMenu = true; // Regresa al menÃº principal o termina el nivel
         }
     }
 
@@ -487,7 +486,7 @@ void Scene::LoadGame() {
         }
 
     }
-    // Si hay más datos a cargar, puedes hacerlo aquí.
+    // Si hay mÃ¡s datos a cargar, puedes hacerlo aquÃ­.
     //cargar checkpoint
     isFlaged= saveNode.attribute("checkpoint").as_bool();
     showMainMenu = false;
@@ -576,9 +575,9 @@ void Scene::LoadState()
 
     //Item
     int isPicked = LoadFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").as_int();
-    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name")); // Obtén la referencia al ítem
+    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name")); // ObtÃ©n la referencia al Ã­tem
     if (item != nullptr) {
-        item->SetIsPicked(isPicked); // Sincroniza el estado del ítem
+        item->SetIsPicked(isPicked); // Sincroniza el estado del Ã­tem
     }
 
     //cargar mas cosas; enemies, items...   
@@ -709,6 +708,14 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
+void Scene::Credits()
+{
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+    Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+
+    Engine::GetInstance().render.get()->DrawText("Credits", 1580, 20, 225, 30);
+}
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
@@ -730,7 +737,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 3: //Setings Gamme
         break;
     case 4:// Credits Game
-
+        Credits();
         break;
     case 5:// Leave Game
         LOG("Leave button clicked");
