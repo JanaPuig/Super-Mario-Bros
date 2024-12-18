@@ -38,20 +38,20 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="64" h="64" />
 						</idle>
 					</animations>
 				</item>
-				<bigcoin name ="BigCoin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/BigCoin.png" gravity="false">>
+				<bigcoin name="BigCoin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/BigCoin.png" gravity="false">&gt;
 					<animations>
 						<idle loop="true" speed="0.5">
-							<frame x="0" y="0" w="64" h="64"/>
-							<frame x="64" y="0" w="64" h="64"/>
-							<frame x="128" y="0" w="64" h="64"/>
-							<frame x="192" y="0" w="64" h="64"/>
+							<frame x="0" y="0" w="64" h="64" />
+							<frame x="64" y="0" w="64" h="64" />
+							<frame x="128" y="0" w="64" h="64" />
+							<frame x="192" y="0" w="64" h="64" />
 						</idle>
 					</animations>
 				</bigcoin>
@@ -204,26 +204,14 @@
 						</dead>
 					</animations>
 				</enemy2>
-				<Bowser name="bowser" x="5500" y="600" w="64" h="64" hitcount="0" texture="Assets/Textures/Bowser.png" gravity="true">>
+				<Bowser name="bowser" x="5500" y="600" w="64" h="64" hitcount="0" texture="Assets/Textures/Bowser.png" gravity="true">&gt;
 					<animations>
-						<idle>
-							
-						</idle>
-						<walkL>
-							
-						</walkL>
-						<walkR>
-							
-						</walkR>
-						<jump>
-							
-						</jump>
-						<hit>
-							
-						</hit>
-						<dead>
-
-						</dead>
+						<idle />
+						<walkL />
+						<walkR />
+						<jump />
+						<hit />
+						<dead />
 					</animations>
 				</Bowser>
 			</enemies>

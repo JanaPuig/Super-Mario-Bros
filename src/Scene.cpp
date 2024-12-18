@@ -28,15 +28,10 @@ bool Scene::Awake()
 {
     LOG("Loading Scene");
 
-<<<<<<< HEAD
     if (level == 1 || level == 2||level ==3) 
     {
         CreateLevelItems();
         // Create the player entity
-=======
-    if (level == 1 || level == 2 || level == 3)
-    {
->>>>>>> dd27f93 (Boss Castle Creation & Music)
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
 
@@ -51,30 +46,17 @@ bool Scene::Awake()
            
         }
     }
-<<<<<<< HEAD
-=======
-    if (level == 1)
-    {
-        CreateLevelItems();
-    }
->>>>>>> dd27f93 (Boss Castle Creation & Music)
-
     InitializeGuiButtons();
     return true;
 }
 // Creates items for Level 1
 void Scene::CreateLevelItems()
 {
-<<<<<<< HEAD
-    if (level == 1||level==3) {
-        const int startX = 1664, startY = 672;
-        
-=======
+
     if (level == 1 || level == 2 || level == 3)
     {
        const int startX = 1664, startY = 672;
 
->>>>>>> dd27f93 (Boss Castle Creation & Music)
         pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
 
         Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
@@ -167,10 +149,7 @@ void Scene::ChangeLevel(int newLevel)
     Engine::GetInstance().entityManager->RemoveAllItems();
 
     level = newLevel;
-<<<<<<< HEAD
-=======
     CreateLevelItems();
->>>>>>> dd27f93 (Boss Castle Creation & Music)
     ShowTransitionScreen();
 }
 // Main update logic for the Scene
@@ -403,10 +382,6 @@ void Scene::FinishTransition()
         player->SetPosition(Vector2D(30, 430));
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
-<<<<<<< HEAD
-    
-=======
->>>>>>> dd27f93 (Boss Castle Creation & Music)
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
@@ -414,18 +389,10 @@ void Scene::FinishTransition()
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
     }
     else if (level == 3) {
-<<<<<<< HEAD
-        player->SetPosition(Vector2D(100, 550));
-        Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
-        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
-    }
-
-=======
         player->SetPosition(Vector2D(100, 580));
         Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
     }
->>>>>>> dd27f93 (Boss Castle Creation & Music)
 }
 
 void Scene::StartNewGame() { 
