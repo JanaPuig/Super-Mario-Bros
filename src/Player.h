@@ -40,7 +40,8 @@ public:
     }
 
     Vector2D GetPosition();
-
+    void LoseLife();  // Función para perder una vida
+    void CheckLives(); // Función para verificar si el jugador tiene vidas
 private:
 
     SDL_Texture* texturePlayer;

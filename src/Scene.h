@@ -57,6 +57,9 @@ public:
 
     bool OnGuiMouseClickEvent(GuiControl* control);
 
+    void DrawLives();
+    void GameOver();
+
     // Returns the player instance
     Player* GetPlayer() const { return player; }
 

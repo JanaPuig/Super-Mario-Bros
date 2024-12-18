@@ -298,6 +298,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 		else {
 			isDead = true; // Si el jugador no está encima, muere
+			LoseLife();
+			CheckLives();  // Verifica si el jugador ha perdido todas sus vidas
 		}
 		break;
 	}
@@ -356,7 +358,6 @@ Vector2D Player::GetPosition() {
 	Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
 	return pos;
 }
-
 void Player::ToggleGodMode() {
 	godMode = !godMode;
 	LOG(godMode ? "GOD MODE ACTIVATED" : "GOD MODE DEACTIVATED");
@@ -367,8 +368,6 @@ void Player::ToggleGodMode() {
 
 	if (godMode) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 }
-
-
 void Player::PlayerFlight(float dt) {
 	b2Vec2 velocity = pbody->body->GetLinearVelocity();
 	velocity.SetZero();// Inicialize velocity at 0
@@ -377,5 +376,15 @@ void Player::PlayerFlight(float dt) {
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) velocity.y = -0.2f * dt;  // up
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) velocity.y = 0.2f * dt;   // down
 	pbody->body->SetLinearVelocity(velocity);// Apply velocity to the body
-
+}
+// En Player.cpp
+void Player::LoseLife() {
+	Engine::GetInstance().entityManager->lives--;
+	Engine::GetInstance().scene->DrawLives();
+}
+void Player::CheckLives() {
+	if (Engine::GetInstance().entityManager->lives <= 0) {
+		isDead = true;
+		Engine::GetInstance().scene.get()->GameOver();  // Cambia el estado a "Game Over"
+	}
 }

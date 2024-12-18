@@ -41,7 +41,7 @@ public:
 	Entity* GetEntityByName(std::string name);
 
 public:
-		
+	int lives = 3;
 	std::list<Entity*> entities;
 
 };

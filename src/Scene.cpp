@@ -100,7 +100,7 @@ void Scene::CreateLevelItems()
 bool Scene::Start()
 {
     Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
-
+    DrawLives();
     // Load sound effects
     pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
     CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
@@ -724,6 +724,16 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         exit(0);
         break;
     } 
-
     return true;
+}
+void Scene::GameOver() {
+    // Mostrar pantalla de Game Over y/o volver al menú
+    showMainMenu = true;  // Regresar al menú principal
+
+    Engine::GetInstance().audio.get()->StopMusic(0.2f);  // Detener música
+}
+void Scene::DrawLives() {
+    char livesText[64];
+    sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
+    Engine::GetInstance().render.get()->DrawText(livesText, 20, 20, 30, 30);  // Ajusta la posición y tamaño
 }
