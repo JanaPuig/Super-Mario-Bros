@@ -34,28 +34,38 @@ bool Scene::Awake()
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
-
-        // Create enemies for the current level
-        pugi::xml_node enemiesNode = configParameters.child("entities").child("enemies");
-        for (pugi::xml_node enemyNode = enemiesNode.first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
+        if (level == 1) {
+            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
+            {
                 Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 enemy->SetParameters(enemyNode);
-                enemyStateList.emplace_back(enemyNode.attribute("name").as_string(), 0);
-                LOG("Enemy created for level %d: %s", level, enemyNode.attribute("name").as_string());
-           
+                enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
+                // Log para depuración
+                LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+            }
         }
     }
-    InitializeGuiButtons();
+
+    // L16: TODO 2: Instantiate a new GuiControlButton in the Scene
+    SDL_Rect NewGamePos = { 150, 350, 250, 120 };
+    SDL_Rect LoadPos = { 150, 485, 250, 120 };
+    SDL_Rect SettingsPos = { 150, 620, 250, 120 };
+    SDL_Rect CreditsPos = { 150, 755, 250, 120 };
+    SDL_Rect LeavePos = { 150, 890, 250, 120 };
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 1, "New Game", NewGamePos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 2, "Load", LoadPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 3, "Settings", SettingsPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 4, "Credits", CreditsPos, this);
+    guiBt = (GuiControlButton*)Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Leave", LeavePos, this);
+
     return true;
 }
 // Creates items for Level 1
 void Scene::CreateLevelItems()
 {
-
-    if (level == 1 || level == 2 || level == 3)
-    {
-       const int startX = 1664, startY = 672;
+    if (level == 1||level==3) {
+        const int startX = 1664, startY = 672;
+        
 
         pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
 
@@ -66,37 +76,46 @@ void Scene::CreateLevelItems()
         // Log the item's creation
         LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
 
-        int flagpoleX[] = { 3232, 2500, 2800 };
-        int flagpoleY[] = { 384, 500, 450 };
-
-        int flagX[] = { 3248, 2516, 2816 };
-        int flagY[] = { 384, 500, 450 };
-
-        // Create flagpole
+        // Crear flagpole
+        const int positionX_flagpole = 3232, positionY_flagpole = 384;
         Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flagpole->position = Vector2D(flagpoleX[level - 1], flagpoleY[level - 1]);
-        flagpole->SetParameters(configParameters.child("entities").child("items").child("flagpole"));
-        LOG("Creating flagpole for level %d at position: (%f, %f)", level, flagpole->position.getX(), flagpole->position.getY());
+        flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
 
-        // Create flag
+        pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+        flagpole->SetParameters(flagpoleNode);
+        LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+
+        // Crear flag
+        const int positionX_flag = 3248, positionY_flag = 384;
         Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flag->position = Vector2D(flagX[level - 1], flagY[level - 1]);
-        flag->SetParameters(configParameters.child("entities").child("items").child("flag"));
-        LOG("Creating flag for level %d at position: (%f, %f)", level, flag->position.getX(), flag->position.getY());
-    }
-}
-void Scene::InitializeGuiButtons()
-{
-    SDL_Rect positions[] = {
-        {150, 350, 250, 120}, {150, 485, 250, 120}, {150, 620, 250, 120}, {150, 755, 250, 120}, {150, 890, 250, 120}
-    };
+        flag->position = Vector2D(positionX_flag, positionY_flag);
 
-    const char* buttonTexts[] = { "New Game", "Load", "Settings", "Credits", "Leave" };
-
-    for (int i = 0; i < 5; ++i)
+        pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+        flag->SetParameters(flagNode); 
+    } 
+    if (level == 2)
     {
-        guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, i + 1, buttonTexts[i], positions[i], this));
+        // Crear flagpole para level 2
+        const int positionX_flagpole = 2500; // Cambiar a una posición diferente
+        const int positionY_flagpole = 500;
+        Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+
+        pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+        flagpole->SetParameters(flagpoleNode);
+        LOG("Creating flagpole for level 2 at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+
+        // Crear flag para level 2
+        const int positionX_flag = 2516; // Cambiar a una posición diferente
+        const int positionY_flag = 500;
+        Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flag->position = Vector2D(positionX_flag, positionY_flag);
+
+        pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+        flag->SetParameters(flagNode);
+        LOG("Creating flag for level 2 at position: (%f, %f)", flag->position.getX(), flag->position.getY());
     }
+
 }
 // Called before the first frame
 bool Scene::Start()
@@ -127,36 +146,14 @@ bool Scene::Start()
     loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
+    black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
+
 
     showGroupLogo = true;
     logoTimer = 0.0f;
-
     return true;
+
 }
-void Scene::LoadAssets()
-{
-    auto& audio = Engine::GetInstance().audio;
-    auto& textures = Engine::GetInstance().textures;
-
-    pipeFxId = audio->LoadFx("Assets/Audio/Fx/Pipe.wav");
-    CastleFxId = audio->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
-    MenuStart = audio->LoadFx("Assets/Audio/Fx/StartNewGame.wav");
-    SelectFxId = audio->LoadFx("Assets/Audio/Fx/SelectDown.wav");
-    SelectFxId2 = audio->LoadFx("Assets/Audio/Fx/SelectUp.wav");
-    marioTime = audio->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
-    hereWeGo = audio->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
-
-    mainMenu = textures->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
-    Title = textures->Load(configParameters.child("textures").child("title").attribute("path").as_string());
-    helpMenuTexture = textures->Load(configParameters.child("textures").child("helpMenu").attribute("path").as_string());
-    level1Transition = textures->Load(configParameters.child("textures").child("level1Transition").attribute("path").as_string());
-    level2Transition = textures->Load(configParameters.child("textures").child("level2Transition").attribute("path").as_string());
-    loadingScreen = textures->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
-    gameOver = textures->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
-    GroupLogo = textures->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
-    black = textures->Load(configParameters.child("textures").child("black").attribute("path").as_string());
-}
-
 // Called before each frame update
 bool Scene::PreUpdate()
 {
@@ -166,14 +163,12 @@ bool Scene::PreUpdate()
 void Scene::ChangeLevel(int newLevel)
 {
     if (level == newLevel) return;
-
     LOG("Changing level from %d to %d", level, newLevel);
-    Engine::GetInstance().entityManager->RemoveAllEnemies();
+    Engine::GetInstance().entityManager->RemoveAllEnemies();//Remove All enemies
+    // Remove all items and clean up the current map
     Engine::GetInstance().map->CleanUp();
     Engine::GetInstance().entityManager->RemoveAllItems();
-
     level = newLevel;
-    CreateLevelItems();
     ShowTransitionScreen();
 }
 // Main update logic for the Scene
@@ -201,30 +196,21 @@ bool Scene::Update(float dt)
             isGameIntroPlaying = true;
             }
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
-        // Dibujar los botones con la textura correcta según la opción seleccionada
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
-
         HandleMainMenuSelection();// Manejar la selección de opciones
-        
-
+        if (showCredits) {
+            Credits(); // Si showCredits es true, dibuja la pantalla de créditos
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+                showCredits = false; // Vuelve al menú si se presiona ESC
+            }
+        }
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
-        if (level == 1)
-        {
-            Engine::GetInstance().render.get()->DrawTexture(level1Transition, -cameraX, -cameraY);
-        }
-        else if (level == 2)
-        {
-            Engine::GetInstance().render.get()->DrawTexture(level2Transition, -cameraX, -cameraY);
-        }
-        else if (level == 3)
-        {
-
-        }
+        Engine::GetInstance().render.get()->DrawTexture((level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY);
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
@@ -264,7 +250,7 @@ bool Scene::Update(float dt)
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
     // Handle teleportation in Level 1
-    if (level == 1 || level==2) {
+    if (level == 1) {
         HandleTeleport(playerPos);
     }
     // Temporizador del nivel
@@ -281,6 +267,7 @@ bool Scene::Update(float dt)
          showMainMenu = true; // Regresa al menú principal o termina el nivel
         }
     }
+
     // Renderizar el tiempo en pantalla
     char timerText[64];
     if (showRemainingTime)
@@ -315,11 +302,6 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(2);
     }
-    if (level == 2 && IsInTeleportArea(playerPos, 6685, 744, tolerance)|| IsInTeleportArea(playerPos, 6704, 744, tolerance))
-    {
-        Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-        ChangeLevel(3);
-    }
 }
 // Checks if the player is in a teleportation area
 bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance)
@@ -331,9 +313,6 @@ bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float 
 bool Scene::PostUpdate()
 {
     // Debug controls for level changes
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-        ChangeLevel(3);
-    }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
         LOG("F2 presionado");
         ChangeLevel(2);
@@ -372,6 +351,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
+    Engine::GetInstance().textures.get()->UnLoad(black);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -394,7 +374,7 @@ void Scene::ShowTransitionScreen()
     Engine::GetInstance().audio.get()->StopMusic();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
-
+    Engine::GetInstance().render.get()->DrawTexture((level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY);
 }
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()

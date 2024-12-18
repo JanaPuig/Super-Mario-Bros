@@ -127,33 +127,21 @@ bool Player::Update(float dt) {
 			if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == true) 
 			{
 				SetPosition(Vector2D(3250, 430)); //Flag Position
-				Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 			}
 			else if(Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == false)
 			{
 				SetPosition(Vector2D(30, 430)); //Lvl 1 Start Position
-				Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 			}
 			if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == true) 
 			{
-				SetPosition(Vector2D(3300, 830)); //Lvl 2 Flag Position
+				SetPosition(Vector2D(3300, 830)); //Flag Position
 			}
 			else if(Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == false)
 			{
 				SetPosition(Vector2D(200, 700)); //Lvl 2 Start Position
 			}
-			if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged == true)
-			{
-				SetPosition(Vector2D(3300, 830)); //Lvl 3 Flag Position
-				Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
-			}
-			else if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged == false)
-			{
-				SetPosition(Vector2D(100, 580));//Lvl 3 Start Position
-				Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
-			}
 			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
-
+			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 		}
 		return true;
 	}

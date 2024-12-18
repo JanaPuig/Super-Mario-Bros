@@ -18,7 +18,6 @@
 		<SaveFile level="1" playerX="30" playerY="430" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
-		<map3 path="Assets/Maps/" name="Map3.tmx" />
 		<textures>
 			<mainMenu path="Assets/Textures/mainMenu.png" />
 			<title path="Assets/Textures/title.png" />
