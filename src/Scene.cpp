@@ -127,6 +127,7 @@ bool Scene::Start()
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
     blur = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("blur").attribute("path").as_string());
+    settings = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("settings").attribute("path").as_string());
 
 
     showGroupLogo = true;
@@ -721,12 +722,12 @@ void Scene::Settings()
 {
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
-    Engine::GetInstance().render.get()->DrawTexture(blur, 0, 0);
-    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 140, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Music Volume", 300, 350, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Fx Volume", 300, 470, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Full Screen", 300, 590, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Vsync", 300, 710, 300, 64);
+    Engine::GetInstance().render.get()->DrawTexture(settings, 0, 0);
+    Engine::GetInstance().render.get()->DrawText("SETTINGS", 768, 140, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Music Volume", 450, 300, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Fx Volume", 450, 420, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Full Screen", 450, 540, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Vsync", 450, 660, 250, 50);
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {

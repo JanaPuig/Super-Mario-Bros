@@ -36,6 +36,7 @@
 			<GroupLogo path="Assets/Textures/Logo.png" />
 			<black path="Assets/Textures/black.png" />
 			<blur path="Assets/Textures/blur.png" />
+			<settings path="Assets/Textures/settings.png" />
 		</textures>
 		<entities>
 			<items>
