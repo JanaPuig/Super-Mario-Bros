@@ -40,7 +40,7 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="64" h="64" />

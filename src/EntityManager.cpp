@@ -117,6 +117,11 @@ bool EntityManager::Update(float dt)
 		if (entity->active == false) continue;
 		ret = entity->Update(dt);
 
+		if (entity->position.getX() <= -Engine::GetInstance().render.get()->camera.x / 260 &&
+			entity->position.getX() >= -Engine::GetInstance().render.get()->camera.x / 2 - 50) {
+			if (entity->active == false)continue;
+			ret = entity->Update(dt);
+		}
 		
 	}
 	for (auto it = entities.begin(); it != entities.end(); ) {
