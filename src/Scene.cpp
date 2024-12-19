@@ -142,6 +142,7 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
+
     DrawLives();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
@@ -159,27 +160,35 @@ bool Scene::Update(float dt)
     }
     // Si estamos en el menú principal, no se procesan otras lógicas
     if (showMainMenu) {
-        // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
-            }
-        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
-        Engine::GetInstance().guiManager->Update(dt);
-        Engine::GetInstance().guiManager->Draw();
+        }
+        // Dibujar el fondo del menú principal
+        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY);
+        // Dibujar y manejar la GUI solo si no están activos los créditos o configuraciones
+        if (!showCredits && !showSettings) {
+            Engine::GetInstance().guiManager->Update(dt);
+            Engine::GetInstance().guiManager->Draw();
+        }
+        // Manejo de pantalla de créditos
         if (showCredits) {
-            Credits(); // Si showCredits es true, dibuja la pantalla de cr�ditos
+            Credits();
+            // Regresar al menú principal con Backspace
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-                showCredits = false; // Vuelve al menu si se presiona backspace
+                showCredits = false;
             }
         }
+
+        // Manejo de configuraciones
         if (showSettings) {
             Settings();
+            // Regresar al menú principal con Backspace
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-                showSettings = false; // Vuelve al menu si se presiona backspace
+                showSettings = false;
             }
         }
-        return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
+        return true; // Evitar que se ejecute el resto del código mientras el menú esté activo
     }
     // Handle level transition screen
     if (showingTransition) {
@@ -201,9 +210,6 @@ bool Scene::Update(float dt)
             LoadState(); // Load Game State
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
-    }
-    if (!showCredits) {
-
     }
 
     Vector2D playerPos = player->GetPosition();
@@ -722,7 +728,7 @@ void Scene::Settings()
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
     Engine::GetInstance().render.get()->DrawTexture(blur, 0, 0);
-    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 140, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 150, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Music Volume", 300, 350, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Fx Volume", 300, 470, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Full Screen", 300, 590, 378, 64);
