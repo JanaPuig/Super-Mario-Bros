@@ -71,7 +71,7 @@ public:
 
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
-
+    void CreateEnemies();
     void Credits();
 
     // Public member variables

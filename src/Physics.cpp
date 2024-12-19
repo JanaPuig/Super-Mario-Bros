@@ -378,13 +378,6 @@ void Physics::EndContact(b2Contact* contact)
 			physA->listener->OnCollisionEnd(physA, physB);
 		}
 	}
-
-	//if (physB && physB->listener != NULL) {
-	//	if (physA) // Ensure physA is also valid
-	//	{
-	//		physB->listener->OnCollisionEnd(physB, physA);
-	//	}
-	//}
 }
 
 void Physics::DeletePhysBody(PhysBody* physBody) {

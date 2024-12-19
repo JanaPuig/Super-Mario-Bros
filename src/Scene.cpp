@@ -27,24 +27,13 @@ Scene::~Scene() {}
 bool Scene::Awake()
 {
     LOG("Loading Scene");
-
     if (level == 1 || level == 2 || level == 3)
     {
         CreateLevelItems();
-
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
-
-        if (level == 1) {
-            for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-            {
-                Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                enemy->SetParameters(enemyNode);
-                enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-                LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
-            }
-        }
+        CreateEnemies();
     }
 
     SDL_Rect buttonPositions[] = {
@@ -59,7 +48,6 @@ bool Scene::Awake()
     for (int i = 0; i < 5; ++i) {
         guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, i + 1, buttonTexts[i], buttonPositions[i], this));
     }
-
     return true;
 }
 // Creates items for Level 1
@@ -126,7 +114,6 @@ bool Scene::Start()
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
-    blur = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("blur").attribute("path").as_string());
     settings = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("settings").attribute("path").as_string());
 
 
@@ -338,6 +325,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
     Engine::GetInstance().textures.get()->UnLoad(black);
+    Engine::GetInstance().textures.get()->UnLoad(settings);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -377,6 +365,7 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
+
     CreateLevelItems();
     elapsedTime = 0.0f;
     isFlaged = false;
@@ -394,11 +383,13 @@ void Scene::FinishTransition()
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
+        CreateEnemies();
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
     }
     else if (level == 3) {
         player->SetPosition(Vector2D(100, 580));
+        CreateEnemies();
         Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
     }
@@ -769,4 +760,36 @@ void Scene::DrawLives() {
     char livesText[64];
     sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
     Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 30);  // Ajusta la posición y tamaño
+}
+void Scene::CreateEnemies() {
+    // Limpiar la lista de enemigos antes de crear nuevos
+    enemyStateList.clear();
+
+    if (level == 1) {
+        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
+        {
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            enemy->SetParameters(enemyNode);
+            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
+            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+        }
+    }
+    else if (level == 2) {
+        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
+        {
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            enemy->SetParameters(enemyNode);
+            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
+            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+        }
+    }
+    else if (level == 3) {
+        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
+        {
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            enemy->SetParameters(enemyNode);
+            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
+            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+        }
+    }
 }
