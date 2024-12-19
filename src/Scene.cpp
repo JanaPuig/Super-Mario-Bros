@@ -365,8 +365,6 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
-
-    CreateLevelItems();
     elapsedTime = 0.0f;
     isFlaged = false;
     showingTransition = false;
