@@ -767,5 +767,5 @@ void Scene::GameOver() {
 void Scene::DrawLives() {
     char livesText[64];
     sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 50);  // Ajusta la posición y tamaño
+    Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 30);  // Ajusta la posición y tamaño
 }
