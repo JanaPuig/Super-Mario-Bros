@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="139">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="143">
  <tileset firstgid="1" name="MarioSprites" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
@@ -12794,6 +12794,10 @@
   <object id="106" x="6528" y="320" width="32" height="32"/>
   <object id="137" x="6592" y="320" width="32" height="32"/>
   <object id="138" x="6400" y="-1.33333" width="32" height="296.333"/>
+  <object id="139" x="4416" y="-288" width="32" height="288.144"/>
+  <object id="140" x="5024" y="-288" width="32" height="288.144"/>
+  <object id="141" x="6400" y="-288" width="32" height="288.144"/>
+  <object id="142" x="2304" y="-288" width="32" height="288.144"/>
  </objectgroup>
  <objectgroup id="5" name="Wall">
   <object id="55" x="2304" y="0" width="32" height="384"/>

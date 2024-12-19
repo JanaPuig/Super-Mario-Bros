@@ -100,7 +100,7 @@ void Scene::CreateLevelItems()
 bool Scene::Start()
 {
     Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
-    DrawLives();
+    
     // Load sound effects
     pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
     CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
@@ -142,6 +142,7 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
+    DrawLives();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
     if (showGroupLogo)
@@ -226,7 +227,7 @@ bool Scene::Update(float dt)
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
     // Handle teleportation in Level 1
-    if (level == 1) {
+    if (level == 1 ||level ==2) {
         HandleTeleport(playerPos);
     }
     // Temporizador del nivel
@@ -278,6 +279,11 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(2);
     }
+    if (level == 2 && IsInTeleportArea(playerPos, 6690, 764, tolerance))
+    {
+        Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
+        ChangeLevel(3);
+    }
 }
 // Checks if the player is in a teleportation area
 bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance)
@@ -295,6 +301,9 @@ bool Scene::PostUpdate()
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
         ChangeLevel(1);
+    }
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+        ChangeLevel(3);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
         ShowTransitionScreen();
@@ -477,6 +486,8 @@ void Scene::LoadGame() {
     }
     // Si hay más datos a cargar, puedes hacerlo aquí.
     //cargar checkpoint
+    Engine::GetInstance().entityManager->lives = LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
+    elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
     isFlaged= saveNode.attribute("checkpoint").as_bool();
     showMainMenu = false;
     LOG("Game loaded successfully."); 
@@ -497,6 +508,8 @@ void Scene::LoadState()
     // read the player position from the XML
     Vector2D posPlayer;
     Vector2D posEnemy;
+    elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
+    Engine::GetInstance().entityManager->lives=LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
     int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
@@ -610,10 +623,12 @@ void Scene::SaveState()
     }
     // read the player position and set the value in the XML
     Vector2D playerPos = player->GetPosition();
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("lives").set_value(Engine::GetInstance().entityManager->lives);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(level);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(playerPos.getY());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("checkpoint").set_value(isFlaged);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("time").set_value(elapsedTime);
     //Actualizar enemigos
     pugi::xml_node enemiesNode = SaveFile.child("config").child("scene").child("entities").child("enemies");
     for (std::pair<std::string, int> enemy : enemyStateList)
@@ -746,12 +761,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     return true;
 }
 void Scene::GameOver() {
-    // Mostrar pantalla de Game Over y/o volver al menú
-    showMainMenu = true;  // Regresar al menú principal
+    showMainMenu = true;
     Engine::GetInstance().audio.get()->StopMusic(0.2f);  // Detener música
 }
 void Scene::DrawLives() {
     char livesText[64];
     sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(livesText, 20, 20, 30, 30);  // Ajusta la posición y tamaño
+    Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 50);  // Ajusta la posición y tamaño
 }

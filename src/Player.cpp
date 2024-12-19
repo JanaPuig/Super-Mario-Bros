@@ -68,15 +68,12 @@ bool Player::Start() {
 }
 bool Player::Update(float dt) {
 
-	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading) {
+	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
-		
 	}
-	if (!isActive) return true;
-
 	if (pbody == nullptr) {
 		LOG("Error: pbody no inicializado.");
 		return true;
@@ -102,46 +99,55 @@ bool Player::Update(float dt) {
 		int cameraY = Engine::GetInstance().render.get()->camera.y;
 		currentAnimation = &deadAnimation;
 		Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
-
 		//Change collision 
 		Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
 		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + 16, (int)position.getY() + 16, texW / 2, bodyType::STATIC);
 		pbody->listener = this;
 		pbody->ctype = ColliderType::PLAYER;
-
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
+			if (Engine::GetInstance().entityManager->lives <= 0) {
+				// Volver al menú
+				Engine::GetInstance().scene.get()->GameOver();
+			}
+			else {
+				// Reiniciar estado del jugador
+				Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+				pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
+				pbody->listener = this;
+				pbody->ctype = ColliderType::PLAYER;
+				isDead = false;
+				deathSoundPlayed = false;
+				Engine::GetInstance().scene.get()->timeUp = false;
+				// Reiniciar enemigos
+				Engine::GetInstance().entityManager.get()->ResetEnemies();
 
-			//Change collision 
-			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-			pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
-			pbody->listener = this;
-			pbody->ctype = ColliderType::PLAYER;			
-			
-			isDead = false;
-			deathSoundPlayed = false;
-			Engine::GetInstance().scene.get()->timeUp == false;
-
-			// Reiniciar enemigos
-			Engine::GetInstance().entityManager.get()->ResetEnemies();
-
-			if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == true) 
-			{
-				SetPosition(Vector2D(3250, 430)); //Flag Position
+				// Reiniciar posición del jugador
+				if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged) {
+					SetPosition(Vector2D(3250, 430)); // Posición del banderín
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+				}
+				else if (Engine::GetInstance().scene.get()->level == 1) {
+					SetPosition(Vector2D(30, 430)); // Inicio del nivel 1
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+				}
+				else if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged) {
+					SetPosition(Vector2D(3300, 830)); // Posición del banderín
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/Wolrd2Theme.wav");
+				}
+				else if (Engine::GetInstance().scene.get()->level == 2) {
+					SetPosition(Vector2D(200, 700)); // Inicio del nivel 2
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav");
+				}
+				else if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged) {
+					SetPosition(Vector2D(3300, 830)); // Posición del banderín
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+				}
+				else if (Engine::GetInstance().scene.get()->level == 3) {
+					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
+					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+				}
+				Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
 			}
-			else if(Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged == false)
-			{
-				SetPosition(Vector2D(30, 430)); //Lvl 1 Start Position
-			}
-			if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == true) 
-			{
-				SetPosition(Vector2D(3300, 830)); //Flag Position
-			}
-			else if(Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged == false)
-			{
-				SetPosition(Vector2D(200, 700)); //Lvl 2 Start Position
-			}
-			Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
-			Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 		}
 		return true;
 	}
@@ -276,7 +282,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::DEATH:
 		LOG("Player hit a death zone, resetting position...");
-		isDead = true;
+		LoseLife();
 		break;
 	case ColliderType::WALL:
 		LOG("Player hit a death zone, resetting position...");
@@ -297,9 +303,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		}
 		else {
-			isDead = true; // Si el jugador no está encima, muere
 			LoseLife();
-			CheckLives();  // Verifica si el jugador ha perdido todas sus vidas
 		}
 		break;
 	}
@@ -379,12 +383,12 @@ void Player::PlayerFlight(float dt) {
 }
 // En Player.cpp
 void Player::LoseLife() {
+	if (!isDead)
+	{
+	isDead=true;
 	Engine::GetInstance().entityManager->lives--;
-	Engine::GetInstance().scene->DrawLives();
-}
-void Player::CheckLives() {
-	if (Engine::GetInstance().entityManager->lives <= 0) {
-		isDead = true;
-		Engine::GetInstance().scene.get()->GameOver();  // Cambia el estado a "Game Over"
+	}
+	else {
+		return;
 	}
 }
