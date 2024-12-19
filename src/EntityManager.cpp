@@ -116,16 +116,19 @@ bool EntityManager::Update(float dt)
 	{
 		if (entity->active == false) continue;
 		ret = entity->Update(dt);
+
+		
 	}
-	   for (auto it = entities.begin(); it != entities.end(); ) {
-        if ((*it)->toBeDestroyed) { //apunta a las entidades marcadas toBeDestryed
-            (*it)->CleanUp();
-            delete *it;
-            it = entities.erase(it); // Borra de la lista
-        } else {
-            ++it;
-        }
-    }
+	for (auto it = entities.begin(); it != entities.end(); ) {
+		if ((*it)->toBeDestroyed) { //apunta a las entidades marcadas toBeDestryed
+			(*it)->CleanUp();
+			delete* it;
+			it = entities.erase(it); // Borra de la lista
+		}
+		else {
+			++it;
+		}
+	}
 	return ret;
 }
 void EntityManager::RemoveAllItems() {
