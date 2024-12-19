@@ -707,7 +707,11 @@ void Scene::Settings()
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
     Engine::GetInstance().render.get()->DrawTexture(blur, 0, 0);
-    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 250, 352, 128);
+    Engine::GetInstance().render.get()->DrawText("SETTINGS", 800, 140, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Music Volume", 300, 350, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Fx Volume", 300, 470, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Full Screen", 300, 590, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Vsync", 300, 710, 300, 64);
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
