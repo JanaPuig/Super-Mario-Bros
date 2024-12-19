@@ -105,7 +105,7 @@ bool Player::Update(float dt) {
 		pbody->listener = this;
 		pbody->ctype = ColliderType::PLAYER;
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
-			if (Engine::GetInstance().entityManager->lives <= 0) {
+			if (Engine::GetInstance().entityManager->lives <= 0|| Engine::GetInstance().scene->timeUp ==true) {
 				// Volver al menú
 				Engine::GetInstance().scene.get()->GameOver();
 			}
