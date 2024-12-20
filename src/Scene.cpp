@@ -94,15 +94,6 @@ bool Scene::Start()
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
     helpMenuTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("helpMenu").attribute("path").as_string());
-    level1Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level1Transition").attribute("path").as_string());
-    level2Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level2Transition").attribute("path").as_string());
-    newGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButtonSelected").attribute("path").as_string());
-    loadGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButtonSelected").attribute("path").as_string());
-    leaveGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButtonSelected").attribute("path").as_string());
-    newGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButton").attribute("path").as_string());
-    loadGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButton").attribute("path").as_string());
-    leaveGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButton").attribute("path").as_string());
-    loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
@@ -168,7 +159,10 @@ bool Scene::Update(float dt)
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
-        Engine::GetInstance().render.get()->DrawTexture((level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY);
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+        if (level == 1) { Engine::GetInstance().render->DrawText("WORLD 1-1", 730, 450, 475, 150); }
+        else if (level == 2) { Engine::GetInstance().render->DrawText("WORLD 1-2", 730, 450, 475, 150); }
+        else if (level == 3) { Engine::GetInstance().render->DrawText("CASTLE 1-3", 720, 450, 475, 150); }
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
@@ -223,18 +217,14 @@ bool Scene::Update(float dt)
     {
         std::cout << "Time's up! Game over!" << std::endl;
         timeUp = true;
-        if (timeUp == false)
-        {
-         showMainMenu = true; // Regresa al menú principal o termina el nivel
-        }
     }
 
     // Renderizar el tiempo en pantalla
     char timerText[64];
     if (showRemainingTime)
-        sprintf_s(timerText, "%0.f", currentTime/1000);
-  
-    Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20,30,30);
+        sprintf_s(timerText, "%0.f", currentTime / 1000);
+    if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20, 30, 30); }
+    if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
 
 

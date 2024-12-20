@@ -53,6 +53,7 @@ public:
 
 	SDL_Texture* textureGoomba;
 	SDL_Texture* textureKoopa;
+	SDL_Texture* textureBowser;
 
 	const char* texturePath;
 	int texW, texH;
@@ -62,7 +63,8 @@ public:
 
 	Animation idleGoomba;
 	Animation deadGoomba;
-
+	Animation idleBowserL;
+	Animation attackBowser;
 	Animation flyingkoopaLeft;
 	Animation flyingkoopaRight;
 	Animation deadkoopa;

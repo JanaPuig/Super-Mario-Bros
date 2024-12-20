@@ -1,4 +1,4 @@
-#include "Enemy.h"
+ï»¿#include "Enemy.h"
 #include "Engine.h"
 #include "Textures.h"
 #include "Audio.h"
@@ -23,7 +23,7 @@ bool Enemy::Awake() {
 }
 
 bool Enemy::Start() {
-    // Inicialización de texturas
+    // InicializaciÃ³n de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
         currentAnimation = &flyingkoopaLeft;
@@ -40,11 +40,15 @@ bool Enemy::Start() {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
         currentAnimation = &idleGoomba;
     }
+    else if (parameters.attribute("name").as_string() == std::string("bowser")) {
+        textureBowser = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_bowser").as_string());
+        currentAnimation = &idleBowserL; // Asegï¿½rate de que esta animaciï¿½n estï¿½ definida
+    }
 
     //asigna nombre al enemigo
     name = parameters.attribute("name").as_string();
 
-    // Configuración inicial
+    // ConfiguraciÃ³n inicial
     position.setX(parameters.attribute("x").as_int());
     position.setY(parameters.attribute("y").as_int());
     texW = parameters.attribute("w").as_int();
@@ -57,8 +61,9 @@ bool Enemy::Start() {
     flyingkoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     flyingkoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
-
-    // Añadir física
+    idleBowserL.LoadAnimations(parameters.child("animations").child("idleBowser"));
+    attackBowser.LoadAnimations(parameters.child("animations").child("attack"));
+    // AÃ±adir fÃ­sica
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
     pbody->listener = this;
@@ -77,6 +82,9 @@ bool Enemy::Start() {
     else if (enemyName == "goomba2") {
         pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
     }
+    else if (parameters.attribute("name").as_string() == "bowser") {
+        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    }
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
 
@@ -90,18 +98,18 @@ void Enemy::UpdateColliderSize() {
     // Elimina el colisionador anterior
     Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
 
-    // Nuevo tamaño para el colisionador
+    // Nuevo tamaÃ±o para el colisionador
     int newWidth = 32;
     int newHeight = 32;
 
-    // Crea un nuevo colisionador de tipo círculo con el nuevo tamaño
+    // Crea un nuevo colisionador de tipo cÃ­rculo con el nuevo tamaÃ±o
     pbody = Engine::GetInstance().physics.get()->CreateCircle(
         (int)position.getX() + newWidth / 2,
         (int)position.getY() + newHeight / 2,
         newWidth / 2,
         bodyType::DYNAMIC
     );
-    // Asigna el nuevo listener y tipo de colisión
+    // Asigna el nuevo listener y tipo de colisiÃ³n
     pbody->listener = this;
     pbody->ctype = ColliderType::ENEMY;
 }
@@ -131,10 +139,11 @@ bool Enemy::Update(float dt) {
         SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
         Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
         Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX() + 25, (int)position.getY() + 25, &frameRect);
+        Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
         return true;
     }
 
-    // Lógica de muerte
+    // LÃ³gica de muerte
     if ((parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) && hitCount == 1) {
         UpdateColliderSize();
         pbody->body->SetGravityScale(1);
@@ -157,11 +166,14 @@ bool Enemy::Update(float dt) {
     }
 
     if (currentAnimation) currentAnimation->Update();
-
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-    Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-    Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
-
+    if (name == "bowser") {
+        Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
+    }
+    else {
+        Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
+    }
     b2Transform pbodyPos = pbody->body->GetTransform();
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
@@ -171,12 +183,12 @@ bool Enemy::Update(float dt) {
         showPath = !showPath;
     }
 
-    // Dibujar el path si está habilitado
+    // Dibujar el path si estÃ¡ habilitado
     if (showPath) {
         pathfinding->DrawPath();
     }
 
-    // Detección del jugador
+    // DetecciÃ³n del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
     Vector2D enemyPosition = GetPosition();
@@ -186,8 +198,8 @@ bool Enemy::Update(float dt) {
     if (distanceToPlayer <= detectionRange) {
         ResetPath();
 
-        int steps = 0;  // Número de pasos máximo del pathfinding
-        int maxSteps = 100; // -> Ajustar según les parezca
+        int steps = 0;  // NÃºmero de pasos mÃ¡ximo del pathfinding
+        int maxSteps = 100; // -> Ajustar segÃºn les parezca
         while (pathfinding->pathTiles.empty() && steps < maxSteps) {
             pathfinding->PropagateAStar(SQUARED);
             steps++;
@@ -217,12 +229,12 @@ bool Enemy::Update(float dt) {
                 velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
             }
 
-            // Actualizar animación en base a dirección Y (solo para Koopas)
+            // Actualizar animaciÃ³n en base a direcciÃ³n Y (solo para Koopas)
             if (velocity.x < 0) {
-                currentAnimation = &flyingkoopaLeft; // O animación hacia abajo
+                currentAnimation = &flyingkoopaLeft; // O animaciÃ³n hacia abajo
             }
             else if (velocity.x > 0) {
-                currentAnimation = &flyingkoopaRight; // O animación hacia arriba
+                currentAnimation = &flyingkoopaRight; // O animaciÃ³n hacia arriba
             }
 
         }
@@ -283,7 +295,7 @@ void Enemy::ResetPath() {
     pathfinding->ResetPath(tilePos);
 }
 void Enemy::ResetPosition() {
-    // Restablece el estado de la animación
+    // Restablece el estado de la animaciÃ³n
     if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
         currentAnimation = &flyingkoopaLeft;
     }
@@ -292,12 +304,12 @@ void Enemy::ResetPosition() {
     }
     if (parameters.attribute("name").as_string() != std::string("goomba2"))
     {
-        // Restablece la posición
+        // Restablece la posiciÃ³n
         position.setX(parameters.attribute("x").as_int() + 32);
         position.setY(parameters.attribute("y").as_int() + 32);
     }
     else {
-        // Restablece la posición
+        // Restablece la posiciÃ³n
         position.setX(parameters.attribute("x").as_int() + 16);
         position.setY(parameters.attribute("y").as_int() + 32);
     }
@@ -322,5 +334,7 @@ void Enemy::ResetPosition() {
     else if (enemyName == "goomba" || enemyName == "goomba2") {
         pbody->body->SetGravityScale(1);
     }
-
+    else if (parameters.attribute("name").as_string() == "bowser") {
+        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    }
 }
