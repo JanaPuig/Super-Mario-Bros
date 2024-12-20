@@ -68,6 +68,8 @@ public:
 	Animation attackBowserR;
 	Animation deadBowserL;
 	Animation deadBowserR;
+	Animation walkingBowserL;
+	Animation walkingBowserR;
 
 	Animation idleGoomba;
 	Animation deadGoomba;

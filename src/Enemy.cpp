@@ -24,25 +24,17 @@ bool Enemy::Awake() {
 
 bool Enemy::Start() {
     // Inicialización de texturas
-    if (parameters.attribute("name").as_string() == std::string("koopa")) {
+    if (parameters.attribute("name").as_string() == std::string("koopa")|| parameters.attribute("name").as_string() == std::string("koopa2")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
         currentAnimation = &flyingkoopaLeft;
     }
-    else if (parameters.attribute("name").as_string() == std::string("koopa2")) {
-        textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
-        currentAnimation = &flyingkoopaLeft;
-    }
-    else if (parameters.attribute("name").as_string() == std::string("goomba")) {
-        textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
-        currentAnimation = &idleGoomba;
-    }
-    else if (parameters.attribute("name").as_string() == std::string("goomba2")) {
+    else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
         currentAnimation = &idleGoomba;
     }
     else if (parameters.attribute("name").as_string() == std::string("bowser")) {
         textureBowser = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_bowser").as_string());
-        currentAnimation = &idleBowserL; // Aseg�rate de que esta animaci�n est� definida
+        currentAnimation = &idleBowserL; 
     }
 
     //asigna nombre al enemigo
@@ -67,6 +59,8 @@ bool Enemy::Start() {
     deadBowserR.LoadAnimations(parameters.child("animations").child("deadBowserR"));
     attackBowserL.LoadAnimations(parameters.child("animations").child("attackL"));
     attackBowserR.LoadAnimations(parameters.child("animations").child("attackR"));
+    walkingBowserL.LoadAnimations(parameters.child("animations").child("walkBowserL"));
+    walkingBowserR.LoadAnimations(parameters.child("animations").child("walkBowserR"));
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -123,6 +117,14 @@ bool Enemy::Update(float dt) {
         Engine::GetInstance().scene.get()->isLoading) {
         return true;
     }
+    // Detección del jugador
+    Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
+    Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
+    Vector2D enemyPosition = GetPosition();
+    Vector2D enemyPositionTiles = Engine::GetInstance().map.get()->WorldToMap(enemyPosition.getX(), enemyPosition.getY());
+    float distanceToPlayer = (playerPosition - enemyPosition).magnitude();
+    // Obtener el tiempo actual
+    float currentTime = SDL_GetTicks();
     frameTime += dt;
 
     if (isDying) {
@@ -145,6 +147,33 @@ bool Enemy::Update(float dt) {
         Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
         return true;
     }
+    //Goomba Animation
+     if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+        if (hitCount >= 1) {
+            LOG("Goomba is Dead");
+            currentAnimation = &deadGoomba;
+            isDying = true;
+            return true;
+        }
+    }
+     //Koopa Animation
+    if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
+        if (hitCount >= 1) {
+            LOG("Koopa is Dead");
+            UpdateColliderSize();
+            pbody->body->SetGravityScale(1);
+            currentAnimation = &deadkoopa;
+            isDying = true;
+            return true;
+        }
+        if (velocity.x < 0) {
+            currentAnimation = &flyingkoopaLeft;
+        }
+        else if (velocity.x > 0) {
+            currentAnimation = &flyingkoopaRight;
+        }
+    }
+    //Bowser Animation
     if (parameters.attribute("name").as_string() == std::string("bowser")) {
         // Muerte
         if (hitCount >= 3) {
@@ -154,13 +183,6 @@ bool Enemy::Update(float dt) {
             deathTimer = 0.0f;
             return true;
         }
-
-        Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
-        float distanceToPlayer = (playerPosition - GetPosition()).magnitude();
-
-        // Obtener el tiempo actual
-        float currentTime = SDL_GetTicks();
-
         if (isAttacking) {
             // Si Bowser está atacando, comprobamos si ha terminado su animación
             if (currentTime - attackStartTime >= attackDuration) {
@@ -176,7 +198,7 @@ bool Enemy::Update(float dt) {
                     isAttacking = true;                  // Inicia el ataque
                     attackStartTime = currentTime;       // Registra el tiempo de inicio
                     lastAttackTime = currentTime;        // Actualiza el último ataque
-                    minAttackInterval = 2000.0f + rand() % 1000; // Ajusta el intervalo entre ataques
+                    minAttackInterval = 2000.0f + rand() % 100; // Ajusta el intervalo entre ataques
                     currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;
 
                     // Reiniciar la animación de ataque
@@ -184,9 +206,24 @@ bool Enemy::Update(float dt) {
                 }
             }
             else {
-                // Animación idle
-                currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+                // Movimiento y animación de caminar
+                if (velocity.x < 0) {
+                    currentAnimation = &walkingBowserL;
+                }
+                else if (velocity.x > 0) {
+                    currentAnimation = &walkingBowserR;
+                }
+                else {
+                    currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+                }
             }
+        }
+        // Aplicar la velocidad a Bowser (sólo si no está atacando)
+        if (!isAttacking) {
+            pbody->body->SetLinearVelocity(velocity);
+        }
+        else {
+            pbody->body->SetLinearVelocity(b2Vec2(0, 0));
         }
     }
     if (isEnemyDead) {
@@ -199,9 +236,9 @@ bool Enemy::Update(float dt) {
 
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
 
-        Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
+    Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
+    Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+    Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
    
 
     b2Transform pbodyPos = pbody->body->GetTransform();
@@ -212,18 +249,10 @@ bool Enemy::Update(float dt) {
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
         showPath = !showPath;
     }
-
     // Dibujar el path si está habilitado
     if (showPath) {
         pathfinding->DrawPath();
     }
-
-    // Detección del jugador
-    Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
-    Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
-    Vector2D enemyPosition = GetPosition();
-    Vector2D enemyPositionTiles = Engine::GetInstance().map.get()->WorldToMap(enemyPosition.getX(), enemyPosition.getY());
-    float distanceToPlayer = (playerPosition - enemyPosition).magnitude();
 
     if (distanceToPlayer <= detectionRange) {
         ResetPath();
@@ -256,13 +285,6 @@ bool Enemy::Update(float dt) {
             }
             else if (nextPos.getY() < enemyPositionTiles.getY()) {
                 velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
-            }
-
-            if (velocity.x < 0) {
-                currentAnimation = &flyingkoopaLeft;
-            }
-            else if (velocity.x > 0) {
-                currentAnimation = &flyingkoopaRight;
             }
         }
         else {

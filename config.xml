@@ -31,7 +31,7 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="64" h="64" />
@@ -219,6 +219,18 @@
 							<frame x="392" y="522" w="90" h="123" />
 							<frame x="248" y="521" w="120" h="124" />
 						</attackR>
+						<walkBowserL loop="loop" speed="0.06">
+							<frame x="21" y="27" w="102" h="120" />
+							<frame x="165" y="24" w="102" h="123" />
+							<frame x="309" y="30" w="102" h="117" />
+							<frame x="453" y="24" w="102" h="123" />
+						</walkBowserL>
+						<walkBowserR loop="loop" speed="0.06">
+							<frame x="648" y="1029" w="102" h="120" />
+							<frame x="504" y="1026" w="102" h="123" />
+							<frame x="360" y="1032" w="102" h="117" />
+							<frame x="216" y="1026" w="102" h="123" />
+						</walkBowserR>
 						<deadBowserL loop="false" speed="0.1">
 							<frame x="213" y="1347" w="90" h="126" />
 							<frame x="330" y="1347" w="99" h="126" />
