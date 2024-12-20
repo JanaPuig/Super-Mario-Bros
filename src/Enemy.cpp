@@ -200,30 +200,38 @@ bool Enemy::Update(float dt) {
         else {
             // Si Bowser no está atacando, decide si debe atacar
             if (distanceToPlayer <= detectionRange && currentTime - lastAttackTime >= minAttackInterval) {
-                if (rand() % 100 < 20) { // 20% de probabilidad de ataque
+                if (rand() % 100 < 1) {
                     LOG("Bowser ATTACKS!");
                     isAttacking = true;                  // Inicia el ataque
                     attackStartTime = currentTime;       // Registra el tiempo de inicio
                     lastAttackTime = currentTime;        // Actualiza el último ataque
-                    minAttackInterval = 2000.0f + rand() % 100; // Ajusta el intervalo entre ataques
+                    Engine::GetInstance().audio.get()->StopFx();
+                    Engine::GetInstance().audio.get()->PlayFx(BowserAttack);
+                    minAttackInterval = 5000.0f + rand() % 10; // Ajusta el intervalo entre ataques
                     currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;
-
                     // Reiniciar la animación de ataque
                     currentAnimation->Reset();
                 }
             }
             else {
                 // Movimiento y animación de caminar
-                if (velocity.x < 0&& distanceToPlayer <= detectionRange) {
+                if (velocity.x < 0&& distanceToPlayer <= detectionRange ) {
                     currentAnimation = &walkingBowserL;
-                    Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                    if (currentTime - lastStepTime > stepInterval) {
+                        Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                        lastStepTime = currentTime;
+                    }
                 }
                 else if (velocity.x > 0&& distanceToPlayer <= detectionRange) {
                     currentAnimation = &walkingBowserR;
-                    Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                    if (currentTime - lastStepTime > stepInterval) {
+                        Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                        lastStepTime = currentTime;
+                    }
                 }
                 else {
                     currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+              
                 }
             }
         }

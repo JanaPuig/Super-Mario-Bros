@@ -252,6 +252,12 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(3);
     }
+    if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
+    {
+        Engine::GetInstance().audio.get()->StopMusic();
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav", 0.f);
+        Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
+    }
 }
 // Checks if the player is in a teleportation area
 bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance)

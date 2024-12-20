@@ -112,4 +112,7 @@ public:
     float attackDuration = 1500.0f;
     float detectionRange = 500.0f;
     float speed = 3.0f;
+    float lastStepTime = 0.0f;
+    float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
+ 
 };
