@@ -862,6 +862,7 @@ void Scene::CreateEnemies() {
         }
     }
     else if (level == 3) {
+        // Crear enemigos para el nivel 3
         for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
         {
             Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -869,6 +870,16 @@ void Scene::CreateEnemies() {
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
         }
+
+        // Crear a Bowser
+        Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        pugi::xml_node bowserNode = configParameters.child("entities").child("enemies").child("bowser"); 
+        bowser->SetParameters(bowserNode);
+        enemyStateList.push_back(std::make_pair("bowser", 0));
+        LOG("Bowser created");
+
+        // Establecer la posición de Bowser
+        bowser->SetPosition(Vector2D(500, 300)); // Reemplaza con las coordenadas deseadas
     }
 }
 void Scene::ToggleFullscreen()
