@@ -209,10 +209,16 @@
 						<idleBowserR loop="true" speed="0.05">
 							<frame x="1153" y="528" w="99" h="123" />
 						</idleBowserR>
-						<attack loop="true" speed="0.1">
-							<frame x="0" y="128" w="128" h="128" />
-							<frame x="128" y="128" w="128" h="128" />
-						</attack>
+						<attackL loop="loop" speed="0.06">
+							<frame x="243" y="192" w="96" h="123" />
+							<frame x="393" y="192" w="90" h="123" />
+							<frame x="507" y="191" w="120" h="124" />
+						</attackL>
+						<attackR loop="loop" speed="0.06">
+							<frame x="536" y="522" w="96" h="123" />
+							<frame x="392" y="522" w="90" h="123" />
+							<frame x="248" y="521" w="120" h="124" />
+						</attackR>
 						<deadBowserL loop="false" speed="0.1">
 							<frame x="213" y="1347" w="90" h="126" />
 							<frame x="330" y="1347" w="99" h="126" />
@@ -220,6 +226,13 @@
 							<frame x="627" y="1359" w="123" h="114" />
 							<frame x="774" y="1355" w="120" h="118" />
 						</deadBowserL>
+						<deadBowserR loop="false" speed="0.1">
+							<frame x="775" y="1155" w="90" h="126" />
+							<frame x="649" y="1155" w="99" h="126" />
+							<frame x="494" y="1167" w="123" h="114" />
+							<frame x="328" y="1167" w="123" h="114" />
+							<frame x="184" y="1163" w="120" h="118" />
+						</deadBowserR>
 					</animations>
 				</enemy_bowser>
 			</enemies>

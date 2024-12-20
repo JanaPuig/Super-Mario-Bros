@@ -64,7 +64,9 @@ bool Enemy::Start() {
     idleBowserL.LoadAnimations(parameters.child("animations").child("idleBowserL"));
     idleBowserR.LoadAnimations(parameters.child("animations").child("idleBowserR"));
     deadBowserL.LoadAnimations(parameters.child("animations").child("deadBowserL"));
-    attackBowser.LoadAnimations(parameters.child("animations").child("attack"));
+    deadBowserR.LoadAnimations(parameters.child("animations").child("deadBowserR"));
+    attackBowserL.LoadAnimations(parameters.child("animations").child("attackL"));
+    attackBowserR.LoadAnimations(parameters.child("animations").child("attackR"));
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -121,7 +123,6 @@ bool Enemy::Update(float dt) {
         Engine::GetInstance().scene.get()->isLoading) {
         return true;
     }
-
     frameTime += dt;
 
     if (isDying) {
@@ -144,25 +145,50 @@ bool Enemy::Update(float dt) {
         Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
         return true;
     }
-
-    // Lógica de muerte para Bowser
     if (parameters.attribute("name").as_string() == std::string("bowser")) {
+        // Muerte
         if (hitCount >= 3) {
             LOG("Bowser is dead");
-            currentAnimation = &deadBowserL;
+            currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
             isDying = true;
             deathTimer = 0.0f;
             return true;
         }
-        if (velocity.x < 0) {
-            currentAnimation = &idleBowserL;
+
+        Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
+        float distanceToPlayer = (playerPosition - GetPosition()).magnitude();
+
+        // Obtener el tiempo actual
+        float currentTime = SDL_GetTicks();
+
+        if (isAttacking) {
+            // Si Bowser está atacando, comprobamos si ha terminado su animación
+            if (currentTime - attackStartTime >= attackDuration) {
+                isAttacking = false; // Finaliza el ataque
+                currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL; // Vuelve a la animación idle
+            }
         }
-        else if (velocity.x > 0) {
-            currentAnimation = &idleBowserR;
+        else {
+            // Si Bowser no está atacando, decide si debe atacar
+            if (distanceToPlayer <= detectionRange && currentTime - lastAttackTime >= minAttackInterval) {
+                if (rand() % 100 < 20) { // 20% de probabilidad de ataque
+                    LOG("Bowser ATTACKS!");
+                    isAttacking = true;                  // Inicia el ataque
+                    attackStartTime = currentTime;       // Registra el tiempo de inicio
+                    lastAttackTime = currentTime;        // Actualiza el último ataque
+                    minAttackInterval = 2000.0f + rand() % 1000; // Ajusta el intervalo entre ataques
+                    currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;
+
+                    // Reiniciar la animación de ataque
+                    currentAnimation->Reset();
+                }
+            }
+            else {
+                // Animación idle
+                currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+            }
         }
     }
-
-
     if (isEnemyDead) {
         toBeDestroyed = true;
         Engine::GetInstance().scene.get()->SaveState();

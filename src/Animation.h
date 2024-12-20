@@ -43,6 +43,9 @@ public:
 				pingpongDirection = -pingpongDirection;
 		}
 	}
+	bool IsFinished() const {
+		return currentFrame >= totalFrames-1;
+	}
 	const SDL_Rect& GetCurrentFrame() const {
 		int actualFrame = static_cast<int>(currentFrame);
 
