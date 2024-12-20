@@ -728,7 +728,8 @@ void Scene::Settings()
 
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
-   
+    ToggleFullscreen();
+
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
@@ -776,7 +777,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 return false;
             }
 
-            // Intentar guardar el archivo XML
+            // Guardar el archivo XML
             if (SaveFile.save_file("config.xml")) {
                 LOG("XML file saved successfully");
             }
@@ -800,7 +801,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 return false;
             }
 
-            // Intentar guardar el archivo XML
+            // Guardar el archivo XML
             if (SaveFile.save_file("config.xml")) {
                 LOG("XML file saved successfully");
             }
@@ -860,4 +861,40 @@ void Scene::CreateEnemies() {
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
         }
     }
+}
+
+void Scene::ToggleFullscreen()
+{
+    pugi::xml_document LoadFile;
+    pugi::xml_parse_result result = LoadFile.load_file("config.xml");
+    if (result == NULL) {
+        LOG("Error Loading config.xml: %s", result.description());
+        return;
+    }
+
+    pugi::xml_node fullscreenNode = LoadFile.child("config").child("window").child("fullscreen_window");
+    bool fullscreen = fullscreenNode.attribute("value").as_bool();  // Leer el valor de fullscreen_window
+
+    SDL_Window* window = Engine::GetInstance().window.get()->window;
+    if (window != nullptr) {
+        if (fullscreen) {
+            // Activar pantalla completa
+            if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0) {
+                LOG("Error setting fullscreen: %s", SDL_GetError());
+            }
+        }
+        else {
+            // Volver al modo ventana
+            if (SDL_SetWindowFullscreen(window, 0) != 0) {  // 0 para modo ventana
+                LOG("Error setting windowed mode: %s", SDL_GetError());
+            }
+        }
+        LoadFile.save_file("config.xml");
+
+    }
+    else {
+        LOG("Window is not initialized properly.");
+    }
+
+
 }

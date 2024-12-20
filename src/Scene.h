@@ -75,6 +75,8 @@ public:
     void Credits();   
     void menu();
 
+    void ToggleFullscreen();
+
     // Public member variables
     int level = 0;                   // Current map level
     SDL_Texture* loadingScreen = NULL; //texture for the loading screen
