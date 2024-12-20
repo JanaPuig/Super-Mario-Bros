@@ -296,21 +296,13 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
     Engine::GetInstance().textures.get()->UnLoad(mainMenu);
-    Engine::GetInstance().textures.get()->UnLoad(loadingScreen);
-    Engine::GetInstance().textures.get()->UnLoad(newGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(loadGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(leaveGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(newGameButtonSelected);
-    Engine::GetInstance().textures.get()->UnLoad(loadGameButtonSelected);
-    Engine::GetInstance().textures.get()->UnLoad(leaveGameButtonSelected);
     Engine::GetInstance().textures.get()->UnLoad(helpMenuTexture);
     Engine::GetInstance().textures.get()->UnLoad(Title);
-    Engine::GetInstance().textures.get()->UnLoad(level1Transition);
-    Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
     Engine::GetInstance().textures.get()->UnLoad(black);
     Engine::GetInstance().textures.get()->UnLoad(settings);
+    Engine::GetInstance().textures.get()->UnLoad(tick);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -880,7 +872,6 @@ void Scene::ToggleFullscreen()
             }
         }
         LoadFile.save_file("config.xml");
-
     }
     else {
         LOG("Window is not initialized properly.");
