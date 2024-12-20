@@ -35,11 +35,6 @@ bool Scene::Awake()
         player->SetParameters(configParameters.child("entities").child("player"));
         CreateEnemies();
     }
-
-   
-
-  
-
     return true;
 }
 // Creates items for Level 1
@@ -89,7 +84,7 @@ bool Scene::Start()
     SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
     marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
-
+    BowserLaugh = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserLaugh.wav");
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
@@ -257,6 +252,12 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
     {
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(3);
+    }
+    if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
+    {
+        Engine::GetInstance().audio.get()->StopMusic();
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav", 0.f);
+        Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
     }
 }
 // Checks if the player is in a teleportation area
@@ -903,6 +904,7 @@ void Scene::CreateEnemies() {
         }
     }
     else if (level == 3) {
+        // Crear enemigos para el nivel 3
         for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
         {
             Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -910,6 +912,16 @@ void Scene::CreateEnemies() {
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
         }
+
+        // Crear a Bowser
+        Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        pugi::xml_node bowserNode = configParameters.child("entities").child("enemies").child("bowser"); 
+        bowser->SetParameters(bowserNode);
+        enemyStateList.push_back(std::make_pair("bowser", 0));
+        LOG("Bowser created");
+
+        // Establecer la posición de Bowser
+        bowser->SetPosition(Vector2D(500, 300)); // Reemplaza con las coordenadas deseadas
     }
 }
 void Scene::ToggleFullscreen()

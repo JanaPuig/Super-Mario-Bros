@@ -23,6 +23,7 @@ bool Enemy::Awake() {
 }
 
 bool Enemy::Start() {
+    name = parameters.attribute("name").as_string();
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")|| parameters.attribute("name").as_string() == std::string("koopa2")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
@@ -61,6 +62,11 @@ bool Enemy::Start() {
     attackBowserR.LoadAnimations(parameters.child("animations").child("attackR"));
     walkingBowserL.LoadAnimations(parameters.child("animations").child("walkBowserL"));
     walkingBowserR.LoadAnimations(parameters.child("animations").child("walkBowserR"));
+
+    //Cargar Fx
+   BowserDeath= Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserDeath.wav");
+   BowserAttack = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserAttack.wav");
+   BowserStep = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserStep.wav");
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -177,6 +183,7 @@ bool Enemy::Update(float dt) {
     if (parameters.attribute("name").as_string() == std::string("bowser")) {
         // Muerte
         if (hitCount >= 3) {
+            Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
             LOG("Bowser is dead");
             currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
             isDying = true;
@@ -193,28 +200,38 @@ bool Enemy::Update(float dt) {
         else {
             // Si Bowser no está atacando, decide si debe atacar
             if (distanceToPlayer <= detectionRange && currentTime - lastAttackTime >= minAttackInterval) {
-                if (rand() % 100 < 20) { // 20% de probabilidad de ataque
+                if (rand() % 100 < 1) {
                     LOG("Bowser ATTACKS!");
                     isAttacking = true;                  // Inicia el ataque
                     attackStartTime = currentTime;       // Registra el tiempo de inicio
                     lastAttackTime = currentTime;        // Actualiza el último ataque
-                    minAttackInterval = 2000.0f + rand() % 100; // Ajusta el intervalo entre ataques
+                    Engine::GetInstance().audio.get()->StopFx();
+                    Engine::GetInstance().audio.get()->PlayFx(BowserAttack);
+                    minAttackInterval = 5000.0f + rand() % 10; // Ajusta el intervalo entre ataques
                     currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;
-
                     // Reiniciar la animación de ataque
                     currentAnimation->Reset();
                 }
             }
             else {
                 // Movimiento y animación de caminar
-                if (velocity.x < 0) {
+                if (velocity.x < 0&& distanceToPlayer <= detectionRange ) {
                     currentAnimation = &walkingBowserL;
+                    if (currentTime - lastStepTime > stepInterval) {
+                        Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                        lastStepTime = currentTime;
+                    }
                 }
-                else if (velocity.x > 0) {
+                else if (velocity.x > 0&& distanceToPlayer <= detectionRange) {
                     currentAnimation = &walkingBowserR;
+                    if (currentTime - lastStepTime > stepInterval) {
+                        Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
+                        lastStepTime = currentTime;
+                    }
                 }
                 else {
                     currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+              
                 }
             }
         }

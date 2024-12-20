@@ -32,7 +32,7 @@ bool Player::Start() {
 	DeathId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Mario_Death.wav");
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 	EnemyDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
-
+	BowserHit = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserHit.wav");
 	//Load Player Texture
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
@@ -281,19 +281,19 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		if (enemy != nullptr && playerBottom < enemyTop) {
 			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
+			if (enemy->name == "bowser") {// Verificar si el enemigo es Bowser
+				Engine::GetInstance().audio.get()->StopFx(); // Asegúrate de que StopFx esté implementado en tu motor de audio
+				Engine::GetInstance().audio.get()->PlayFx(BowserHit); // Reproducir sonido de BowserHit
+			}
 			Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 			enemy->hitCount++; // Incrementa el contador de impactos
 			Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
-
 		}
 		else {
 			LoseLife();
 		}
 		break;
 	}
-	case ColliderType::FLAG:
-	
-		break;
 	default:
 		break;
 	}

@@ -112,6 +112,8 @@ public:
     int marioTime = 0;
     int hereWeGo = 0;
     int MenuStart = 0;// Sound effect ID for castle interaction
+ 
+    int BowserLaugh = 0;
     float tolerance = 20.0f;         // Tolerance value for proximity checks
     GuiControlButton* guiBt;
 

@@ -49,56 +49,70 @@ public:
 	void ResetPosition();
 
 public:
-	int hitCount;
+    // Variables públicas relacionadas con texturas y animaciones
+    SDL_Texture* textureGoomba;
+    SDL_Texture* textureKoopa;
+    SDL_Texture* textureBowser;
+    const char* texturePath;
 
-	SDL_Texture* textureGoomba;
-	SDL_Texture* textureKoopa;
-	SDL_Texture* textureBowser;
+    int texW, texH;
+    pugi::xml_node parameters;
 
-	const char* texturePath;
-	int texW, texH;
-	pugi::xml_node parameters;
-	Animation* currentAnimation = nullptr;
-	Animation* currentAnimation_fly = nullptr;
+    Animation* currentAnimation = nullptr;
 
-	//Bowser Parameters
-	Animation idleBowserL;
-	Animation idleBowserR;
-	Animation attackBowserL;
-	Animation attackBowserR;
-	Animation deadBowserL;
-	Animation deadBowserR;
-	Animation walkingBowserL;
-	Animation walkingBowserR;
+    // Animaciones específicas de Bowser
+    Animation idleBowserL;
+    Animation idleBowserR;
+    Animation attackBowserL;
+    Animation attackBowserR;
+    Animation deadBowserL;
+    Animation deadBowserR;
+    Animation walkingBowserL;
+    Animation walkingBowserR;
 
-	Animation idleGoomba;
-	Animation deadGoomba;
-	Animation flyingkoopaLeft;
-	Animation flyingkoopaRight;
-	Animation deadkoopa;
+    // Animaciones de otros enemigos
+    Animation idleGoomba;
+    Animation deadGoomba;
+    Animation flyingkoopaLeft;
+    Animation flyingkoopaRight;
+    Animation deadkoopa;
 
-	b2Vec2 velocity = b2Vec2(0, 0);
-	Vector2D nextPos;
-	PhysBody* pbody;
-	Pathfinding* pathfinding;
-	Vector2D lastPlayerTile;
-	//Animation enemy walking
-	float deathTimer = 0.0f;
-	float frameTime = 0;
-	float frameDuration = 200.0f;
-	float lastAttackTime = 0.0f;  // Tiempo del último ataque
-	float minAttackInterval = 2000.0f;  // Intervalo mínimo entre ataques (en milisegundos)
-	bool isAttacking = false;      // Indica si Bowser está en medio de un ataque
-	float attackStartTime = 0.0f;  // Momento en el que comenzó la animación de ataque
-	float attackDuration = 1500.0f; // Duración de la animación de ataque en milisegundos
-	int currentFrame = 0;
-	int totalFrames = 3;
-	float detectionRange = 500.0f; // Rango en pixeles
-	bool movingRight = true;
-	bool movingLeft = false;
-	bool isEnemyDead = false; // Temporizador para la animación de muerte
-	bool isDying = false;    // Indica si está en proceso de morir
-	float speed = 3.0f;
-	bool showPath = false;
-	bool isLookingRight = false;
+    // Variables físicas y de pathfinding
+    b2Vec2 velocity = b2Vec2(0, 0);
+    Vector2D nextPos;
+    Vector2D lastPlayerTile;
+    PhysBody* pbody;
+    Pathfinding* pathfinding;
+
+    // Variables de control de comportamiento
+    int hitCount = 0;
+    int currentFrame = 0;
+    int totalFrames = 3;
+    
+//BowserSoundEffects
+    int BowserStep = 1;
+    int BowserDeath = 1;
+    int BowserAttack = 1;
+
+    bool isAttacking = false;
+    bool isEnemyDead = false;
+    bool isDying = false;
+    bool movingRight = true;
+    bool movingLeft = false;
+    bool showPath = false;
+    bool isLookingRight = false;
+
+    // Parámetros relacionados con tiempo y rango
+    float deathTimer = 0.0f;
+    float frameTime = 0;
+    float frameDuration = 200.0f;
+    float lastAttackTime = 0.0f;
+    float minAttackInterval = 2000.0f;
+    float attackStartTime = 0.0f;
+    float attackDuration = 1500.0f;
+    float detectionRange = 500.0f;
+    float speed = 3.0f;
+    float lastStepTime = 0.0f;
+    float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
+ 
 };
