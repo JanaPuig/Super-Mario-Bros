@@ -765,28 +765,56 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         pugi::xml_parse_result result = SaveFile.load_file("config.xml");
         // Modificar el valor de fullscreen_window
         pugi::xml_node fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
-        if (fullscreenNode) {
-            fullscreenNode.attribute("value").set_value("true");
+        
+        if (fullscreen_window == false)
+        {
+            if (fullscreenNode) {
+                fullscreenNode.attribute("value").set_value("true");
+            }
+            else {
+                LOG("Error: fullscreen_window node not found.");
+                return false;
+            }
+
+            // Intentar guardar el archivo XML
+            if (SaveFile.save_file("config.xml")) {
+                LOG("XML file saved successfully");
+            }
+            else {
+                LOG("Error saving XML file");
+                return false;
+            }
+
+            // Leer el valor modificado de fullscreen_window
+            fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
+
+            LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
         }
-        else {
-            LOG("Error: fullscreen_window node not found.");
-            return false;
+        
+        else if (fullscreen_window == true) {
+            if (fullscreenNode) {
+                fullscreenNode.attribute("value").set_value("false");
+            }
+            else {
+                LOG("Error: fullscreen_window node not found.");
+                return false;
+            }
+
+            // Intentar guardar el archivo XML
+            if (SaveFile.save_file("config.xml")) {
+                LOG("XML file saved successfully");
+            }
+            else {
+                LOG("Error saving XML file");
+                return false;
+            }
+
+            // Leer el valor modificado de fullscreen_window
+            fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
+
+            LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
         }
 
-        // Intentar guardar el archivo XML
-        if (SaveFile.save_file("config.xml")) {
-            LOG("XML file saved successfully");
-        }
-        else {
-            LOG("Error saving XML file");
-            return false;
-        }
-
-        // Leer el valor modificado de fullscreen_window
-        bool fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
-
-        // Mostrar el valor de fullscreen_window
-        LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
 
         break;
     } 

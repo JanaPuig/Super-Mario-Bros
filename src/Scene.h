@@ -110,6 +110,9 @@ public:
     int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
     GuiControlButton* guiBt;
+
+    bool fullscreen_window = false;
+
 private:
     // Player instance
     Player* player;
