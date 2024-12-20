@@ -107,6 +107,7 @@ bool Scene::Start()
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
     settings = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("settings").attribute("path").as_string());
+    tick = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("tick").attribute("path").as_string());
 
 
     showGroupLogo = true;
@@ -882,6 +883,8 @@ void Scene::ToggleFullscreen()
             if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN) != 0) {
                 LOG("Error setting fullscreen: %s", SDL_GetError());
             }
+            Engine::GetInstance().render.get()->DrawTexture(tick, 940, 525);
+
         }
         else {
             // Volver al modo ventana

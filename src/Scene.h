@@ -92,6 +92,7 @@ public:
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
     bool showingTransition = false;       // Whether the transition screen is visible
     bool isFlaged = false;
+    SDL_Texture* tick = NULL;
     SDL_Texture* settings = NULL;
     SDL_Texture* black = NULL;
     SDL_Texture* blur = NULL;
