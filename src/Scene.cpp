@@ -35,11 +35,6 @@ bool Scene::Awake()
         player->SetParameters(configParameters.child("entities").child("player"));
         CreateEnemies();
     }
-
-   
-
-  
-
     return true;
 }
 // Creates items for Level 1
@@ -89,7 +84,7 @@ bool Scene::Start()
     SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
     marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
-
+    BowserLaugh = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserLaugh.wav");
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());

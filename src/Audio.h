@@ -32,6 +32,12 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(int fx, int repeat = 0);
 
+	void PauseFx();
+
+	void ResumeFx();
+
+	void StopFx();
+
 	void StopMusic(float fadeTime = 0.0f);
 
 	void PauseMusic();

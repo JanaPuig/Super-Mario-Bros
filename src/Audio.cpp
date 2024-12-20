@@ -192,3 +192,30 @@ bool Audio::PlayFx(int id, int repeat)
 
 	return ret;
 }
+// Pause all FX
+void Audio::PauseFx()
+{
+	if (active)
+	{
+		Mix_Pause(-1); // Pausa todos los canales
+		LOG("Paused all FX");
+	}
+}
+
+// Resume all FX
+void Audio::ResumeFx()
+{
+	if (active)
+	{
+		Mix_Resume(-1); // Reanuda todos los canales
+		LOG("Resumed all FX");
+	}
+}
+void Audio::StopFx()
+{
+	if (active)
+	{
+		Mix_HaltChannel(-1); // Detiene todos los canales activos
+		LOG("Stopped all FX");
+	}
+}

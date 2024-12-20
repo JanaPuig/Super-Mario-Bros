@@ -23,6 +23,7 @@ bool Enemy::Awake() {
 }
 
 bool Enemy::Start() {
+    name = parameters.attribute("name").as_string();
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")|| parameters.attribute("name").as_string() == std::string("koopa2")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
@@ -61,6 +62,11 @@ bool Enemy::Start() {
     attackBowserR.LoadAnimations(parameters.child("animations").child("attackR"));
     walkingBowserL.LoadAnimations(parameters.child("animations").child("walkBowserL"));
     walkingBowserR.LoadAnimations(parameters.child("animations").child("walkBowserR"));
+
+    //Cargar Fx
+   BowserDeath= Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserDeath.wav");
+   BowserAttack = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserAttack.wav");
+   BowserStep = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserStep.wav");
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -177,6 +183,7 @@ bool Enemy::Update(float dt) {
     if (parameters.attribute("name").as_string() == std::string("bowser")) {
         // Muerte
         if (hitCount >= 3) {
+            Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
             LOG("Bowser is dead");
             currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
             isDying = true;
@@ -207,11 +214,13 @@ bool Enemy::Update(float dt) {
             }
             else {
                 // Movimiento y animación de caminar
-                if (velocity.x < 0) {
+                if (velocity.x < 0&& distanceToPlayer <= detectionRange) {
                     currentAnimation = &walkingBowserL;
+                    Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
                 }
-                else if (velocity.x > 0) {
+                else if (velocity.x > 0&& distanceToPlayer <= detectionRange) {
                     currentAnimation = &walkingBowserR;
+                    Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
                 }
                 else {
                     currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
