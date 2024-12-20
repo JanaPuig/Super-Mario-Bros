@@ -61,15 +61,22 @@ public:
 	Animation* currentAnimation = nullptr;
 	Animation* currentAnimation_fly = nullptr;
 
+	//Bowser Parameters
+	Animation idleBowserL;
+	Animation idleBowserR;
+	Animation attackBowserL;
+	Animation attackBowserR;
+	Animation deadBowserL;
+	Animation deadBowserR;
+	Animation walkingBowserL;
+	Animation walkingBowserR;
+
 	Animation idleGoomba;
 	Animation deadGoomba;
-	Animation idleBowserL;
-	Animation attackBowser;
-	Animation idleBowserR;
-	Animation deadBowserL;
 	Animation flyingkoopaLeft;
 	Animation flyingkoopaRight;
 	Animation deadkoopa;
+
 	b2Vec2 velocity = b2Vec2(0, 0);
 	Vector2D nextPos;
 	PhysBody* pbody;
@@ -79,6 +86,11 @@ public:
 	float deathTimer = 0.0f;
 	float frameTime = 0;
 	float frameDuration = 200.0f;
+	float lastAttackTime = 0.0f;  // Tiempo del último ataque
+	float minAttackInterval = 2000.0f;  // Intervalo mínimo entre ataques (en milisegundos)
+	bool isAttacking = false;      // Indica si Bowser está en medio de un ataque
+	float attackStartTime = 0.0f;  // Momento en el que comenzó la animación de ataque
+	float attackDuration = 1500.0f; // Duración de la animación de ataque en milisegundos
 	int currentFrame = 0;
 	int totalFrames = 3;
 	float detectionRange = 500.0f; // Rango en pixeles
@@ -88,4 +100,5 @@ public:
 	bool isDying = false;    // Indica si está en proceso de morir
 	float speed = 3.0f;
 	bool showPath = false;
+	bool isLookingRight = false;
 };
