@@ -72,7 +72,8 @@ public:
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
     void CreateEnemies();
-    void Credits();
+    void Credits();   
+    void menu();
 
     // Public member variables
     int level = 0;                   // Current map level

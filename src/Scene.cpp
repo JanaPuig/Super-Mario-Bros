@@ -36,18 +36,10 @@ bool Scene::Awake()
         CreateEnemies();
     }
 
-    SDL_Rect buttonPositions[] = {
-        {150, 350, 250, 120},
-        {150, 485, 250, 120},
-        {150, 620, 250, 120},
-        {150, 755, 250, 120},
-        {150, 890, 250, 120}
-    };
-    const char* buttonTexts[] = { "New Game", "Load", "Settings", "Credits", "Leave" };
+   
 
-    for (int i = 0; i < 5; ++i) {
-        guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, i + 1, buttonTexts[i], buttonPositions[i], this));
-    }
+  
+
     return true;
 }
 // Creates items for Level 1
@@ -152,6 +144,7 @@ bool Scene::Update(float dt)
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
             }
+        menu();
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
         Engine::GetInstance().guiManager->Update(dt);
         Engine::GetInstance().guiManager->Draw();
@@ -163,6 +156,8 @@ bool Scene::Update(float dt)
         }
         if (showSettings) {
             Settings();
+            Engine::GetInstance().guiManager->Update(dt);
+            Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showSettings = false; // Vuelve al menu si se presiona backspace
             }
@@ -696,10 +691,26 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
+void Scene::menu()
+{
+    Engine::GetInstance().guiManager->CleanUp();
+    SDL_Rect buttonPositions[] = {
+   {150, 350, 250, 120},
+   {150, 485, 250, 120},
+   {150, 620, 250, 120},
+   {150, 755, 250, 120},
+   {150, 890, 250, 120}
+    };
+    const char* buttonTexts[] = { "New Game", "Load", "Settings", "Credits", "Leave" };
+
+    for (int i = 0; i < 5; ++i) {
+        guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, i + 1, buttonTexts[i], buttonPositions[i], this));
+    }
+}
+
+
 void Scene::Credits()
 {
-    int cameraX = Engine::GetInstance().render.get()->camera.x;
-    int cameraY = Engine::GetInstance().render.get()->camera.y;
     Engine::GetInstance().render.get()->DrawTexture(black,0,0);
     Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
     Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
@@ -707,14 +718,17 @@ void Scene::Credits()
 }
 void Scene::Settings()
 {
-    int cameraX = Engine::GetInstance().render.get()->camera.x;
-    int cameraY = Engine::GetInstance().render.get()->camera.y;
+    Engine::GetInstance().guiManager->CleanUp();
     Engine::GetInstance().render.get()->DrawTexture(settings, 0, 0);
     Engine::GetInstance().render.get()->DrawText("SETTINGS", 768, 140, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Music Volume", 450, 300, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Fx Volume", 450, 420, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Full Screen", 450, 540, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Vsync", 450, 660, 250, 50);
+
+    SDL_Rect buttonPosition = { 940, 530, 64, 64 };
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
+   
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
@@ -744,6 +758,36 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         LOG("Leave button clicked");
         Engine::GetInstance().CleanUp();
         exit(0);
+        break;
+    case 6:// Full screen window
+        LOG("Leave button clicked");
+        pugi::xml_document SaveFile;
+        pugi::xml_parse_result result = SaveFile.load_file("config.xml");
+        // Modificar el valor de fullscreen_window
+        pugi::xml_node fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
+        if (fullscreenNode) {
+            fullscreenNode.attribute("value").set_value("true");
+        }
+        else {
+            LOG("Error: fullscreen_window node not found.");
+            return false;
+        }
+
+        // Intentar guardar el archivo XML
+        if (SaveFile.save_file("config.xml")) {
+            LOG("XML file saved successfully");
+        }
+        else {
+            LOG("Error saving XML file");
+            return false;
+        }
+
+        // Leer el valor modificado de fullscreen_window
+        bool fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
+
+        // Mostrar el valor de fullscreen_window
+        LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
+
         break;
     } 
     return true;
