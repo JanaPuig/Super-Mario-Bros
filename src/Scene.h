@@ -117,6 +117,8 @@ public:
 
     bool fullscreen_window = false;
     bool activatebotton7 = false;
+    bool musicButtonClicked = false;
+    bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
 
 private:
     // Player instance
@@ -156,4 +158,5 @@ private:
     void StartNewGame();
     void LoadGame();
 
+    Vector2D mousePos;
 };

@@ -51,20 +51,40 @@ void GuiControlButton::Draw()
 {
 	//L16: TODO 4: Draw the button according the GuiControl State
 
-	switch (state)
-	{
-	case GuiControlState::DISABLED:
-		Engine::GetInstance().render->DrawRectangle(bounds, 150, 150, 150, 100, true, false);
-		break;
-	case GuiControlState::NORMAL:
-		Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);
-		break;
-	case GuiControlState::FOCUSED:
-		Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
-		break;
-	case GuiControlState::PRESSED:
-		Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 150, 100, true, false);
-		break;
+	if (id == 8) {
+		// Hacer que este botón no tenga transparencia (alfa = 255)
+		switch (state)
+		{
+		case GuiControlState::DISABLED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 0, 255, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::NORMAL:
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 0, 255, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::FOCUSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 255, 255, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::PRESSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 30, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		}
+	}
+	else {
+		switch (state)
+		{
+		case GuiControlState::DISABLED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 150, 150, 150, 100, true, false);
+			break;
+		case GuiControlState::NORMAL:
+			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);
+			break;
+		case GuiControlState::FOCUSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
+			break;
+		case GuiControlState::PRESSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 150, 100, true, false);
+			break;
+		}
 	}
 
 	// Dibujar el texto del botón
