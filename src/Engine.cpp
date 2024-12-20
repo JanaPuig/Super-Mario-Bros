@@ -135,8 +135,8 @@ bool Engine::Update() {
     if (input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
         limitFPS = !limitFPS; // Alternar el límite de FPS
         maxFrameDuration = limitFPS ? 34 : 16; // 33 ms para ~30 FPS, 16 ms para ~60 FPS
-
-
+        Engine::GetInstance().scene.get()->activatebotton7 = Engine::GetInstance().limitFPS;
+        Engine::GetInstance().scene.get()->Settings();
     }
 
     if (ret == true)
