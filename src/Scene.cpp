@@ -713,6 +713,7 @@ void Scene::Settings()
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
     ToggleFullscreen();
+    
     if (activatebotton7==true) {
         LOG("Drawing tick because limitFPS is enabled.");
         Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick"
