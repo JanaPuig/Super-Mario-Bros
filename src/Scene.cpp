@@ -852,7 +852,6 @@ void Scene::CreateEnemies() {
         }
     }
 }
-
 void Scene::ToggleFullscreen()
 {
     pugi::xml_document LoadFile;
@@ -873,7 +872,6 @@ void Scene::ToggleFullscreen()
                 LOG("Error setting fullscreen: %s", SDL_GetError());
             }
             Engine::GetInstance().render.get()->DrawTexture(tick, 940, 525);
-
         }
         else {
             // Volver al modo ventana
