@@ -26,7 +26,7 @@ Engine::Engine() {
     frameTime = PerfTimer();
     lastSecFrameTime = PerfTimer();
     frames = 0;
-
+    limitFPS = false;
     // L4: TODO 1: Add the EntityManager Module to the Engine
     
     // Modules
@@ -135,6 +135,8 @@ bool Engine::Update() {
     if (input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) {
         limitFPS = !limitFPS; // Alternar el límite de FPS
         maxFrameDuration = limitFPS ? 34 : 16; // 33 ms para ~30 FPS, 16 ms para ~60 FPS
+
+
     }
 
     if (ret == true)

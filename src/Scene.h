@@ -77,6 +77,7 @@ public:
 
     void ToggleFullscreen();
 
+    bool limitFPS=false;
     // Public member variables
     int level = 0;                   // Current map level
     SDL_Texture* loadingScreen = NULL; //texture for the loading screen
@@ -115,6 +116,7 @@ public:
     GuiControlButton* guiBt;
 
     bool fullscreen_window = false;
+    bool activatebotton7 = false;
 
 private:
     // Player instance

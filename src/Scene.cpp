@@ -717,12 +717,23 @@ void Scene::Settings()
     Engine::GetInstance().render.get()->DrawText("Vsync", 450, 660, 250, 50);
 
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
+    SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
     ToggleFullscreen();
+    if (activatebotton7==true) {
+        LOG("Drawing tick because limitFPS is enabled.");
+        Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick"
+    }
 
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
+    pugi::xml_document SaveFile;
+    pugi::xml_parse_result result = SaveFile.load_file("config.xml");
+    pugi::xml_node fullscreenNode;
+    pugi::xml_node configNode;
+
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // New Game
@@ -752,10 +763,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 6:// Full screen window
         LOG("Leave button clicked");
-        pugi::xml_document SaveFile;
-        pugi::xml_parse_result result = SaveFile.load_file("config.xml");
-        // Modificar el valor de fullscreen_window
-        pugi::xml_node fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
+        fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
         
         if (fullscreen_window == false)
         {
@@ -806,9 +814,32 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
         }
 
-
         break;
-    } 
+
+    case 7:// FPS Toggle
+
+        static bool wasClicked = true;
+
+        if (wasClicked) {
+            // Alternar limitFPS
+            Engine::GetInstance().limitFPS = !Engine::GetInstance().limitFPS;
+            Engine::GetInstance().maxFrameDuration = Engine::GetInstance().limitFPS ? 34 : 16; 
+
+            std::cout << "FPS Limit toggled: " << (Engine::GetInstance().limitFPS ? "Enabled" : "Disabled") << std::endl;
+
+            activatebotton7 = Engine::GetInstance().limitFPS;
+
+            wasClicked = false;
+        }  
+
+        else if (activatebotton7 || !activatebotton7) {
+            wasClicked = true;
+        }
+
+        break;       
+    }
+
+    
     return true;
 }
 void Scene::GameOver() {

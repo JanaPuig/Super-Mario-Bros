@@ -75,6 +75,7 @@ private:
 	bool LoadConfig();
 
 	std::list<std::shared_ptr<Module>> moduleList;
+	
 
 public:
 
@@ -102,6 +103,8 @@ public:
 	// L08: TODO 2: Add Physics module
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<GuiManager> guiManager;
+	int maxFrameDuration = 16; // Esto representa aproximadamente 60 FPS por defecto
+	bool limitFPS;
 
 private: 
 
@@ -124,12 +127,8 @@ private:
 	float averageFps = 0.0f;
 	int secondsSinceStartup = 0;
 
-	int maxFrameDuration = 16; // Esto representa aproximadamente 60 FPS por defecto
-
 	std::string gameTitle = "Super Mario Bros";
 
 	//L05 TODO 2: Declare a xml_document to load the config file
 	pugi::xml_document configFile;
-
-	bool limitFPS = false;
 };
