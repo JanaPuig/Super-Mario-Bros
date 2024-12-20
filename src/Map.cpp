@@ -52,7 +52,7 @@ bool Map::Update(float dt)
                         Vector2D limits = Vector2D(camPosTile.getX() + camSizeTile.getX(), camPosTile.getY() + camSizeTile.getY());
                         if (limits.getX() > mapData.width) limits.setX(mapData.width);
                        if (limits.getY() > mapData.height) limits.setY(mapData.height);
-                for (int i = camPosTile.getX(); i < limits.getX()+1; i++)
+                for (int i = camPosTile.getX(); i < limits.getX()+32; i++)
                 {
                     for (int j = camPosTile.getY(); j < limits.getY(); j++)
                     {

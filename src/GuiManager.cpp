@@ -64,7 +64,7 @@ bool GuiManager::CleanUp()
 	{
 		delete control;
 	}
-
+	guiControlsList.clear();
 	return true;
 }
 

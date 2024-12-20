@@ -72,7 +72,8 @@ public:
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
     void CreateEnemies();
-    void Credits();
+    void Credits();   
+    void menu();
 
     // Public member variables
     int level = 0;                   // Current map level
@@ -109,6 +110,9 @@ public:
     int MenuStart = 0;// Sound effect ID for castle interaction
     float tolerance = 20.0f;         // Tolerance value for proximity checks
     GuiControlButton* guiBt;
+
+    bool fullscreen_window = false;
+
 private:
     // Player instance
     Player* player;
