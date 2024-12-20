@@ -227,7 +227,6 @@ bool Scene::Update(float dt)
     if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
 
-
     return true;
 }
 // Handles teleportation logic

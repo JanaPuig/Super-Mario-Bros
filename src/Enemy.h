@@ -65,6 +65,8 @@ public:
 	Animation deadGoomba;
 	Animation idleBowserL;
 	Animation attackBowser;
+	Animation idleBowserR;
+	Animation deadBowserL;
 	Animation flyingkoopaLeft;
 	Animation flyingkoopaRight;
 	Animation deadkoopa;

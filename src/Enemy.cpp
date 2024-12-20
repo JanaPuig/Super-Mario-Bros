@@ -61,7 +61,9 @@ bool Enemy::Start() {
     flyingkoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     flyingkoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
-    idleBowserL.LoadAnimations(parameters.child("animations").child("idleBowser"));
+    idleBowserL.LoadAnimations(parameters.child("animations").child("idleBowserL"));
+    idleBowserR.LoadAnimations(parameters.child("animations").child("idleBowserR"));
+    deadBowserL.LoadAnimations(parameters.child("animations").child("deadBowserL"));
     attackBowser.LoadAnimations(parameters.child("animations").child("attack"));
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
@@ -143,21 +145,23 @@ bool Enemy::Update(float dt) {
         return true;
     }
 
-    // Lógica de muerte
-    if ((parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) && hitCount == 1) {
-        UpdateColliderSize();
-        pbody->body->SetGravityScale(1);
-        currentAnimation = &deadkoopa;
-        isDying = true;
-        deathTimer = 0.0f;
-        return true;
+    // Lógica de muerte para Bowser
+    if (parameters.attribute("name").as_string() == std::string("bowser")) {
+        if (hitCount >= 3) {
+            LOG("Bowser is dead");
+            currentAnimation = &deadBowserL;
+            isDying = true;
+            deathTimer = 0.0f;
+            return true;
+        }
+        if (velocity.x < 0) {
+            currentAnimation = &idleBowserL;
+        }
+        else if (velocity.x > 0) {
+            currentAnimation = &idleBowserR;
+        }
     }
-    else if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) && hitCount >= 1) {
-        currentAnimation = &deadGoomba;
-        isDying = true;
-        deathTimer = 0.0f;
-        return true;
-    }
+
 
     if (isEnemyDead) {
         toBeDestroyed = true;
@@ -166,14 +170,14 @@ bool Enemy::Update(float dt) {
     }
 
     if (currentAnimation) currentAnimation->Update();
+
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-    if (name == "bowser") {
+
         Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
-    }
-    else {
         Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
         Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
-    }
+   
+
     b2Transform pbodyPos = pbody->body->GetTransform();
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
     position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
@@ -213,7 +217,6 @@ bool Enemy::Update(float dt) {
             i++;
         }
 
-        // Modificar solo el movimiento en el eje Y para Koopas
         if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
             velocity = b2Vec2(0, 0); // Resetear la velocidad en X
             if (nextPos.getX() > enemyPositionTiles.getX()) {
@@ -229,24 +232,20 @@ bool Enemy::Update(float dt) {
                 velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
             }
 
-            // Actualizar animación en base a dirección Y (solo para Koopas)
             if (velocity.x < 0) {
-                currentAnimation = &flyingkoopaLeft; // O animación hacia abajo
+                currentAnimation = &flyingkoopaLeft;
             }
             else if (velocity.x > 0) {
-                currentAnimation = &flyingkoopaRight; // O animación hacia arriba
+                currentAnimation = &flyingkoopaRight;
             }
-
         }
         else {
-            // Comportamiento normal para otros enemigos (no Koopa)
             if (nextPos.getX() > enemyPositionTiles.getX()) {
                 velocity = b2Vec2(2, 0);
             }
             else if (nextPos.getX() < enemyPositionTiles.getX()) {
                 velocity = b2Vec2(-2, 0);
             }
-          
         }
 
         pbody->body->SetLinearVelocity(velocity);
@@ -254,16 +253,16 @@ bool Enemy::Update(float dt) {
     else {
         pbody->body->SetLinearVelocity(b2Vec2(0, 0));
     }
+
     if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-        if (GetPosition().getY() > 490)
-        {
-            //currentAnimation = &deadGoomba;
+        if (GetPosition().getY() > 490) {
             isEnemyDead = true;
             toBeDestroyed = true;
         }
     }
     return true;
 }
+
 
 bool Enemy::CleanUp() {
     if (pbody != nullptr) {
@@ -272,6 +271,7 @@ bool Enemy::CleanUp() {
     }
     Engine::GetInstance().textures.get()->UnLoad(textureKoopa);
     Engine::GetInstance().textures.get()->UnLoad(textureGoomba);
+    Engine::GetInstance().textures.get()->UnLoad(textureBowser);
     return true;
 }
 

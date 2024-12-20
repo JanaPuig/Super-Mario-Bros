@@ -203,17 +203,23 @@
 				</enemy2>
 				<enemy_bowser name="bowser" x="3000" y="400" w="102" h="117" hitcount="0" texture_bowser="Assets/Textures/Bowser.png" gravity="true">
 					<animations>
-						<idleBowser loop="true" speed="0.05">
-							<frame x="309" y="531" w="102" h="117" />
+						<idleBowserL loop="true" speed="0.05">
 							<frame x="1032" y="528" w="99" h="123" />
-						</idleBowser>
+						</idleBowserL>
+						<idleBowserR loop="true" speed="0.05">
+							<frame x="1153" y="528" w="99" h="123" />
+						</idleBowserR>
 						<attack loop="true" speed="0.1">
 							<frame x="0" y="128" w="128" h="128" />
 							<frame x="128" y="128" w="128" h="128" />
 						</attack>
-						<dead>
-							<frame x="0" y="256" w="128" h="128" />
-						</dead>
+						<deadBowserL loop="false" speed="0.1">
+							<frame x="213" y="1347" w="90" h="126" />
+							<frame x="330" y="1347" w="99" h="126" />
+							<frame x="461" y="1359" w="123" h="114" />
+							<frame x="627" y="1359" w="123" h="114" />
+							<frame x="774" y="1355" w="120" h="118" />
+						</deadBowserL>
 					</animations>
 				</enemy_bowser>
 			</enemies>
