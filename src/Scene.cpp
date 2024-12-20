@@ -102,15 +102,6 @@ bool Scene::Start()
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
     helpMenuTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("helpMenu").attribute("path").as_string());
-    level1Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level1Transition").attribute("path").as_string());
-    level2Transition = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("level2Transition").attribute("path").as_string());
-    newGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButtonSelected").attribute("path").as_string());
-    loadGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButtonSelected").attribute("path").as_string());
-    leaveGameButtonSelected = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButtonSelected").attribute("path").as_string());
-    newGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("newGameButton").attribute("path").as_string());
-    loadGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadGameButton").attribute("path").as_string());
-    leaveGameButton = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("leaveGameButton").attribute("path").as_string());
-    loadingScreen = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("loadingScreen").attribute("path").as_string());
     gameOver = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("gameOver").attribute("path").as_string());
     GroupLogo = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("GroupLogo").attribute("path").as_string());
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
@@ -172,7 +163,10 @@ bool Scene::Update(float dt)
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
-        Engine::GetInstance().render.get()->DrawTexture((level == 1) ? level1Transition : level2Transition, -cameraX, -cameraY);
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+        if (level == 1) { Engine::GetInstance().render->DrawText("WORLD 1-1",730,450,475,150); }
+        else if(level ==2){ Engine::GetInstance().render->DrawText("WORLD 1-2", 730, 450, 475, 150); }
+        else if (level == 3) { Engine::GetInstance().render->DrawText("CASTLE 1-3", 720, 450, 475, 150); }
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
@@ -190,10 +184,6 @@ bool Scene::Update(float dt)
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
-    if (!showCredits) {
-
-    }
-
     Vector2D playerPos = player->GetPosition();
    
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
@@ -227,18 +217,16 @@ bool Scene::Update(float dt)
     {
         std::cout << "Time's up! Game over!" << std::endl;
         timeUp = true;
-        if (timeUp == false)
-        {
-         showMainMenu = true; // Regresa al menú principal o termina el nivel
-        }
+        showRemainingTime = false;
     }
 
     // Renderizar el tiempo en pantalla
     char timerText[64];
     if (showRemainingTime)
-        sprintf_s(timerText, "%0.f", currentTime/1000);
-  
-    Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20,30,30);
+    sprintf_s(timerText, "%0.f", currentTime/1000);
+    
+    if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20, 30, 30); }
+    if(timeUp){ Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
 
 
@@ -311,17 +299,8 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
     Engine::GetInstance().textures.get()->UnLoad(mainMenu);
-    Engine::GetInstance().textures.get()->UnLoad(loadingScreen);
-    Engine::GetInstance().textures.get()->UnLoad(newGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(loadGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(leaveGameButton);
-    Engine::GetInstance().textures.get()->UnLoad(newGameButtonSelected);
-    Engine::GetInstance().textures.get()->UnLoad(loadGameButtonSelected);
-    Engine::GetInstance().textures.get()->UnLoad(leaveGameButtonSelected);
     Engine::GetInstance().textures.get()->UnLoad(helpMenuTexture);
     Engine::GetInstance().textures.get()->UnLoad(Title);
-    Engine::GetInstance().textures.get()->UnLoad(level1Transition);
-    Engine::GetInstance().textures.get()->UnLoad(level2Transition);
     Engine::GetInstance().textures.get()->UnLoad(gameOver);
     Engine::GetInstance().textures.get()->UnLoad(GroupLogo);
     Engine::GetInstance().textures.get()->UnLoad(black);
@@ -365,6 +344,8 @@ void Scene::ShowTransitionScreen()
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
+    Engine::GetInstance().entityManager->ResetEnemies();
+    
     elapsedTime = 0.0f;
     isFlaged = false;
     showingTransition = false;
@@ -718,35 +699,36 @@ void Scene::Settings()
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
-    // L15: DONE 5: Implement the OnGuiMouseClickEvent method
-    switch (control->id) {
-    case 1: // New Game
-        LOG("New Game button clicked");
-        StartNewGame();
-        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
-        Engine::GetInstance().audio.get()->PlayFx(marioTime);
-        ShowTransitionScreen();
-        break;
-    case 2: // Load Game
-        LOG("Load Game button clicked");
-        LoadGame();
-        Engine::GetInstance().audio.get()->StopMusic();
-        isLoading = true;
-        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
-        break;
-    case 3: //Setings Gamme
-        showSettings = true;
-        break;
-    case 4:// Credits Game
-        showCredits = true;
-        break;
-    case 5:// Leave Game
-        LOG("Leave button clicked");
-        Engine::GetInstance().CleanUp();
-        exit(0);
-        break;
-    } 
-    return true;
+    if (showMainMenu && !showSettings && !showCredits) {// L15: DONE 5: Implement the OnGuiMouseClickEvent method
+        switch (control->id) {
+        case 1: // New Game
+            LOG("New Game button clicked");
+            StartNewGame();
+            Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+            Engine::GetInstance().audio.get()->PlayFx(marioTime);
+            ShowTransitionScreen();
+            break;
+        case 2: // Load Game
+            LOG("Load Game button clicked");
+            LoadGame();
+            Engine::GetInstance().audio.get()->StopMusic();
+            isLoading = true;
+            Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+            break;
+        case 3: //Setings Gamme
+            showSettings = true;
+            break;
+        case 4:// Credits Game
+            showCredits = true;
+            break;
+        case 5:// Leave Game
+            LOG("Leave button clicked");
+            Engine::GetInstance().CleanUp();
+            exit(0);
+            break;
+        }
+        return true;
+    }
 }
 void Scene::GameOver() {
     showMainMenu = true;
@@ -761,31 +743,21 @@ void Scene::CreateEnemies() {
     // Limpiar la lista de enemigos antes de crear nuevos
     enemyStateList.clear();
 
-    if (level == 1) {
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
+    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
+    {
+        // Solo crear enemigos si estamos en el nivel 1 o 2
+        if (level == 1 || level == 2) {
             Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
             enemy->SetParameters(enemyNode);
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
         }
-    }
-    else if (level == 2) {
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
+        // Crear Bowser solo en el nivel 3
+        else if (level == 3 && std::string(enemyNode.attribute("name").as_string()) == "bowser") {
+            Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            bowser->SetParameters(enemyNode);
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
-        }
-    }
-    else if (level == 3) {
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
-            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+            LOG("Bowser created: %s", enemyNode.attribute("name").as_string());
         }
     }
 }

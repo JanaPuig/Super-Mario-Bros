@@ -23,15 +23,6 @@
 			<mainMenu path="Assets/Textures/mainMenu.png" />
 			<title path="Assets/Textures/title.png" />
 			<helpMenu path="Assets/Textures/Help_Menu.png" />
-			<level1Transition path="Assets/Textures/world1-1.png" />
-			<level2Transition path="Assets/Textures/world1-2.png" />
-			<newGameButtonSelected path="Assets/Textures/NewGameButtonSelected.png" />
-			<loadGameButtonSelected path="Assets/Textures/LoadGameButtonSelected.png" />
-			<leaveGameButtonSelected path="Assets/Textures/LeaveGameButtonSelected.png" />
-			<newGameButton path="Assets/Textures/NewGameButton.png" />
-			<loadGameButton path="Assets/Textures/LoadGameButton.png" />
-			<leaveGameButton path="Assets/Textures/LeaveGameButton.png" />
-			<loadingScreen path="Assets/Textures/loadgame.png" />
 			<gameOver path="Assets/Textures/gameOver.png" />
 			<GroupLogo path="Assets/Textures/Logo.png" />
 			<black path="Assets/Textures/black.png" />
@@ -40,7 +31,7 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="64" h="64" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="64" h="64" />
@@ -210,6 +201,21 @@
 						</dead>
 					</animations>
 				</enemy2>
+				<enemy_bowser name="bowser" x="3000" y="400" w="102" h="117" hitcount="0" texture_bowser="Assets/Textures/Bowser.png" gravity="true">
+					<animations>
+						<idleBowser loop="true" speed="0.05">
+							<frame x="309" y="531" w="102" h="117" />
+							<frame x="1032" y="528" w="99" h="123" />
+						</idleBowser>
+						<attack loop="true" speed="0.1">
+							<frame x="0" y="128" w="128" h="128" />
+							<frame x="128" y="128" w="128" h="128" />
+						</attack>
+						<dead>
+							<frame x="0" y="256" w="128" h="128" />
+						</dead>
+					</animations>
+				</enemy_bowser>
 			</enemies>
 		</entities>
 	</scene>

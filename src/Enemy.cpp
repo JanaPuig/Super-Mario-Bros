@@ -40,6 +40,10 @@ bool Enemy::Start() {
         textureGoomba = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
         currentAnimation = &idleGoomba;
     }
+    else if (parameters.attribute("name").as_string() == std::string("bowser")) {
+        textureBowser = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_bowser").as_string());
+        currentAnimation = &idleBowser; // Asegúrate de que esta animación esté definida
+    }
 
     //asigna nombre al enemigo
     name = parameters.attribute("name").as_string();
@@ -57,13 +61,14 @@ bool Enemy::Start() {
     flyingkoopaLeft.LoadAnimations(parameters.child("animations").child("idlekoopaL"));
     flyingkoopaRight.LoadAnimations(parameters.child("animations").child("idlekoopaR"));
     deadkoopa.LoadAnimations(parameters.child("animations").child("deadkoopa"));
+    idleBowser.LoadAnimations(parameters.child("animations").child("idleBowser"));
+    attackBowser.LoadAnimations(parameters.child("animations").child("attack"));
 
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-
     pbody->listener = this;
-    //Assign collider type
     pbody->ctype = ColliderType::ENEMY;
+
     std::string enemyName = parameters.attribute("name").as_string();
     if (enemyName == "koopa") {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
@@ -77,6 +82,10 @@ bool Enemy::Start() {
     else if (enemyName == "goomba2") {
         pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
     }
+    else if (parameters.attribute("name").as_string() == "bowser") {
+        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    }
+
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
 
@@ -157,10 +166,15 @@ bool Enemy::Update(float dt) {
     }
 
     if (currentAnimation) currentAnimation->Update();
-
     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-    Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-    Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
+    // Dibuja el enemigo según su tipo
+    if (name == "bowser") {
+        Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
+    }
+    else {
+        Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
+    }
 
     b2Transform pbodyPos = pbody->body->GetTransform();
     position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -322,5 +336,9 @@ void Enemy::ResetPosition() {
     else if (enemyName == "goomba" || enemyName == "goomba2") {
         pbody->body->SetGravityScale(1);
     }
+    if (parameters.attribute("name").as_string() == "bowser") {
+        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    }
+
 
 }

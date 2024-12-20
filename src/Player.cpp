@@ -107,8 +107,7 @@ bool Player::Update(float dt) {
 		pbody->listener = this;
 		pbody->ctype = ColliderType::PLAYER;
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
-			if (Engine::GetInstance().entityManager->lives <= 0) {
-				// Volver al menú
+			if (Engine::GetInstance().entityManager->lives <= 0||Engine::GetInstance().scene->timeUp) {
 				Engine::GetInstance().scene.get()->GameOver();
 			}
 			else {
@@ -371,8 +370,5 @@ void Player::LoseLife() {
 	{
 	isDead=true;
 	Engine::GetInstance().entityManager->lives--;
-	}
-	else {
-		return;
 	}
 }
