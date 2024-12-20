@@ -381,13 +381,11 @@ void Scene::FinishTransition()
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
-        CreateEnemies();
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
     }
     else if (level == 3) {
         player->SetPosition(Vector2D(100, 580));
-        CreateEnemies();
         Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
     }

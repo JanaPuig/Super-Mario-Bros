@@ -50,6 +50,8 @@ bool Player::Start() {
 	jumpRAnimation.LoadAnimations(parameters.child("animations").child("jumping"));
 	jumpLAnimation.LoadAnimations(parameters.child("animations").child("jumpingL"));
 	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
+	crouchLAnimation.LoadAnimations(parameters.child("animations").child("crouchL"));
+	crouchRAnimation.LoadAnimations(parameters.child("animations").child("crouchR"));
 	currentAnimation = &idleRAnimation;
 
 	// Añadir física
@@ -67,7 +69,9 @@ bool Player::Start() {
 	return true;
 }
 bool Player::Update(float dt) {
-
+	
+	int cameraX = Engine::GetInstance().render.get()->camera.x;
+	int cameraY = Engine::GetInstance().render.get()->camera.y;
 	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
@@ -95,8 +99,6 @@ bool Player::Update(float dt) {
 			deathSoundPlayed = true;
 		}
 		//Drawn Death Texture
-		int cameraX = Engine::GetInstance().render.get()->camera.x;
-		int cameraY = Engine::GetInstance().render.get()->camera.y;
 		currentAnimation = &deadAnimation;
 		Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
 		//Change collision 
@@ -151,45 +153,21 @@ bool Player::Update(float dt) {
 		}
 		return true;
 	}
+	//crouching animation
+	else if (iscrouching) {
+		currentAnimation = facingLeft ? &crouchLAnimation : &crouchRAnimation;
+	}
 	// Moving Animation
-	if (isMoving && !isJumping) {
-		if (facingLeft)
-		{
-			currentAnimation = &walkingLAnimation;
-		}
-		else {
-			currentAnimation = &walkingRAnimation;
-		}
+	else if (isMoving&&!isJumping) {
+		currentAnimation = facingLeft ? &walkingLAnimation : &walkingRAnimation;
 	}
-
 	// Jumping Animation
-	else if (isJumping == true) {
-		animationTimer += dt;  // Incrementa el temporizador para la animación de salto
-		SDL_Rect jumpClip;
-		if (animationTimer < jumpFrameDuration) {
-			currentFrame = 0;
-			jumpClip = { 0, 0, texW, texH };
-		}
-		else {
-			currentFrame = 1;
-			jumpClip = { texW, 0, texW, texH };
-		}
-		if (facingLeft) {
-			currentAnimation = &jumpLAnimation;
-		}
-		else {
-			currentAnimation = &jumpRAnimation;
-		}
+	else if (isJumping&&!iscrouching) {
+		currentAnimation = facingLeft ? &jumpLAnimation : &jumpRAnimation;
 	}
-
-	// Idle Animation
+	//idle animation
 	else {
-		if (facingLeft) {
-			currentAnimation = &idleLAnimation;
-		}
-		else {
-			currentAnimation = &idleRAnimation;
-		}
+		currentAnimation = facingLeft ? &idleLAnimation : &idleRAnimation;
 	}
 
 	//DEBUG FUNCTIONS
@@ -220,24 +198,30 @@ bool Player::Update(float dt) {
 	else {
 		isSprinting = false; frameDuration = 130.0f;
 	}
-
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
+		iscrouching = true;
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
+		iscrouching = false;
+	}
 	// Left
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead)
-	{
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
 		velocity.x = -movementSpeed;
 		isMoving = true;
 		facingLeft = true;
 	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) isMoving = false;
-
-	// Right
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
+	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+		isMoving = false;
+	}
+	// Right movement
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
 		velocity.x = movementSpeed;
 		isMoving = true;
 		facingLeft = false;
 	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) isMoving = false;
-
+	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+		isMoving = false;
+	}
 	// Jump
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
 		pbody->body->SetLinearVelocity(b2Vec2(0, 0));

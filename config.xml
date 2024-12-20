@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<SaveFile level="2" playerX="30" playerY="430" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="9163.39844" />
+		<SaveFile level="1" playerX="30" playerY="430" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="9163.39844" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -78,35 +78,39 @@
 					</animations>
 				</flagpole>
 			</items>
-			<player name="mario" x="271" y="431" w="32" h="32" texture_player="Assets/Textures/player.png" gravity="true">
+			<player name="mario" x="271" y="431" w="32" h="40" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
 					<idle loop="false">
-						<frame x="0" y="0" w="32" h="32" />
+						<frame x="2" y="8" w="28" h="40" />
 					</idle>
 					<idleL loop="false">
-						<frame x="0" y="32" w="32" h="32" />
+						<frame x="2" y="56" w="28" h="40" />
 					</idleL>
-					<walking loop="true" speed="0.25">
-						<frame x="32" y="0" w="32" h="32" />
-						<frame x="64" y="0" w="32" h="32" />
-						<frame x="0" y="0" w="32" h="32" />
+					<walking loop="true" speed="0.135">
+						<frame x="2" y="8" w="28" h="40" />
+						<frame x="33" y="10" w="30" h="38" />
 					</walking>
-					<walkingL loop="true" speed="0.25">
-						<frame x="32" y="32" w="32" h="32" />
-						<frame x="64" y="32" w="32" h="32" />
-						<frame x="0" y="32" w="32" h="32" />
+					<walkingL loop="true" speed="0.135">
+						<frame x="2" y="56" w="28" h="40" />
+						<frame x="33" y="58" w="30" h="38" />
 					</walkingL>
-					<jumping loop="false" speed="0.10">
-						<frame x="96" y="0" w="32" h="32" />
-						<frame x="128" y="0" w="32" h="32" />
+					<jumping loop="false" speed="0.5">
+						<frame x="64" y="8" w="32" h="40" />
+						<frame x="96" y="4" w="32" h="44" />
 					</jumping>
-					<jumpingL loop="false" speed="0.10">
-						<frame x="128" y="32" w="32" h="32" />
-						<frame x="96" y="32" w="32" h="32" />
+					<jumpingL loop="false" speed="0.5">
+						<frame x="64" y="56" w="32" h="40" />
+						<frame x="96" y="52" w="32" h="44" />
 					</jumpingL>
 					<die loop="false">
-						<frame x="160" y="32" w="32" h="32" />
+						<frame x="160" y="0" w="32" h="48" />
 					</die>
+					<crouchL loop="false">
+						<frame x="129" y="60" w="30" h="38" />
+					</crouchL>
+					<crouchR loop="false">
+						<frame x="128" y="10" w="30" h="38" />
+					</crouchR>
 				</animations>
 			</player>
 			<enemies>

@@ -59,7 +59,6 @@ private:
     int currentFrame = 0;
     float animationTimer = 0.0f;
     float frameDuration = 130.0f;
-
     // Physics body
     PhysBody* pbody = nullptr;
 
@@ -71,6 +70,8 @@ private:
     Animation walkingRAnimation;
     Animation walkingLAnimation;
     Animation deadAnimation;
+    Animation crouchRAnimation;
+    Animation crouchLAnimation;
 
 
     // Audio FX
@@ -91,6 +92,7 @@ private:
     bool facingLeft = false;
     bool godMode = false;
     bool godModeToggle = false;
+    bool iscrouching = false;
     int jumpcount = 0;
 
     // Internal state
