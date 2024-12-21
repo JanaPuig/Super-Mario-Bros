@@ -51,7 +51,7 @@ void GuiControlButton::Draw()
 {
 	//L16: TODO 4: Draw the button according the GuiControl State
 
-	if (id == 8) {
+	if (id == 8 || id == 9) {
 		// Hacer que este botón no tenga transparencia (alfa = 255)
 		switch (state)
 		{

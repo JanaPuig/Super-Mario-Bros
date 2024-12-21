@@ -120,8 +120,12 @@ public:
     bool fullscreen_window = false;
     bool activatebotton7 = false;
     bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
-
+    bool FxButtonHeld = false; // Detecta si el clic está siendo mantenido
+    
+    bool mouseOverMusicControl = false;
+    bool mouseOverFxControl = false;
     int musicPosX = 1350;
+    int FxPosX = 1350;
 private:
     // Player instance
     Player* player;

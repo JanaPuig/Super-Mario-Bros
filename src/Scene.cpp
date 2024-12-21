@@ -716,22 +716,44 @@ void Scene::Settings()
   
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
-
-   
-
     SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
     guiBt->bounds.x = musicPosX; //Botones se reubiquen
+    SDL_Rect FxPosition = { FxPosX, 431, 15, 35 };
+    guiBt->bounds.x = FxPosX; //Botones se reubiquen
 
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 8, "  ", MusicPosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 9, "  ", FxPosition, this));
+
+    //Evitar que Fx Volume y Music Volume se muevan a la vez. Mirar donde está la posición del ratón en el eje de la y
+    if (mousePos.getX() >= 940 && mousePos.getX() <= 1350 && mousePos.getY() >= 300 && mousePos.getY() <= 340) {
+        mouseOverMusicControl = true;  // El ratón está sobre el control de volumen de música
+    }
+    else {
+        mouseOverMusicControl = false; // El ratón no está sobre el control de música
+    }
+
+    // Comprobar si el mouse está sobre el control de FX
+    if (mousePos.getX() >= 940 && mousePos.getX() <= 1350 && mousePos.getY() >= 420 && mousePos.getY() <= 460) {
+        mouseOverFxControl = true;  // El ratón está sobre el control de volumen de FX
+    }
+    else {
+        mouseOverFxControl = false; // El ratón no está sobre el control de FX
+    }
 
     if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-        musicButtonHeld = true;  // Activar el movimiento solo si estamos presionando el botón. Music Volumen       
+        if (mouseOverMusicControl) {
+            musicButtonHeld = true;  // Activar movimiento solo si estamos sobre el botón de música
+        }
+        if (mouseOverFxControl) {
+            FxButtonHeld = true;  // Activar movimiento solo si estamos sobre el botón de FX
+        }
     }
 
     if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-            musicButtonHeld = false;  // Si se suelta el botón, desactivar el movimiento. Music Volumen         
+        FxButtonHeld = false;  // Activar el movimiento solo si estamos presionando el botón. Fx Volumen       
+        musicButtonHeld = false;  // Si se suelta el botón, desactivar el movimiento. Music Volumen         
     } 
 
     if (musicButtonHeld) {
@@ -747,15 +769,39 @@ void Scene::Settings()
         }       
     }
 
+    if (FxButtonHeld) {
+
+        if (mousePos.getX() < 940) {
+            FxPosX = 940;
+        }
+        else if (mousePos.getX() > 1350) {
+            FxPosX = 1350;
+        }
+        else {
+            FxPosX = mousePos.getX();
+        }
+    }
+
     SDL_Rect newMusicPos = { musicPosX, 311, 15, 35 }; // Nueva posición. Music Volumen 
     guiBt->bounds = newMusicPos;
+
+    SDL_Rect newFxPos = { FxPosX, 431, 15, 35 }; // Nueva posición. Music Volumen 
+    guiBt->bounds = newFxPos;
     
+    //Subir bajar volumen de la música
     float volume = (float)(musicPosX - 940) / (1350 - 940);  
     int sdlVolume = (int)(volume * MIX_MAX_VOLUME);
     Mix_VolumeMusic(sdlVolume);
 
+    //Subir bajar volumen de Fx
+    float volumeFx = (float)(FxPosX - 940) / (1350 - 940);
+    int sdlVolumeFx = (int)(volumeFx * MIX_MAX_VOLUME);
+    Mix_Volume(-1, sdlVolumeFx);
+
    //Rectángulo volumen musica
     Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
+    //Rectángulo Fx musica
+    Engine::GetInstance().render.get()->DrawRectangle({ 940, 420 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
 
     ToggleFullscreen(); //Full screen
 
@@ -875,9 +921,9 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         break; 
 
-    case 8:
-       
-
+    case 8:      
+        break;
+    case 9:
         break;
     }
     musicButtonHeld = false;
