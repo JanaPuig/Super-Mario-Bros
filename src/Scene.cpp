@@ -716,6 +716,9 @@ void Scene::Settings()
   
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
+
+   
+
     SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
     guiBt->bounds.x = musicPosX; //Botones se reubiquen
 
@@ -746,6 +749,11 @@ void Scene::Settings()
 
     SDL_Rect newMusicPos = { musicPosX, 311, 15, 35 }; // Nueva posición. Music Volumen 
     guiBt->bounds = newMusicPos;
+    
+    float volume = (float)(musicPosX - 940) / (1350 - 940);  
+    int sdlVolume = (int)(volume * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(sdlVolume);
+
    //Rectángulo volumen musica
     Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
 

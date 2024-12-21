@@ -121,7 +121,7 @@ public:
     bool activatebotton7 = false;
     bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
 
-    int musicPosX = 940;
+    int musicPosX = 1350;
 private:
     // Player instance
     Player* player;
