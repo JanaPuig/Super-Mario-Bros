@@ -142,9 +142,10 @@ bool Scene::Update(float dt)
             }
         }
         if (showSettings) {
+            Engine::GetInstance().guiManager->Update(dt);
+
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
-            Engine::GetInstance().guiManager->Update(dt);
             Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showSettings = false; // Vuelve al menu si se presiona backspace
@@ -713,21 +714,27 @@ void Scene::Settings()
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
 
-    SDL_Rect MusicPosition = { 940, 311, 15, 35 };
+
     if (musicButtonHeld) {
         if (mousePos.getX() < 940) {
-            MusicPosition = { 940, 311, 15, 35 };
+            musicPosX = 940;
         }
         else if (mousePos.getX() > 1350) {
-            MusicPosition = { 1350, 311, 15, 35 };
+            musicPosX = 1350;
         }
         else {
-            MusicPosition = { static_cast<int>(mousePos.getX()), 311, 15, 35 };
+            musicPosX = static_cast<int>(mousePos.getX());
         }
-
     }
 
-    
+    if (!musicButtonHeld) {
+        musicPosX_aux = musicPosX;
+    }
+
+    SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
+    guiBt->bounds = MusicPosition;
+
+
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 8, "  ", MusicPosition, this));
@@ -750,10 +757,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     pugi::xml_node fullscreenNode;
     static bool wasClicked = true;
-    static bool wasClicked8 = true;
 
-    musicButtonClicked = false;
-    musicButtonHeld = false; 
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // New Game
@@ -858,13 +862,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break; 
 
     case 8:
-        //if (mousePos.getX() > 940 && mousePos.getX() < 1350) {
-        //    musicButtonClicked = true; // Solo cambia si el clic es sobre el botón
-        //}        
-        if (!musicButtonClicked) { musicButtonHeld = true; musicButtonClicked = true; }
-        else {
-            musicButtonHeld = false; musicButtonClicked = false;
-        }
+       
 
         break;
     }

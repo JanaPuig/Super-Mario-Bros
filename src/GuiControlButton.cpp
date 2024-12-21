@@ -2,6 +2,7 @@
 #include "Render.h"
 #include "Engine.h"
 #include "Audio.h"
+#include "Scene.h"
 
 GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -31,14 +32,25 @@ bool GuiControlButton::Update(float dt)
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 				state = GuiControlState::PRESSED;
+
+				if (id == 8) {
+					Engine::GetInstance().scene.get()->musicButtonHeld = true;
+				}
 			}
 			
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 				NotifyObserver();
+
+				if (id == 8) {
+					Engine::GetInstance().scene.get()->musicButtonHeld = false;
+				}
 			}
 		}
 		else {
 			state = GuiControlState::NORMAL;
+			if (id == 8) {
+				Engine::GetInstance().scene.get()->musicButtonHeld = false;
+			}
 		}
 
 	}
