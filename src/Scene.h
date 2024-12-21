@@ -119,11 +119,9 @@ public:
 
     bool fullscreen_window = false;
     bool activatebotton7 = false;
-    bool musicButtonClicked = false;
     bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
 
     int musicPosX = 940;
-    int musicPosX_aux = 940;
 private:
     // Player instance
     Player* player;

@@ -146,6 +146,8 @@ bool Scene::Update(float dt)
 
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
+            LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
+
             Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showSettings = false; // Vuelve al menu si se presiona backspace
@@ -711,11 +713,26 @@ void Scene::Settings()
     Engine::GetInstance().render.get()->DrawText("Full Screen", 450, 540, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Vsync", 450, 660, 250, 50);
 
+  
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
+    SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
+    guiBt->bounds.x = musicPosX; //Botones se reubiquen
 
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 8, "  ", MusicPosition, this));
+
+    if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+        musicButtonHeld = true;  // Activar el movimiento solo si estamos presionando el botón. Music Volumen       
+    }
+
+    if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+            musicButtonHeld = false;  // Si se suelta el botón, desactivar el movimiento. Music Volumen         
+    } 
 
     if (musicButtonHeld) {
+
         if (mousePos.getX() < 940) {
             musicPosX = 940;
         }
@@ -723,32 +740,21 @@ void Scene::Settings()
             musicPosX = 1350;
         }
         else {
-            musicPosX = static_cast<int>(mousePos.getX());
-        }
+            musicPosX = mousePos.getX();
+        }       
     }
 
-    if (!musicButtonHeld) {
-        musicPosX_aux = musicPosX;
-    }
+    SDL_Rect newMusicPos = { musicPosX, 311, 15, 35 }; // Nueva posición. Music Volumen 
+    guiBt->bounds = newMusicPos;
+   //Rectángulo volumen musica
+    Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
 
-    SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
-    guiBt->bounds = MusicPosition;
+    ToggleFullscreen(); //Full screen
 
-
-    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 6, "  ", buttonPosition, this));
-    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 7, "  ", VsyncPosition, this));
-    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 8, "  ", MusicPosition, this));
-
-    ToggleFullscreen();
-    
-    if (activatebotton7==true) {
+    if (activatebotton7 == true) {
         LOG("Drawing tick because limitFPS is enabled.");
-        Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick"
+        Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick". Vsync
     }
-
-    Engine::GetInstance().render.get()->DrawRectangle({ 940, 300+20, 400+20, 19 }, 34, 255, 76, 200, true, false);
-
-
 
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
@@ -866,7 +872,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         break;
     }
-
+    musicButtonHeld = false;
     
     return true;
 }
