@@ -69,12 +69,14 @@ bool Player::Start() {
 	return true;
 }
 bool Player::Update(float dt) {
-	
+
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
 	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
+	if (canMove)
+	{
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
 	}
@@ -83,9 +85,12 @@ bool Player::Update(float dt) {
 		return true;
 
 	}
+
 	//Actualize textures to be sure they are Drawn
 	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 	currentAnimation->Update();
+
+
 
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
 
@@ -187,7 +192,7 @@ bool Player::Update(float dt) {
 		Player::pbody->body->SetGravityScale(1);
 	}
 
-	if (canMove) {
+	
 		// PLAYER MOVEMENT CODE
 		float movementSpeed = 3.5f;  // walking speed
 		// Sprint
@@ -236,7 +241,7 @@ bool Player::Update(float dt) {
 			Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
 		}
 		if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
-
+	
 		// Apply the velocity to the player
 		pbody->body->SetLinearVelocity(velocity);
 

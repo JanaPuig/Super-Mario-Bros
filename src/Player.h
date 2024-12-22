@@ -46,6 +46,9 @@ public:
     //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
+
+    bool canMove = true;
+
 private:
 
     SDL_Texture* texturePlayer;
@@ -102,5 +105,4 @@ private:
     // Internal state
     bool isActive = true;
 
-    bool canMove = true;
 };

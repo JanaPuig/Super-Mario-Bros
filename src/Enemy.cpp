@@ -120,9 +120,11 @@ void Enemy::UpdateColliderSize() {
 bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu ||
         Engine::GetInstance().scene.get()->showingTransition ||
-        Engine::GetInstance().scene.get()->isLoading) {
+        Engine::GetInstance().scene.get()->isLoading||!canMove) {
         return true;
     }
+    if (canMove) {
+
     // Detección del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
@@ -133,7 +135,7 @@ bool Enemy::Update(float dt) {
     float currentTime = SDL_GetTicks();
     frameTime += dt;
 
-    if (canMove) {
+   
         if (isDying) {
             deathTimer += dt;
             b2Transform pbodyPos = pbody->body->GetTransform();
@@ -408,7 +410,10 @@ void Enemy::ResetPosition() {
 
 void Enemy::StopMovement() {
     canMove = false;
+    LOG("Enemy movement stopped");
 }
 void Enemy::ResumeMovement() {
-    canMove = true;
+    canMove = true;   
+    LOG("Enemy movement resumed");
+
 }

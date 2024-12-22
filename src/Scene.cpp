@@ -114,45 +114,6 @@ bool Scene::Update(float dt)
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
-
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
-        showPauseMenu = !showPauseMenu; // Alternar el estado del menú
-        if (showPauseMenu) {
-            Engine::GetInstance().audio.get()->PauseMusic(); // Pausar la música
-        }
-        else {
-            Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
-        }
-    }
-
-    // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
-    if (showPauseMenu) {
-        funcion_menu_pause();
-        //Detener todos los movimientos
-        player->StopMovement();
-        for (Enemy* enemy : enemyList) {
-            enemy->StopMovement();
-        }
-        Engine::GetInstance().audio.get()->PauseMusic();
-        timeUp = false;
-        Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
-        Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
-        //Engine::GetInstance().input->ClearKeyStates();
-        // Opcional: Mostrar opciones del menú, manejar entradas para cerrarlo o navegar por opciones
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-            showPauseMenu = false; // Cerrar el menú al presionar Backspace
-            player->ResumeMovement();
-            for (Enemy* enemy : enemyList) {
-                enemy->ResumeMovement();
-            }
-            timeUp = true;
-
-            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
-
-        }
-        return true; // Detenemos el resto del código mientras el menú de pausa está activo
-    }
-
     if (showGroupLogo)
     {
         logoTimer += dt;
@@ -183,7 +144,6 @@ bool Scene::Update(float dt)
             }
         }
         if (showSettings) {
-
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
@@ -191,7 +151,7 @@ bool Scene::Update(float dt)
 
             Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-                showSettings = false; // Vuelve al menu si se presiona backspace
+                showSettings = false; 
             }
         }
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
@@ -222,6 +182,39 @@ bool Scene::Update(float dt)
     }
     if (!showCredits) {
 
+    }
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
+        showPauseMenu = !showPauseMenu; // Alternar el estado del menú
+
+        if (showPauseMenu) {
+            player->StopMovement();
+            for (Enemy* enemy : enemyList) {
+                enemy->StopMovement();
+            }
+            Engine::GetInstance().audio.get()->PauseMusic(); // Pausar la música
+            //timeUp = false;
+            Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
+            Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
+        }
+        else {
+            Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
+            LOG("Calling player->ResumeMovement()");
+           
+            player->ResumeMovement();
+          
+            for (Enemy* enemy : enemyList) {
+                enemy->ResumeMovement();
+            }
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+            showPauseMenu = false; // Cerrar el menú al presionar Backspace
+        }
+    }
+
+    // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
+    if (showPauseMenu) {
+        funcion_menu_pause();
+        return true;
     }
 
   
