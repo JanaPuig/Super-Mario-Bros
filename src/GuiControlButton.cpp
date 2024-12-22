@@ -51,21 +51,40 @@ void GuiControlButton::Draw()
 {
 	//L16: TODO 4: Draw the button according the GuiControl State
 
-	if (id == 8 || id == 9) {
+	if (id == 6 || id == 7) {
 		// Hacer que este botón no tenga transparencia (alfa = 255)
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::NORMAL:
+			Engine::GetInstance().render->DrawRectangle(bounds, 195, 159, 129, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::FOCUSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 141, 73, 37, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		case GuiControlState::PRESSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false); // Alfa = 255 (sin transparencia)
+			break;
+		}
+	}
+
+	else if (id == 8 || id == 9) {
+		// Hacer que este botón no tenga transparencia (alfa = 255)
+		switch (state)
+		{
+		case GuiControlState::DISABLED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 244, 244, 244, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::NORMAL:
 			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::FOCUSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 255, 235, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 252, 240, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::PRESSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 250, 251, 253, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		}
 	}

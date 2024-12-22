@@ -142,11 +142,11 @@ bool Scene::Update(float dt)
             }
         }
         if (showSettings) {
-            Engine::GetInstance().guiManager->Update(dt);
 
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
+            Engine::GetInstance().guiManager->Update(dt);
 
             Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
@@ -678,6 +678,10 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
+
+
+
+
 void Scene::menu()
 {
     Engine::GetInstance().guiManager->CleanUp();
@@ -719,7 +723,6 @@ void Scene::Settings()
     Engine::GetInstance().render.get()->DrawText("Full Screen", 450, 540, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Vsync", 450, 660, 250, 50);
 
-  
     SDL_Rect buttonPosition = { 940, 530, 64, 64 };
     SDL_Rect VsyncPosition = { 940, 655, 64, 64 };
     SDL_Rect MusicPosition = { musicPosX, 311, 15, 35 };
