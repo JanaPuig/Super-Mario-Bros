@@ -56,16 +56,16 @@ void GuiControlButton::Draw()
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 0, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::NORMAL:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 0, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::FOCUSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 255, 255, 100, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 255, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::PRESSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 215, 30, 100, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		}
 	}

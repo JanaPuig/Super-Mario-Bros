@@ -799,9 +799,9 @@ void Scene::Settings()
     Mix_Volume(-1, sdlVolumeFx);
 
    //Rectángulo volumen musica
-    Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
+    Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 64, 224, 208, 200, true, false);
     //Rectángulo Fx musica
-    Engine::GetInstance().render.get()->DrawRectangle({ 940, 420 + 20, 400 + 20, 19 }, 34, 255, 76, 200, true, false);
+    Engine::GetInstance().render.get()->DrawRectangle({ 940, 420 + 20, 400 + 20, 19 }, 64, 224, 208, 200, true, false);
 
     ToggleFullscreen(); //Full screen
 
@@ -926,7 +926,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 9:
         break;
     }
-    musicButtonHeld = false;
     
     return true;
 }
