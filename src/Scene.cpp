@@ -753,10 +753,11 @@ void Scene::funcion_menu_pause()
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
     Engine::GetInstance().render.get()->DrawTexture(menu_pause, -cameraX, -cameraY);
-    Engine::GetInstance().render.get()->DrawText("Resume", 768, 140, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Settings", 450, 300, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Back to tile", 450, 420, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Exit", 450, 540, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Pause", 768, 195, 360, 60);
+    Engine::GetInstance().render.get()->DrawText("Resume", 700, 340-20, 365, 60);
+    Engine::GetInstance().render.get()->DrawText("Settings", 700, 440 - 20, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Back to tile", 700, 540 - 20, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Exit", 700, 640 - 20, 200, 45);
 }
 
 void Scene::Credits()
