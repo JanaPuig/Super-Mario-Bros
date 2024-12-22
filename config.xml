@@ -28,6 +28,7 @@
 			<black path="Assets/Textures/black.png" />
 			<settings path="Assets/Textures/settings.png" />
 			<tick path="Assets/Textures/tick.png" />
+			<menu_pause path="Assets/Textures/pause menu.png" />
 		</textures>
 		<entities>
 			<items>

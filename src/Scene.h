@@ -72,10 +72,13 @@ public:
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
     void CreateEnemies();
+  
     void Credits();   
     void menu();
-
     void ToggleFullscreen();
+    void funcion_menu_pause();
+
+    bool showPauseMenu = false;
 
     bool limitFPS=false;
     // Public member variables
@@ -93,6 +96,7 @@ public:
     bool ToggleHelpMenu = false;     // Toggle flag for the help menu
     bool showingTransition = false;       // Whether the transition screen is visible
     bool isFlaged = false;
+    SDL_Texture* menu_pause = NULL;
     SDL_Texture* tick = NULL;
     SDL_Texture* settings = NULL;
     SDL_Texture* black = NULL;
@@ -131,7 +135,7 @@ private:
     Player* player;
     Item* item;
 
-    //std::vector<Enemy*> enemyList;
+    std::vector<Enemy*> enemyList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList; 
 

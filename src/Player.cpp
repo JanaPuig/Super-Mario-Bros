@@ -187,62 +187,64 @@ bool Player::Update(float dt) {
 		Player::pbody->body->SetGravityScale(1);
 	}
 
-	// PLAYER MOVEMENT CODE
-	float movementSpeed = 3.5f;  // walking speed
-	// Sprint
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) { 
-		movementSpeed = 5.5f; 
-		isSprinting = true; 
-		frameDuration = 80.0f; 
-	}
-	else {
-		isSprinting = false; frameDuration = 130.0f;
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
-		iscrouching = true;
-	}
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
-		iscrouching = false;
-	}
-	// Left
-	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
-		velocity.x = -movementSpeed;
-		isMoving = true;
-		facingLeft = true;
-	}
-	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) {
-		isMoving = false;
-	}
-	// Right movement
-	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
-		velocity.x = movementSpeed;
-		isMoving = true;
-		facingLeft = false;
-	}
-	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) {
-		isMoving = false;
-	}
-	// Jump
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
-		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-		animationTimer = 0.0f;
-		isJumping = true;
-		++jumpcount;
-		Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
-		// Play random sound
-		int randomSound = rand() % 8;
-		Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
-	}
-	if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
+	if (canMove) {
+		// PLAYER MOVEMENT CODE
+		float movementSpeed = 3.5f;  // walking speed
+		// Sprint
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) {
+			movementSpeed = 5.5f;
+			isSprinting = true;
+			frameDuration = 80.0f;
+		}
+		else {
+			isSprinting = false; frameDuration = 130.0f;
+		}
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
+			iscrouching = true;
+		}
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
+			iscrouching = false;
+		}
+		// Left
+		if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
+			velocity.x = -movementSpeed;
+			isMoving = true;
+			facingLeft = true;
+		}
+		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+			isMoving = false;
+		}
+		// Right movement
+		if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
+			velocity.x = movementSpeed;
+			isMoving = true;
+			facingLeft = false;
+		}
+		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+			isMoving = false;
+		}
+		// Jump
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
+			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+			animationTimer = 0.0f;
+			isJumping = true;
+			++jumpcount;
+			Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
+			// Play random sound
+			int randomSound = rand() % 8;
+			Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
+		}
+		if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
 
-	// Apply the velocity to the player
-	pbody->body->SetLinearVelocity(velocity);
+		// Apply the velocity to the player
+		pbody->body->SetLinearVelocity(velocity);
 
-	b2Transform pbodyPos = pbody->body->GetTransform();
+		b2Transform pbodyPos = pbody->body->GetTransform();
 
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	}
 	return true;
 }
 
@@ -375,4 +377,11 @@ void Player::LoseLife() {
 	else {
 		return;
 	}
+}
+
+void Player::StopMovement() {
+	canMove = false;
+}
+void Player::ResumeMovement() {
+	canMove = true;
 }

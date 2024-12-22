@@ -47,7 +47,9 @@ public:
 	b2Vec2 MoveEnemy(Vector2D enemyPosition, float speed);
 
 	void ResetPosition();
-
+    //Pausar movimiento
+    void StopMovement();
+    void ResumeMovement();
 public:
     // Variables públicas relacionadas con texturas y animaciones
     SDL_Texture* textureGoomba;
@@ -114,5 +116,8 @@ public:
     float speed = 3.0f;
     float lastStepTime = 0.0f;
     float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
+
+    bool canMove = true;
+
  
 };

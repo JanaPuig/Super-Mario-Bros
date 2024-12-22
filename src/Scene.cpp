@@ -94,6 +94,7 @@ bool Scene::Start()
     black = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("black").attribute("path").as_string());
     settings = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("settings").attribute("path").as_string());
     tick = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("tick").attribute("path").as_string());
+    menu_pause = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("menu_pause").attribute("path").as_string());
 
 
     showGroupLogo = true;
@@ -112,6 +113,46 @@ bool Scene::Update(float dt)
     DrawLives();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
+
+
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
+        showPauseMenu = !showPauseMenu; // Alternar el estado del menú
+        if (showPauseMenu) {
+            Engine::GetInstance().audio.get()->PauseMusic(); // Pausar la música
+        }
+        else {
+            Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
+        }
+    }
+
+    // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
+    if (showPauseMenu) {
+        funcion_menu_pause();
+        //Detener todos los movimientos
+        player->StopMovement();
+        for (Enemy* enemy : enemyList) {
+            enemy->StopMovement();
+        }
+        Engine::GetInstance().audio.get()->PauseMusic();
+        timeUp = false;
+        Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
+        Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
+        //Engine::GetInstance().input->ClearKeyStates();
+        // Opcional: Mostrar opciones del menú, manejar entradas para cerrarlo o navegar por opciones
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+            showPauseMenu = false; // Cerrar el menú al presionar Backspace
+            player->ResumeMovement();
+            for (Enemy* enemy : enemyList) {
+                enemy->ResumeMovement();
+            }
+            timeUp = true;
+
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+
+        }
+        return true; // Detenemos el resto del código mientras el menú de pausa está activo
+    }
+
     if (showGroupLogo)
     {
         logoTimer += dt;
@@ -183,6 +224,7 @@ bool Scene::Update(float dt)
 
     }
 
+  
     Vector2D playerPos = player->GetPosition();
    
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
@@ -207,6 +249,7 @@ bool Scene::Update(float dt)
     if (level == 1 ||level ==2) {
         HandleTeleport(playerPos);
     }
+
     // Temporizador del nivel
     elapsedTime += dt;  // Aumenta el tiempo acumulado
     float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
@@ -225,6 +268,8 @@ bool Scene::Update(float dt)
     if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20, 30, 30); }
     if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
+
+  
 
     return true;
 }
@@ -308,6 +353,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(black);
     Engine::GetInstance().textures.get()->UnLoad(settings);
     Engine::GetInstance().textures.get()->UnLoad(tick);
+    Engine::GetInstance().textures.get()->UnLoad(menu_pause);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
     return true;
@@ -374,6 +420,7 @@ void Scene::FinishTransition()
 }
 
 void Scene::StartNewGame() { 
+   
     level = 1;
     player->SetPosition(Vector2D(30, 430));
     showMainMenu = false;
@@ -699,6 +746,18 @@ void Scene::menu()
     }
 }
 
+void Scene::funcion_menu_pause() 
+{
+    Engine::GetInstance().guiManager->CleanUp();
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+
+    Engine::GetInstance().render.get()->DrawTexture(menu_pause, -cameraX, -cameraY);
+    Engine::GetInstance().render.get()->DrawText("Resume", 768, 140, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Settings", 450, 300, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Back to tile", 450, 420, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Exit", 450, 540, 378, 64);
+}
 
 void Scene::Credits()
 {
@@ -835,6 +894,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         Engine::GetInstance().audio.get()->PlayFx(marioTime);
         ShowTransitionScreen();
+      
         break;
     case 2: // Load Game
         LOG("Load Game button clicked");
@@ -960,6 +1020,7 @@ void Scene::CreateEnemies() {
             enemy->SetParameters(enemyNode);
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+            enemyList.push_back(enemy);
         }
     }
     else if (level == 2) {
@@ -969,6 +1030,8 @@ void Scene::CreateEnemies() {
             enemy->SetParameters(enemyNode);
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+            enemyList.push_back(enemy);
+
         }
     }
     else if (level == 3) {
@@ -979,6 +1042,8 @@ void Scene::CreateEnemies() {
             enemy->SetParameters(enemyNode);
             enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
             LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
+            enemyList.push_back(enemy);
+
         }
 
         // Crear a Bowser
@@ -986,6 +1051,8 @@ void Scene::CreateEnemies() {
         pugi::xml_node bowserNode = configParameters.child("entities").child("enemies").child("bowser"); 
         bowser->SetParameters(bowserNode);
         enemyStateList.push_back(std::make_pair("bowser", 0));
+        enemyList.push_back(bowser);
+
         LOG("Bowser created");
 
         // Establecer la posición de Bowser

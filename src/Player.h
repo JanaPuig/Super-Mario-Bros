@@ -42,6 +42,10 @@ public:
     Vector2D GetPosition();
     void LoseLife();  // Función para perder una vida
     void CheckLives(); // Función para verificar si el jugador tiene vidas
+
+    //Pausar movimiento
+    void StopMovement();
+    void ResumeMovement();
 private:
 
     SDL_Texture* texturePlayer;
@@ -97,4 +101,6 @@ private:
 
     // Internal state
     bool isActive = true;
+
+    bool canMove = true;
 };
