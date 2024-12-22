@@ -931,8 +931,10 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break; 
 
     case 8:      
+        musicButtonHeld = true;
         break;
     case 9:
+        FxButtonHeld = true;
         break;
     }
     
