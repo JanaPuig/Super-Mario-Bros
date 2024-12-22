@@ -698,15 +698,21 @@ void Scene::menu()
 
 void Scene::Credits()
 {
-    Engine::GetInstance().render.get()->DrawTexture(black,0,0);
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+
+    Engine::GetInstance().render.get()->DrawTexture(black,-cameraX,-cameraY);
     Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
     Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
 }
 void Scene::Settings()
 {
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+
     Engine::GetInstance().guiManager->CleanUp();
-    Engine::GetInstance().render.get()->DrawTexture(settings, 0, 0);
+    Engine::GetInstance().render.get()->DrawTexture(settings, -cameraX, -cameraY);
     Engine::GetInstance().render.get()->DrawText("SETTINGS", 768, 140, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Music Volume", 450, 300, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Fx Volume", 450, 420, 378, 64);
