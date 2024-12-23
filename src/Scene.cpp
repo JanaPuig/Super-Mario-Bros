@@ -196,13 +196,12 @@ bool Scene::Update(float dt)
             for (Enemy* enemy : enemyList) {
                 enemy->StopMovement();
             }
-            Engine::GetInstance().audio.get()->PauseMusic(); // Pausar la música
+            //Engine::GetInstance().audio.get()->PauseMusic(); // Pausar la música
             //timeUp = false;
             Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
             Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
         else {
-            Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
             LOG("Calling player->ResumeMovement()");
 
             player->ResumeMovement();
@@ -210,7 +209,6 @@ bool Scene::Update(float dt)
             for (Enemy* enemy : enemyList) {
                 enemy->ResumeMovement();
             }
-            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
             showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
     }
@@ -418,16 +416,19 @@ void Scene::FinishTransition()
         player->SetPosition(Vector2D(30, 430));
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+        Mix_VolumeMusic(sdlVolume);
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
+        Mix_VolumeMusic(sdlVolume);
     }
     else if (level == 3) {
         player->SetPosition(Vector2D(100, 580));
         Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
+        Mix_VolumeMusic(sdlVolume);
     }
 }
 
@@ -878,7 +879,8 @@ void Scene::Settings()
     
     //Subir bajar volumen de la música
     float volume = (float)(musicPosX - 940) / (1350 - 940);  
-    int sdlVolume = (int)(volume * MIX_MAX_VOLUME);
+    volume = std::max(0.0f, std::min(1.0f, volume)); 
+    sdlVolume = (int)(volume * MIX_MAX_VOLUME);
     Mix_VolumeMusic(sdlVolume);
 
     //Subir bajar volumen de Fx
@@ -1030,7 +1032,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break;
     case 12: //Menu pause: Resume
         showPauseMenu = true;
-        Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
         LOG("Calling player->ResumeMovement()");
 
         player->ResumeMovement();
@@ -1038,7 +1039,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         for (Enemy* enemy : enemyList) {
             enemy->ResumeMovement();
         }
-        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
         showPauseMenu = false; // Cerrar el menú al presionar Backspace        
         break;
     }

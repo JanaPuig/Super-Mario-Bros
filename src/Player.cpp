@@ -152,8 +152,11 @@ bool Player::Update(float dt) {
 				else if (Engine::GetInstance().scene.get()->level == 3) {
 					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+
 				}
 				Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
+				
+
 			}
 		}
 		return true;

@@ -135,6 +135,8 @@ public:
 
 
     bool variable_save = false;
+    int sdlVolume;
+
 private:
     // Player instance
     Player* player;
@@ -174,4 +176,5 @@ private:
     void LoadGame();
 
     Vector2D mousePos;
+   
 };
