@@ -143,6 +143,7 @@ bool Scene::Update(float dt)
                 showCredits = false; // Vuelve al menu si se presiona backspace
             }
         }
+
         if (showSettings) {
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
@@ -151,11 +152,14 @@ bool Scene::Update(float dt)
 
             Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-                showSettings = false; 
+                showSettings = false;
             }
+
         }
+  
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
+ 
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -200,20 +204,35 @@ bool Scene::Update(float dt)
         else {
             Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
             LOG("Calling player->ResumeMovement()");
-           
+
             player->ResumeMovement();
-          
+
             for (Enemy* enemy : enemyList) {
                 enemy->ResumeMovement();
             }
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
-            showPauseMenu = false; // Cerrar el menú al presionar Backspace
+            showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
     }
 
     // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
     if (showPauseMenu) {
         funcion_menu_pause();
+        Engine::GetInstance().guiManager->Update(dt);
+        Engine::GetInstance().guiManager->Draw();
+
+        if (manage_showSettings) {
+            Settings();
+            mousePos = Engine::GetInstance().input->GetMousePosition();
+            LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
+            Engine::GetInstance().guiManager->Update(dt);
+
+            Engine::GetInstance().guiManager->Draw();
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+                manage_showSettings = false;
+            }
+
+        }
         return true;
     }
 
@@ -719,9 +738,6 @@ void Scene::SaveState()
 
 }
 
-
-
-
 void Scene::menu()
 {
     Engine::GetInstance().guiManager->CleanUp();
@@ -747,10 +763,16 @@ void Scene::funcion_menu_pause()
 
     Engine::GetInstance().render.get()->DrawTexture(menu_pause, -cameraX, -cameraY);
     Engine::GetInstance().render.get()->DrawText("Pause", 768, 195, 360, 60);
-    Engine::GetInstance().render.get()->DrawText("Resume", 700, 340-20, 365, 60);
-    Engine::GetInstance().render.get()->DrawText("Settings", 700, 440 - 20, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Back to tile", 700, 540 - 20, 378, 64);
-    Engine::GetInstance().render.get()->DrawText("Exit", 700, 640 - 20, 200, 45);
+
+    SDL_Rect ResumePosition = { 700, 340 - 20, 365, 60 };
+    SDL_Rect SettingsPosition = { 700, 440 - 20, 378, 64 };
+    SDL_Rect Back_tile = { 700, 540 - 20, 378, 64 };
+    SDL_Rect Exit = { 700, 640 - 20, 200, 45 };
+
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 12, "resume", ResumePosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 11, "Settings", SettingsPosition, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 10, "Back to tile", Back_tile, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Exit", Exit, this));
 }
 
 void Scene::Credits()
@@ -763,6 +785,7 @@ void Scene::Credits()
     Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
 }
+
 void Scene::Settings()
 {
     int cameraX = Engine::GetInstance().render.get()->camera.x;
@@ -882,7 +905,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
-    case 1: // New Game
+    case 1: // Menu; New Game
         LOG("New Game button clicked");
         StartNewGame();
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
@@ -890,25 +913,25 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         ShowTransitionScreen();
       
         break;
-    case 2: // Load Game
+    case 2: // Menu; Load Game
         LOG("Load Game button clicked");
         LoadGame();
         Engine::GetInstance().audio.get()->StopMusic();
         isLoading = true;
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         break;
-    case 3: //Setings Gamme
+    case 3: //Menu: Setings Gamme
         showSettings = true;
         break;
-    case 4:// Credits Game
+    case 4:// Menu: Credits Game
         showCredits = true;
         break;
-    case 5:// Leave Game
+    case 5:// Menu and Menu pause: Leave Game
         LOG("Leave button clicked");
         Engine::GetInstance().CleanUp();
         exit(0);
         break;
-    case 6:// Full screen window
+    case 6:// Settings: Full screen window
         LOG("Leave button clicked");
         fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
         
@@ -963,7 +986,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         break;
 
-    case 7:// FPS Toggle
+    case 7:// Settings: FPS Toggle
 
 
         if (wasClicked) {
@@ -984,11 +1007,29 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         break; 
 
-    case 8:      
+    case 8:// Settings: Music Volume
         musicButtonHeld = true;
         break;
-    case 9:
+    case 9:// Settings: Fx Volume
         FxButtonHeld = true;
+        break;
+    case 10: //Menu pause: Back to tile
+        showMainMenu = true;
+        break;
+    case 11: //Menu pause: Settings
+        manage_showSettings = true;
+        break;
+    case 12: //Menu pause: Resume
+        Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
+        LOG("Calling player->ResumeMovement()");
+
+        player->ResumeMovement();
+
+        for (Enemy* enemy : enemyList) {
+            enemy->ResumeMovement();
+        }
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
+        showPauseMenu = false; // Cerrar el menú al presionar Backspace        
         break;
     }
     

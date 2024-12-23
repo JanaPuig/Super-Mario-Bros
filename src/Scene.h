@@ -78,7 +78,6 @@ public:
     void ToggleFullscreen();
     void funcion_menu_pause();
 
-    bool showPauseMenu = false;
 
     bool limitFPS=false;
     // Public member variables
@@ -107,6 +106,9 @@ public:
     bool showGroupLogo =false;  
     bool timeUp = false;// Controla si se muestra el logo
     bool showSettings = false;
+    bool manage_showSettings = false;
+    bool showPauseMenu = false;
+
     float logoTimer = 0;                // Temporizador para el logo
     float logoDuration = 3000.0f;      // Duración del logo en segundos
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
