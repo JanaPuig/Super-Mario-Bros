@@ -36,19 +36,22 @@ public:
     // Audio Fx
     int pickCoinFxId= 0;
     int CheckPoint= 0;
-    // Indica si el ítem ha sido recogido
-    int isPicked;
+    int oneUpFxId = 0;
+    int BigCoinFxId = 0;
+    int isPicked;    // Indica si el ítem ha sido recogido
 
-    // Indica si el ítem es una moneda
-    bool isCoin = false;
-
+    bool isCoin = false;     // Indica si el ítem es una MONEDA
+    bool isOneUp = false;    // Indica si el ítem es una VIDA
+    bool isBigCoin = false;  // Indica si el ítem es una MONEDA GRANDE
     std::vector<Item*> items;
 
 private:
 
-    SDL_Texture* coinTexture;
-    SDL_Texture* flagTexture;
-    SDL_Texture* flagpoleTexture;
+    SDL_Texture* coinTexture =  NULL;
+    SDL_Texture* BigCoinTexture = NULL;
+    SDL_Texture* OneUpTexture = NULL;
+    SDL_Texture* flagTexture = NULL;
+    SDL_Texture* flagpoleTexture = NULL;
 
     const char* texturePath;
     int texW= 0, texH = 0;
@@ -61,6 +64,7 @@ private:
     Animation flag;
     Animation lower_flag;
     Animation lower_lower_flag;
+    Animation BigCoin;
 
     Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;

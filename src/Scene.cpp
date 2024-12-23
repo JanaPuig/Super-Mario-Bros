@@ -40,10 +40,9 @@ bool Scene::Awake()
 // Creates items for Level 1
 void Scene::CreateLevelItems()
 {
-    if (level == 1||level==2||level==3) {
+    if (level == 1) {
         const int startX = 1664, startY = 672;
         
-
         pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
 
         Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
@@ -69,6 +68,26 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
         flag->SetParameters(flagNode); 
+
+        // Crear OneUp
+        const int oneUpPpositionX = 500, oneUpPpositionY = 200;
+        Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
+
+        pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
+        OneUp->SetParameters(oneUpeNode);
+        LOG("Creating flagpole at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
+
+        //Crear BigCoin
+        const int BigCoinpositionX = 800, BigCoinpositionY = 200;
+        Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
+
+        pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
+        BigCoin->SetParameters(BigCoinNode);
+        LOG("Creating flagpole at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
+
+
     } 
 }
 // Called before the first frame
