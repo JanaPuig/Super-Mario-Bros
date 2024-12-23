@@ -46,6 +46,13 @@
 						</idle>
 					</animations>
 				</OneUp>
+				<PowerUp name="PowerUp" x="500" y="200" w="32" h="32" isPowerUp="true" PowerUpTexture="Assets/Textures/PowerUp.png" gravity="true">
+					<animations>
+						<PowerUpIdle loop="true" speed="0.5">
+							<frame x="0" y="0" w="32" h="32" />
+						</PowerUpIdle>
+					</animations>
+				</PowerUp>
 				<BigCoin name="BigCoin" x="500" y="200" w="64" h="64" isBigCoin="true" BigCoinTexture="Assets/Textures/BigCoin.png" gravity="true">
 					<animations>
 						<idleBigCoin loop="true" speed="0.3">

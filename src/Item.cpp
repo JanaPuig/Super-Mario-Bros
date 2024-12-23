@@ -29,13 +29,14 @@ bool Item::Start() {
     isOneUp = parameters.attribute("isOneUp").as_bool(false);
     isCoin = parameters.attribute("isCoin").as_bool(false);
     isBigCoin = parameters.attribute("isBigCoin").as_bool(false);
+    isPowerUp = parameters.attribute("isPowerUp").as_bool(false);
     // Inicializar texturas
     coinTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
     OneUpTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("OneUpTexture").as_string());
     flagTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_flag").as_string());
     flagpoleTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_flagpole").as_string());
     BigCoinTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("BigCoinTexture").as_string());
-
+    PowerUpTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("PowerUpTexture").as_string());
 
     idle.LoadAnimations(parameters.child("animations").child("idle"));
     currentAnimation = &idle;
@@ -56,12 +57,14 @@ bool Item::Start() {
     Engine::GetInstance().textures.get()->GetSize(BigCoinTexture, texW, texH);
     Engine::GetInstance().textures.get()->GetSize(flagpoleTexture, texW, texH);
     Engine::GetInstance().textures.get()->GetSize(flagTexture, texW, texH);
+    Engine::GetInstance().textures.get()->GetSize(PowerUpTexture, texW, texH);
 
     // Cargar efecto de sonido
     pickCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Coin.wav"); // Sonido Coin
     CheckPoint = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Checkpoint.wav"); //Sonido CheckPoint
     oneUpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/1up.wav"); // Sonido 1Up
     BigCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BigCoin.wav"); // Sonido BigCoin
+    PowerUpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/PowerUp.wav"); // Sonido BigCoin
     return true;
 }
 
@@ -89,7 +92,12 @@ bool Item::Update(float dt)
             if (isCoin) {
                 Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId); // Reproducir sonido de Coin
             }
-            if (isBigCoin) {
+            else if (isPowerUp) {
+                Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
+                // Realizar acciones relacionadas con el PowerUp, como otorgar habilidades o poder al jugador
+                LOG("PowerUp collected! Power granted.");
+            }
+            else if (isBigCoin) {
                 Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
                 LOG("Star Coin collected!");
             }
@@ -115,7 +123,9 @@ bool Item::Update(float dt)
         Engine::GetInstance().render.get()->DrawTexture(BigCoinTexture, (int)position.getX(), (int)position.getY(), &BigCoin.GetCurrentFrame());
         BigCoin.Update();
     }
-    // Dibujar el ítem dependiendo de si fue recogido
+    else if (isPowerUp && isPicked == 0) {
+        Engine::GetInstance().render.get()->DrawTexture(PowerUpTexture, (int)position.getX(), (int)position.getY());
+    }
     if (isPicked == 0) {
         Engine::GetInstance().render.get()->DrawTexture(isOneUp ? OneUpTexture : coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
         currentAnimation->Update();

@@ -38,11 +38,13 @@ public:
     int CheckPoint= 0;
     int oneUpFxId = 0;
     int BigCoinFxId = 0;
+    int PowerUpFxId = -1;
     int isPicked;    // Indica si el ítem ha sido recogido
 
     bool isCoin = false;     // Indica si el ítem es una MONEDA
     bool isOneUp = false;    // Indica si el ítem es una VIDA
-    bool isBigCoin = false;  // Indica si el ítem es una MONEDA GRANDE
+    bool isBigCoin = false;
+    bool isPowerUp = false;// Indica si el ítem es una MONEDA GRANDE
     std::vector<Item*> items;
 
 private:
@@ -52,6 +54,7 @@ private:
     SDL_Texture* OneUpTexture = NULL;
     SDL_Texture* flagTexture = NULL;
     SDL_Texture* flagpoleTexture = NULL;
+    SDL_Texture* PowerUpTexture = NULL;
 
     const char* texturePath;
     int texW= 0, texH = 0;
@@ -65,6 +68,7 @@ private:
     Animation lower_flag;
     Animation lower_lower_flag;
     Animation BigCoin;
+ 
 
     Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;

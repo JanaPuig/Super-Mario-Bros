@@ -69,14 +69,14 @@ void Scene::CreateLevelItems()
         pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
         flag->SetParameters(flagNode); 
 
-        // Crear OneUp
+        // Crear 1Up
         const int oneUpPpositionX = 500, oneUpPpositionY = 200;
         Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
         OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
 
         pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
         OneUp->SetParameters(oneUpeNode);
-        LOG("Creating flagpole at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
+        LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
 
         //Crear BigCoin
         const int BigCoinpositionX = 800, BigCoinpositionY = 200;
@@ -85,9 +85,16 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
         BigCoin->SetParameters(BigCoinNode);
-        LOG("Creating flagpole at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
+        LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
 
+        //Crear PowerUp
+        const int PowerUppositionX = 800, PowerUppositionY = 300;
+        Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
 
+        pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
+        PowerUp->SetParameters(PowerUpNode);
+        LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
     } 
 }
 // Called before the first frame
