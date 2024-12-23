@@ -644,6 +644,7 @@ void Scene::UpdateItem(std::string itemName, int isPicked) {
 
 void Scene::SaveState()
 {
+    variable_save = true;
     pugi::xml_document SaveFile;
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     if (result == NULL) {
@@ -737,6 +738,8 @@ void Scene::SaveState()
     //guardar mas cosas; enemies, items...
 
 }
+
+
 
 void Scene::menu()
 {
@@ -914,12 +917,18 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
       
         break;
     case 2: // Menu; Load Game
-        LOG("Load Game button clicked");
-        LoadGame();
-        Engine::GetInstance().audio.get()->StopMusic();
-        isLoading = true;
-        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+        if (variable_save) {
+            showCredits = true;
+           
+            LOG("Load Game button clicked");
+            LoadGame();
+            Engine::GetInstance().audio.get()->StopMusic();
+            isLoading = true;
+            Engine::GetInstance().audio.get()->PlayFx(MenuStart);         
+       
+        }
         break;
+
     case 3: //Menu: Setings Gamme
         showSettings = true;
         break;
@@ -1020,6 +1029,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         manage_showSettings = true;
         break;
     case 12: //Menu pause: Resume
+        showPauseMenu = true;
         Engine::GetInstance().audio.get()->ResumeMusic(); // Reanudar la música cuando se sale del menú de pausa
         LOG("Calling player->ResumeMovement()");
 

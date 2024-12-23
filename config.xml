@@ -15,7 +15,7 @@
 		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="9750.75977" />
+		<SaveFile level="1" playerX="258" playerY="431" enemy1X="1498" enemy2X="4498" enemy3X="2000" enemy4X="5500" enemy1Y="98" enemy2Y="98" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="3205.02759" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />

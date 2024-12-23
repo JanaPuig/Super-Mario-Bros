@@ -132,6 +132,9 @@ public:
     bool mouseOverFxControl = false;
     int musicPosX = 1350;
     int FxPosX = 1350;
+
+
+    bool variable_save = false;
 private:
     // Player instance
     Player* player;
