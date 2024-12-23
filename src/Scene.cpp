@@ -794,14 +794,14 @@ void Scene::funcion_menu_pause()
     Engine::GetInstance().render.get()->DrawTexture(menu_pause, -cameraX, -cameraY);
     Engine::GetInstance().render.get()->DrawText("Pause", 768, 195, 360, 60);
 
-    SDL_Rect ResumePosition = { 700, 340 - 20, 365, 60 };
-    SDL_Rect SettingsPosition = { 700, 440 - 20, 378, 64 };
-    SDL_Rect Back_tile = { 700, 540 - 20, 378, 64 };
-    SDL_Rect Exit = { 700, 640 - 20, 200, 45 };
+    SDL_Rect ResumePosition = { 700, 340 - 30, 365-20, 60 };
+    SDL_Rect SettingsPosition = { 700, 440 - 30, 378-20, 60 };
+    SDL_Rect Back_tile = { 700, 540 - 30, 230, 60 };
+    SDL_Rect Exit = { 700, 640 - 30, 200, 45 };
 
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 12, "resume", ResumePosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 11, "Settings", SettingsPosition, this));
-    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 10, "Back to tile", Back_tile, this));
+    guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 10, "Return", Back_tile, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Exit", Exit, this));
 }
 
