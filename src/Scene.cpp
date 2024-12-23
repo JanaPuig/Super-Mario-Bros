@@ -188,7 +188,7 @@ bool Scene::Update(float dt)
 
     }
 
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_O) == KEY_DOWN) {
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu; // Alternar el estado del menú
 
         if (showPauseMenu) {
@@ -343,9 +343,9 @@ bool Scene::PostUpdate()
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
         ShowTransitionScreen();
     }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-        return false;
-    }
+    //if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+    //    return false;
+    //}
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
         LoadGame();
     }
