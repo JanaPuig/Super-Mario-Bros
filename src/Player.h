@@ -76,13 +76,20 @@ private:
     Animation jumpLAnimation;
     Animation walkingRAnimation;
     Animation walkingLAnimation;
+    Animation WalkingFireLAnimation;
+    Animation WalkingFireRAnimation;
+    Animation IdleFireLAnimation;
+    Animation IdleFireRAnimation;
     Animation deadAnimation;
     Animation crouchRAnimation;
     Animation crouchLAnimation;
+    Animation JumpFireRAnimation;
+    Animation JumpFireLAnimation;
 
 
     // Audio FX
     int pickCoinFxId= 0;
+    int PowerDown = 0;
     int jumpFxId = 0;
     int jumpVoiceIds[8] = { 0 };
     int DeathId = 0;

@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="32" h="32" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="32" h="32" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
@@ -84,7 +84,7 @@
 					</animations>
 				</flagpole>
 			</items>
-			<player name="mario" x="271" y="431" w="32" h="40" texture_player="Assets/Textures/player.png" gravity="true">
+			<player name="mario" x="271" y="431" w="32" h="40" isFirey="false" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
 					<idle loop="false">
 						<frame x="2" y="8" w="28" h="40" />
@@ -92,6 +92,12 @@
 					<idleL loop="false">
 						<frame x="2" y="56" w="28" h="40" />
 					</idleL>
+					<idleLFire loop="false">
+						<frame x="118" y="113" w="33" h="63" />
+					</idleLFire>
+					<idleRFire loop="false">
+						<frame x="153" y="113" w="33" h="63" />
+					</idleRFire>
 					<walking loop="true" speed="0.135">
 						<frame x="2" y="8" w="28" h="40" />
 						<frame x="33" y="10" w="30" h="38" />
@@ -100,6 +106,18 @@
 						<frame x="2" y="56" w="28" h="40" />
 						<frame x="33" y="58" w="30" h="38" />
 					</walkingL>
+					<walkingLFire loop="true" speed="0.135">
+						<frame x="0" y="113" w="35" h="63" />
+						<frame x="39" y="113" w="36" h="61" />
+						<frame x="80" y="113" w="35" h="63" />
+						<frame x="118" y="113" w="33" h="63" />
+					</walkingLFire>
+					<walkingRFire loop="true" speed="0.135">
+						<frame x="269" y="113" w="35" h="63" />
+						<frame x="229" y="113" w="36" h="61" />
+						<frame x="189" y="113" w="35" h="63" />
+						<frame x="153" y="113" w="33" h="63" />
+					</walkingRFire>
 					<jumping loop="false" speed="0.5">
 						<frame x="64" y="8" w="32" h="40" />
 						<frame x="96" y="4" w="32" h="44" />
@@ -108,6 +126,12 @@
 						<frame x="64" y="56" w="32" h="40" />
 						<frame x="96" y="52" w="32" h="44" />
 					</jumpingL>
+					<jumpingRFire loop="false" speed="0.5">
+						<frame x="304" y="27" w="36" h="69" />
+					</jumpingRFire>
+					<jumpingLFire loop="false" speed="0.5">
+						<frame x="256" y="27" w="36" h="69" />
+					</jumpingLFire>
 					<die loop="false">
 						<frame x="160" y="0" w="32" h="48" />
 					</die>

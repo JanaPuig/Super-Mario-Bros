@@ -33,6 +33,7 @@ bool Player::Start() {
 	ohNoId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Death.wav");
 	EnemyDeathSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Stomp.wav");
 	BowserHit = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserHit.wav");
+	PowerDown = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/PowerDown.wav");
 	//Load Player Texture
 	texturePlayer = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_player").as_string());
 
@@ -52,6 +53,12 @@ bool Player::Start() {
 	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
 	crouchLAnimation.LoadAnimations(parameters.child("animations").child("crouchL"));
 	crouchRAnimation.LoadAnimations(parameters.child("animations").child("crouchR"));
+	WalkingFireLAnimation.LoadAnimations(parameters.child("animations").child("walkingLFire"));
+	WalkingFireRAnimation.LoadAnimations(parameters.child("animations").child("walkingRFire"));
+	IdleFireLAnimation.LoadAnimations(parameters.child("animations").child("idleLFire"));
+	IdleFireRAnimation.LoadAnimations(parameters.child("animations").child("idleRFire"));
+	JumpFireLAnimation.LoadAnimations(parameters.child("animations").child("jumpingLFire"));
+	JumpFireRAnimation.LoadAnimations(parameters.child("animations").child("jumpingRFire"));
 	currentAnimation = &idleRAnimation;
 
 	// Añadir física
@@ -72,29 +79,23 @@ bool Player::Update(float dt) {
 
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
-	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive) {
+	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
-	if (canMove)
-	{
+	//Si se agota el tiempo...
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
 	}
 	if (pbody == nullptr) {
 		LOG("Error: pbody no inicializado.");
 		return true;
-
 	}
-
 	//Actualize textures to be sure they are Drawn
 	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 	currentAnimation->Update();
 
-
-
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
 
-	// ANIMATION CODES
 	// Death handling
 	if (isDead) {
 		if (!deathSoundPlayed) {
@@ -152,30 +153,52 @@ bool Player::Update(float dt) {
 				else if (Engine::GetInstance().scene.get()->level == 3) {
 					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
-
 				}
 				Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
-				
-
 			}
 		}
 		return true;
 	}
 	//crouching animation
 	else if (iscrouching) {
-		currentAnimation = facingLeft ? &crouchLAnimation : &crouchRAnimation;
+		if (Engine::GetInstance().entityManager->isFirey == true)
+		{
+
+		}
+		else {
+			currentAnimation = facingLeft ? &crouchLAnimation : &crouchRAnimation;
+		}
 	}
 	// Moving Animation
 	else if (isMoving&&!isJumping) {
-		currentAnimation = facingLeft ? &walkingLAnimation : &walkingRAnimation;
+		if (Engine::GetInstance().entityManager->isFirey == true)
+		{
+			currentAnimation = facingLeft ? &WalkingFireLAnimation : &WalkingFireRAnimation;
+		}
+		else {
+			currentAnimation = facingLeft ? &walkingLAnimation : &walkingRAnimation;
+		}
 	}
 	// Jumping Animation
 	else if (isJumping&&!iscrouching) {
-		currentAnimation = facingLeft ? &jumpLAnimation : &jumpRAnimation;
+		if (Engine::GetInstance().entityManager->isFirey == true)
+		{
+			currentAnimation = facingLeft ? &JumpFireLAnimation : &JumpFireRAnimation;
+		}
+		else {
+			currentAnimation = facingLeft ? &jumpLAnimation : &jumpRAnimation;
+		}
 	}
+	//Fire Power Up animation
 	//idle animation
 	else {
-		currentAnimation = facingLeft ? &idleLAnimation : &idleRAnimation;
+		if (Engine::GetInstance().entityManager->isFirey == true)
+		{
+			currentAnimation = facingLeft ? &IdleFireLAnimation : &IdleFireRAnimation;
+		}
+		else {
+			currentAnimation = facingLeft ? &idleLAnimation : &idleRAnimation;
+		}
 	}
 
 	//DEBUG FUNCTIONS
@@ -243,6 +266,10 @@ bool Player::Update(float dt) {
 			int randomSound = rand() % 8;
 			Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
 		}
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine::GetInstance().entityManager->isFirey == true)
+		{
+			//CODIGO DE CREACION ATAQUE DE FUEGO MARIO
+		}
 		if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
 	
 		// Apply the velocity to the player
@@ -252,7 +279,7 @@ bool Player::Update(float dt) {
 
 		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-	}
+	
 	return true;
 }
 
@@ -300,7 +327,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 		}
 		else {
-			LoseLife();
+			if (Engine::GetInstance().entityManager->isFirey==true)
+			{
+				Engine::GetInstance().entityManager->isFirey = false;
+				Engine::GetInstance().audio->PlayFx(PowerDown);
+			}
+			else {
+				LoseLife();
+			}
 		}
 		break;
 	}

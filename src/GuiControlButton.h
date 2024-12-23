@@ -17,7 +17,7 @@ public:
 
 
 private:
-
+	int SelectUp = 0;
 	bool canClick = true;
 	bool drawBasic = false;
 };

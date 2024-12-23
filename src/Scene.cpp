@@ -111,6 +111,7 @@ bool Scene::Start()
     marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
     BowserLaugh = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserLaugh.wav");
+   
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
@@ -418,11 +419,9 @@ void Scene::ShowTransitionScreen()
 {
     showingTransition = true;
     transitionTimer = 0.0f;
-
     if (player != nullptr) {
         player->SetActive(false);
     }
-
     Engine::GetInstance().audio.get()->StopMusic();
 }
 
@@ -652,7 +651,6 @@ void Scene::UpdateEnemyHitCount(std::string enemyName, int hitCount) {
         i++;
     }
 }
-
 void Scene::UpdateItem(std::string itemName, int isPicked) {
     int i = 0;
     for (std::pair<std::string, int> item : itemStateList)
@@ -668,7 +666,6 @@ void Scene::UpdateItem(std::string itemName, int isPicked) {
         i++;
     }
 }
-
 void Scene::SaveState()
 {
     variable_save = true;
@@ -763,7 +760,6 @@ void Scene::SaveState()
     // save the XML modification to disk
     SaveFile.save_file("config.xml");
     //guardar mas cosas; enemies, items...
-
 }
 
 

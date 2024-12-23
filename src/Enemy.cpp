@@ -208,7 +208,6 @@ bool Enemy::Update(float dt) {
                         isAttacking = true;                  // Inicia el ataque
                         attackStartTime = currentTime;       // Registra el tiempo de inicio
                         lastAttackTime = currentTime;        // Actualiza el último ataque
-                        Engine::GetInstance().audio.get()->StopFx();
                         Engine::GetInstance().audio.get()->PlayFx(BowserAttack);
                         minAttackInterval = 5000.0f + rand() % 10; // Ajusta el intervalo entre ataques
                         currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;

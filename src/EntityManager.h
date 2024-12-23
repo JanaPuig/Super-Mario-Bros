@@ -41,6 +41,7 @@ public:
 	Entity* GetEntityByName(std::string name);
 
 public:
+	bool isFirey = false;
 	int lives = 3;
 	std::list<Entity*> entities;
 

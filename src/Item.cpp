@@ -94,7 +94,7 @@ bool Item::Update(float dt)
             }
             else if (isPowerUp) {
                 Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
-                // Realizar acciones relacionadas con el PowerUp, como otorgar habilidades o poder al jugador
+                Engine::GetInstance().entityManager.get()->isFirey = true;; // Reproducir sonido de PowerU
                 LOG("PowerUp collected! Power granted.");
             }
             else if (isBigCoin) {

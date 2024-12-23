@@ -6,6 +6,7 @@
 
 GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
+	SelectUp = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
 	this->bounds = bounds;
 	this->text = text;
 
@@ -29,7 +30,7 @@ bool GuiControlButton::Update(float dt)
 		if (mousePos.getX() > bounds.x && mousePos.getX() < bounds.x + bounds.w && mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h) {
 		
 			state = GuiControlState::FOCUSED;
-
+	
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 				state = GuiControlState::PRESSED;
 			}
@@ -82,6 +83,7 @@ void GuiControlButton::Draw()
 			break;
 		case GuiControlState::FOCUSED:
 			Engine::GetInstance().render->DrawRectangle(bounds, 255, 252, 240, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().audio->PlayFx(SelectUp);
 			break;
 		case GuiControlState::PRESSED:
 			Engine::GetInstance().render->DrawRectangle(bounds, 250, 251, 253, 255, true, false); // Alfa = 255 (sin transparencia)
