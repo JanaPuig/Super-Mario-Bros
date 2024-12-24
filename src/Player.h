@@ -41,15 +41,21 @@ public:
 
     Vector2D GetPosition();
     void LoseLife();  // Función para perder una vida
-    void CheckLives(); // Función para verificar si el jugador tiene vidas
 
+    void UpdateColliderSize(bool isFirey);
     //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
-
+    void CheckPlayerFire(float dt);
     bool canMove = true;
 
 private:
+
+    bool isInvincible = false; // Estado de invencibilidad
+    float invincibilityTimer = 0.0f; // Temporizador para controlar la duración de la invencibilidad
+    bool toggleTexture = false; // Alternar textura para parpadeo
+    const float INVINCIBILITY_DURATION = 800.0f; // Duración en segundos
+    float blinkTimer = 0.0f;
 
     SDL_Texture* texturePlayer;
     pugi::xml_node parameters;
@@ -85,6 +91,8 @@ private:
     Animation crouchLAnimation;
     Animation JumpFireRAnimation;
     Animation JumpFireLAnimation;
+    Animation crouchFireLAnimation;
+    Animation crouchFireRAnimation;
 
 
     // Audio FX

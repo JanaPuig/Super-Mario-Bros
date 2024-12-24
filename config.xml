@@ -106,13 +106,13 @@
 						<frame x="2" y="56" w="28" h="40" />
 						<frame x="33" y="58" w="30" h="38" />
 					</walkingL>
-					<walkingLFire loop="true" speed="0.135">
+					<walkingLFire loop="true" speed="0.15">
 						<frame x="0" y="113" w="35" h="63" />
 						<frame x="39" y="113" w="36" h="61" />
 						<frame x="80" y="113" w="35" h="63" />
 						<frame x="118" y="113" w="33" h="63" />
 					</walkingLFire>
-					<walkingRFire loop="true" speed="0.135">
+					<walkingRFire loop="true" speed="0.15">
 						<frame x="269" y="113" w="35" h="63" />
 						<frame x="229" y="113" w="36" h="61" />
 						<frame x="189" y="113" w="35" h="63" />
@@ -126,6 +126,12 @@
 						<frame x="64" y="56" w="32" h="40" />
 						<frame x="96" y="52" w="32" h="44" />
 					</jumpingL>
+					<crouchRFire loop="false" speed="0.5">
+						<frame x="208" y="63" w="36" h="34" />
+					</crouchRFire>
+					<crouchLFire loop="false" speed="0.5">
+						<frame x="160" y="63" w="36" h="34" />
+					</crouchLFire>
 					<jumpingRFire loop="false" speed="0.5">
 						<frame x="304" y="27" w="36" h="69" />
 					</jumpingRFire>

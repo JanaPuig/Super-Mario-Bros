@@ -83,7 +83,6 @@ void GuiControlButton::Draw()
 			break;
 		case GuiControlState::FOCUSED:
 			Engine::GetInstance().render->DrawRectangle(bounds, 255, 252, 240, 255, true, false); // Alfa = 255 (sin transparencia)
-			Engine::GetInstance().audio->PlayFx(SelectUp);
 			break;
 		case GuiControlState::PRESSED:
 			Engine::GetInstance().render->DrawRectangle(bounds, 250, 251, 253, 255, true, false); // Alfa = 255 (sin transparencia)
@@ -100,6 +99,7 @@ void GuiControlButton::Draw()
 			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);
 			break;
 		case GuiControlState::FOCUSED:
+		
 			Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
 			break;
 		case GuiControlState::PRESSED:
@@ -107,7 +107,7 @@ void GuiControlButton::Draw()
 			break;
 		}
 	}
-
+	//Engine::GetInstance().audio->PlayFx(SelectUp);
 	// Dibujar el texto del botón
 	Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);
 }

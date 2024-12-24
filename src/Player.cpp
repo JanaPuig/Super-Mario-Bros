@@ -59,6 +59,9 @@ bool Player::Start() {
 	IdleFireRAnimation.LoadAnimations(parameters.child("animations").child("idleRFire"));
 	JumpFireLAnimation.LoadAnimations(parameters.child("animations").child("jumpingLFire"));
 	JumpFireRAnimation.LoadAnimations(parameters.child("animations").child("jumpingRFire"));
+	crouchFireRAnimation.LoadAnimations(parameters.child("animations").child("crouchRFire"));
+	crouchFireLAnimation.LoadAnimations(parameters.child("animations").child("crouchLFire"));
+
 	currentAnimation = &idleRAnimation;
 
 	// Añadir física
@@ -75,8 +78,10 @@ bool Player::Start() {
 
 	return true;
 }
-bool Player::Update(float dt) {
 
+bool Player::Update(float dt) {
+	CheckPlayerFire(dt);
+	
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
 	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove) {
@@ -86,14 +91,11 @@ bool Player::Update(float dt) {
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
 	}
-	if (pbody == nullptr) {
-		LOG("Error: pbody no inicializado.");
-		return true;
-	}
 	//Actualize textures to be sure they are Drawn
-	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	if (toggleTexture) {
+		Engine::GetInstance().render.get()->DrawTexture(texturePlayer,(int)position.getX(),(int)position.getY(),&currentAnimation->GetCurrentFrame());
+	}
 	currentAnimation->Update();
-
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
 
 	// Death handling
@@ -160,10 +162,10 @@ bool Player::Update(float dt) {
 		return true;
 	}
 	//crouching animation
-	else if (iscrouching) {
+	 if (iscrouching) {
 		if (Engine::GetInstance().entityManager->isFirey == true)
 		{
-
+			currentAnimation = facingLeft ? &crouchFireLAnimation : &crouchFireRAnimation;
 		}
 		else {
 			currentAnimation = facingLeft ? &crouchLAnimation : &crouchRAnimation;
@@ -292,6 +294,7 @@ bool Player::CleanUp()
 
 // L08 TODO 6: Define OnCollision function for the player. 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
+
 	switch (physB->ctype) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
@@ -306,34 +309,46 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LoseLife();
 		break;
 	case ColliderType::WALL:
-		LOG("Player hit a death zone, resetting position...");
+		LOG("Player collision with WALL...");
 		jumpcount = 1;
 		break;
 	case ColliderType::ENEMY: {
 		LOG("Collision with ENEMY");
 
 		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
-		float playerBottom = this->position.getY() + this->texH / 2;
-		float enemyTop = enemy->GetPosition().getY();
+		if (enemy != nullptr) {
+			float playerBottom = this->position.getY() + this->texH; // Usamos todo el alto del jugador
+			float playerVelocityY = pbody->body->GetLinearVelocity().y; // Velocidad en Y del jugador
+			float enemyTop = enemy->GetPosition().getY(); // Parte superior del enemigo
 
-		if (enemy != nullptr && playerBottom < enemyTop) {
-			pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote ligero
-			if (enemy->name == "bowser") {// Verificar si el enemigo es Bowser
-				Engine::GetInstance().audio.get()->StopFx(); // Asegúrate de que StopFx esté implementado en tu motor de audio
-				Engine::GetInstance().audio.get()->PlayFx(BowserHit); // Reproducir sonido de BowserHit
-			}
-			Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-			enemy->hitCount++; // Incrementa el contador de impactos
-			Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
-		}
-		else {
-			if (Engine::GetInstance().entityManager->isFirey==true)
-			{
-				Engine::GetInstance().entityManager->isFirey = false;
-				Engine::GetInstance().audio->PlayFx(PowerDown);
+			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo
+			if (playerBottom <= enemyTop + 5.0f && playerVelocityY > 0) { // Aseguramos que el jugador está cayendo
+				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
+
+				// Lógica específica para el enemigo (ejemplo con Bowser)
+				if (enemy->name == "bowser") {
+					Engine::GetInstance().audio.get()->StopFx(); // Detener sonidos actuales
+					Engine::GetInstance().audio.get()->PlayFx(BowserHit); // Sonido de impacto en Bowser
+				}
+				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0); // Sonido de muerte del enemigo
+
+				enemy->hitCount++; // Incrementa el contador de impactos
+				Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 			}
 			else {
-				LoseLife();
+				// Si el jugador no está cayendo o no está por encima del enemigo
+				if (!isInvincible) {
+					if (Engine::GetInstance().entityManager->isFirey) {
+						// El jugador pierde el power-up de fuego
+						Engine::GetInstance().entityManager->isFirey = false;
+						isInvincible = true;
+						invincibilityTimer = INVINCIBILITY_DURATION; // Temporizador de invencibilidad
+						Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder
+					}
+					else {
+						LoseLife(); // El jugador pierde una vida
+					}
+				}
 			}
 		}
 		break;
@@ -409,16 +424,33 @@ void Player::PlayerFlight(float dt) {
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) velocity.y = 0.2f * dt;   // down
 	pbody->body->SetLinearVelocity(velocity);// Apply velocity to the body
 }
-// En Player.cpp
 void Player::LoseLife() {
 	if (!isDead)
 	{
-	isDead=true;
-	Engine::GetInstance().entityManager->lives--;
+		isDead = true;
+		Engine::GetInstance().entityManager->lives--;
 	}
 	else {
 		return;
 	}
+}
+void Player::UpdateColliderSize(bool isFirey) {
+	// Eliminar el cuerpo físico actual
+	Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+
+	// Ajustar el tamaño del collider basado en el estado
+	int newRadius = isFirey ? texW / 1.25 : texW / 2; // Cambiar tamaño del collider
+	int yOffset = isFirey ? 0 : (texH / 4); // Ajustar el offset vertical para reducir hacia abajo
+
+	// Crear un nuevo collider con el tamaño actualizado
+	pbody = Engine::GetInstance().physics.get()->CreateCircle(
+		(int)position.getX(), (int)position.getY() + yOffset, newRadius, bodyType::DYNAMIC
+	);
+	pbody->listener = this;
+	pbody->ctype = ColliderType::PLAYER;
+
+	// Log para depuración
+	LOG("Collider actualizado: radio=%d, yOffset=%d", newRadius, yOffset);
 }
 
 void Player::StopMovement() {
@@ -426,4 +458,41 @@ void Player::StopMovement() {
 }
 void Player::ResumeMovement() {
 	canMove = true;
+}
+
+void Player::CheckPlayerFire(float dt)
+{
+	static bool wasFirey = false;
+	if (Engine::GetInstance().entityManager->isFirey != wasFirey) {
+		wasFirey = Engine::GetInstance().entityManager->isFirey;
+		UpdateColliderSize(wasFirey);
+	}
+	// Lógica de invencibilidad
+	if (isInvincible) {
+		invincibilityTimer -= dt;
+
+		// Manejo del parpadeo
+		blinkTimer += dt;
+		if (blinkTimer >= 80.0f) { // Alternar visibilidad cada 0.1 segundos
+			toggleTexture = !toggleTexture;
+			blinkTimer = 0.0f;
+		}
+
+		// Fin de invencibilidad
+		if (invincibilityTimer <= 0.0f) {
+			isInvincible = false;
+			toggleTexture = true; // Asegurar visibilidad al finalizar
+		}
+	}
+	else {
+		toggleTexture = true; // Siempre visible si no es invencible
+	}
+
+	if (Engine::GetInstance().entityManager->isFirey == true)
+	{
+		jumpForce = 6.8f;
+	}
+	else {
+		jumpForce = 2.8f;
+	}
 }
