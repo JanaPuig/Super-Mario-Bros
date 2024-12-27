@@ -463,6 +463,7 @@ void Player::ResumeMovement() {
 void Player::CheckPlayerFire(float dt)
 {
 	static bool wasFirey = false;
+
 	if (Engine::GetInstance().entityManager->isFirey != wasFirey) {
 		wasFirey = Engine::GetInstance().entityManager->isFirey;
 		UpdateColliderSize(wasFirey);
