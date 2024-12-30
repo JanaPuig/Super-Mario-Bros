@@ -135,26 +135,32 @@ bool Player::Update(float dt) {
 				if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3250, 430)); // Posición del banderín
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 1) {
 					SetPosition(Vector2D(30, 430)); // Inicio del nivel 1
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3300, 830)); // Posición del banderín
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/Wolrd2Theme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 2) {
 					SetPosition(Vector2D(200, 700)); // Inicio del nivel 2
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3300, 830)); // Posición del banderín
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3) {
 					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
 			}

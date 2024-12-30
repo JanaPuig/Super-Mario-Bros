@@ -67,8 +67,6 @@ bool GuiManager::CleanUp()
 		delete control;
 	}
 	guiControlsList.clear();
-	//Engine::GetInstance().audio.get()->CleanUp();
-
 
 	return true;
 }
