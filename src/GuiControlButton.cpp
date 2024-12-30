@@ -34,18 +34,19 @@ bool GuiControlButton::Update(float dt)
 			if (state != GuiControlState::FOCUSED)  // El estado solo cambia la primera vez que el ratón entra
 			{
 				state = GuiControlState::FOCUSED;
-
 				// Reproducir el sonido solo una vez al entrar al área del botón
 				if (!soundPlayed) // Solo reproducir si no se ha reproducido ya
 				{
 					Engine::GetInstance().audio->PlayFx(SelectUp);
 					soundPlayed = true; // Marcar que el sonido se ha reproducido
 				}
+				
 			}
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
 				state = GuiControlState::PRESSED;
+			
 			}
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
