@@ -93,10 +93,10 @@
 						<frame x="2" y="56" w="28" h="40" />
 					</idleL>
 					<idleLFire loop="false">
-						<frame x="118" y="132" w="33" h="73" />
+						<frame x="118" y="115" w="33" h="73" />
 					</idleLFire>
 					<idleRFire loop="false">
-						<frame x="153" y="132" w="33" h="73" />
+						<frame x="153" y="115" w="33" h="73" />
 					</idleRFire>
 					<walking loop="true" speed="0.135">
 						<frame x="2" y="8" w="28" h="40" />
@@ -107,16 +107,16 @@
 						<frame x="33" y="58" w="30" h="38" />
 					</walkingL>
 					<walkingLFire loop="true" speed="0.15">
-						<frame x="0" y="128" w="35" h="68" />
-						<frame x="39" y="128" w="36" h="66" />
-						<frame x="80" y="128" w="35" h="68" />
-						<frame x="118" y="128" w="33" h="68" />
+						<frame x="0" y="115" w="35" h="68" />
+						<frame x="39" y="115" w="36" h="66" />
+						<frame x="80" y="115" w="35" h="68" />
+						<frame x="118" y="115" w="33" h="68" />
 					</walkingLFire>
 					<walkingRFire loop="true" speed="0.15">
-						<frame x="269" y="128" w="35" h="68" />
-						<frame x="229" y="128" w="36" h="66" />
-						<frame x="189" y="128" w="35" h="68" />
-						<frame x="153" y="128" w="33" h="68" />
+						<frame x="269" y="115" w="35" h="68" />
+						<frame x="229" y="115" w="36" h="66" />
+						<frame x="189" y="115" w="35" h="68" />
+						<frame x="153" y="115" w="33" h="68" />
 					</walkingRFire>
 					<jumping loop="false" speed="0.5">
 						<frame x="64" y="8" w="32" h="40" />
