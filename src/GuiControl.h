@@ -74,6 +74,8 @@ public:
 
 	virtual void Draw() = 0;
 
+	GuiControlState GetState() const { return state; }
+
 public:
 
 	int id;

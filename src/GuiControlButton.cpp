@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Audio.h"
 #include "Scene.h"
+#include "GuiManager.h"
 
 GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -21,6 +22,11 @@ GuiControlButton::~GuiControlButton()
 }
 bool GuiControlButton::Update(float dt)
 {
+	if (state == GuiControlState::DISABLED)
+	{
+		return false; // Sal de la función y evita actualizar lógica innecesaria
+	}
+
 	if (state != GuiControlState::DISABLED)
 	{
 		Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
@@ -33,20 +39,18 @@ bool GuiControlButton::Update(float dt)
 		{
 			if (state != GuiControlState::FOCUSED)  // El estado solo cambia la primera vez que el ratón entra
 			{
-				state = GuiControlState::FOCUSED;
+				state = GuiControlState::FOCUSED;				
+			}
+
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				state = GuiControlState::PRESSED;
 				// Reproducir el sonido solo una vez al entrar al área del botón
 				if (!soundPlayed) // Solo reproducir si no se ha reproducido ya
 				{
 					Engine::GetInstance().audio->PlayFx(SelectUp);
 					soundPlayed = true; // Marcar que el sonido se ha reproducido
 				}
-				
-			}
-
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
-			{
-				state = GuiControlState::PRESSED;
-			
 			}
 
 			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
@@ -71,13 +75,18 @@ bool GuiControlButton::Update(float dt)
 void GuiControlButton::Draw()
 {
 	//L16: TODO 4: Draw the button according the GuiControl State
+	if (state == GuiControlState::DISABLED)
+	{
+		return; // No hacer nada si el botón está deshabilitado
+	}
 
 	if (id == 6 || id == 7) {
 		// Hacer que este botón no tenga transparencia (alfa = 255)
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 100, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 0, 0, 50, true, true); // Rojo para botones deshabilitados (depuración)
+
 			break;
 		case GuiControlState::NORMAL:
 			Engine::GetInstance().render->DrawRectangle(bounds, 195, 159, 129, 100, true, false); // Alfa = 255 (sin transparencia)
@@ -96,8 +105,10 @@ void GuiControlButton::Draw()
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 244, 244, 244, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 0, 0, 50, true, true); // Rojo para botones deshabilitados (depuración)
+
 			break;
+
 		case GuiControlState::NORMAL:
 			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
 			break;
@@ -113,7 +124,8 @@ void GuiControlButton::Draw()
 		switch (state)
 		{
 		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 150, 150, 150, 100, true, false);
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 0, 0, 50, true, true); // Rojo para botones deshabilitados (depuración)
+
 			break;
 		case GuiControlState::NORMAL:
 			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);

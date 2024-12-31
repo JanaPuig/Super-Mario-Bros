@@ -15,7 +15,6 @@ public:
 	bool Update(float dt);
 	void Draw();
 
-
 private:
 	bool soundPlayed = false;
 	int SelectUp = 0;

@@ -177,4 +177,8 @@ private:
 
     Vector2D mousePos;
    
+
+    bool active_menu = false;
+    bool active_settings = false;
+    bool active_menu_pause = false;
 };

@@ -44,15 +44,16 @@ bool GuiManager::Update(float dt)
 	for (const auto& control : guiControlsList)
 	{
 		control->Update(dt);
+		
 	}
 
 	return true;
 }
 void GuiManager::Draw()
 {
+
 	for (const auto& control : guiControlsList)
 	{
-		
 		control->Draw();
 		
 	}
@@ -64,7 +65,9 @@ bool GuiManager::CleanUp()
 
 	for (const auto& control : guiControlsList)
 	{
+		
 		delete control;
+		
 	}
 	guiControlsList.clear();
 
