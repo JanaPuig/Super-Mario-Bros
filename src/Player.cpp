@@ -444,23 +444,23 @@ void Player::UpdateColliderSize(bool isFirey) {
 	// Eliminar el cuerpo físico actual
 	Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
 	//// Ajustar el tamaño del collider basado en el estado
-	//int newRadius = isFirey ? texW / 1.25 : 32; // Cambiar tamaño del collider
-	//int yOffset = isFirey ? 0 : 0; // Ajustar el offset vertical para reducir hacia abajo
+	int newRadius = isFirey ? texW / 1.25 : 32; // Cambiar tamaño del collider
+	int yOffset = isFirey ? 0 : 0; // Ajustar el offset vertical para reducir hacia abajo
 
-	////// Crear un nuevo collider con el tamaño actualizado
-	//pbody = Engine::GetInstance().physics.get()->CreateCircle(
-	//	(int)position.getX(), (int)position.getY() + yOffset, newRadius, bodyType::DYNAMIC
-	//);
-	int newRadius = 32;  // Radio del círculo, ajusta según tus necesidades
-
-	// Centrar la colisión con respecto al sprite
-	int centerX = (int)position.getX() + (texW / 2); // Centra horizontalmente
-	int centerY = (int)position.getY() + (texH/2); // Centra verticalmente (ajusta con yOffset si es necesario)
-
-	// Crear el círculo para colisión en el centro calculado
+	//// Crear un nuevo collider con el tamaño actualizado
 	pbody = Engine::GetInstance().physics.get()->CreateCircle(
-		centerX, centerY, newRadius, bodyType::DYNAMIC
+		(int)position.getX(), (int)position.getY() + yOffset, newRadius, bodyType::DYNAMIC
 	);
+	//int newRadius = 32;  // Radio del círculo, ajusta según tus necesidades
+
+	//// Centrar la colisión con respecto al sprite
+	//int centerX = (int)position.getX() + (texW / 2); // Centra horizontalmente
+	//int centerY = (int)position.getY() + (texH/2); // Centra verticalmente (ajusta con yOffset si es necesario)
+
+	//// Crear el círculo para colisión en el centro calculado
+	//pbody = Engine::GetInstance().physics.get()->CreateCircle(
+	//	centerX, centerY, newRadius, bodyType::DYNAMIC
+	//);
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 	LOG("texW: %d", texW);
