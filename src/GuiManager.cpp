@@ -61,7 +61,6 @@ void GuiManager::Draw()
 
 bool GuiManager::CleanUp()
 {
-	Engine::GetInstance().audio.get()->StopFx();
 
 	for (const auto& control : guiControlsList)
 	{

@@ -15,7 +15,7 @@
 		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="294" playerY="431" enemy1X="1494" enemy2X="4493" enemy3X="2000" enemy4X="5500" enemy1Y="96" enemy2Y="96" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="7103.97119" />
+		<SaveFile level="1" playerX="30" playerY="430" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" time="7103.97119" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="32" h="32" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<item name="coin" x="1600" y="768" w="32" h="32" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />

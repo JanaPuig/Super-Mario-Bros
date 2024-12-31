@@ -185,29 +185,32 @@ int Audio::LoadFx(const char* path)
 // Play WAV with a specific channel
 bool Audio::PlayFx(int id, int repeat)
 {
-    bool ret = false;
-
     if (!active)
-        return false;
-
-    if (id > 0 && id <= fx.size())
     {
-        auto fxIt = fx.begin();
-        std::advance(fxIt, id - 1);
-
-        // Use Mix_PlayChannel to play sound effect on a specific channel
-        int channel = Mix_PlayChannel(-1, *fxIt, repeat);
-        if (channel == -1)
-        {
-            LOG("Error playing sound effect: %s", Mix_GetError());
-        }
-        else
-        {
-            ret = true; // Success in playing sound effect
-        }
+        LOG("Audio system not active. Cannot play FX.");
+        return false;
     }
 
-    return ret;
+    if (id <= 0 || id > fx.size())
+    {
+        LOG("Invalid FX id: %d", id);
+        return false;
+    }
+
+    auto fxIt = fx.begin();
+    std::advance(fxIt, id - 1);
+
+    Mix_VolumeChunk(*fxIt, MIX_MAX_VOLUME); // Ajustar volumen al máximo
+
+    int channel = Mix_PlayChannel(-1, *fxIt, repeat);
+    if (channel == -1)
+    {
+        LOG("Error playing FX id %d: %s", id, Mix_GetError());
+        return false;
+    }
+
+    LOG("Playing FX id %d on channel %d", id, channel);
+    return true;
 }
 
 // Pause all FX
