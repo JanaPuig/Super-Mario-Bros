@@ -13,12 +13,11 @@ GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : 
 
 	canClick = true;
 	drawBasic = false;
-	soundPlayed = false;
+
 }
 
 GuiControlButton::~GuiControlButton()
 {
-
 }
 bool GuiControlButton::Update(float dt)
 {
@@ -27,45 +26,36 @@ bool GuiControlButton::Update(float dt)
 		return false; // Sal de la función y evita actualizar lógica innecesaria
 	}
 
-	if (state != GuiControlState::DISABLED)
+	Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+
+	// Verifica si el mouse está dentro de los límites del botón
+	bool mouseOverButton = mousePos.getX() > bounds.x && mousePos.getX() < bounds.x + bounds.w &&
+		mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h;
+
+	if (mouseOverButton)
 	{
-		Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
-
-		// Verifica si el mouse está dentro de los límites del botón
-		bool mouseOverButton = mousePos.getX() > bounds.x && mousePos.getX() < bounds.x + bounds.w &&
-			mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h;
-
-		if (mouseOverButton)
+		if (state != GuiControlState::FOCUSED)
 		{
-			if (state != GuiControlState::FOCUSED)  // El estado solo cambia la primera vez que el ratón entra
-			{
-				state = GuiControlState::FOCUSED;				
-			}
+			state = GuiControlState::FOCUSED;
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
-			{
-				state = GuiControlState::PRESSED;
-				// Reproducir el sonido solo una vez al entrar al área del botón
-				if (!soundPlayed) // Solo reproducir si no se ha reproducido ya
-				{
-					Engine::GetInstance().audio->PlayFx(SelectUp);
-					soundPlayed = true; // Marcar que el sonido se ha reproducido
-				}
-			}
-
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
-			{
-				NotifyObserver();
-			}
 		}
-		else
+
+		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		{
-			// Si el ratón sale del área del botón, restablece el estado y permite la reproducción del sonido en la siguiente vez que entre
-			if (state != GuiControlState::NORMAL)
-			{
-				state = GuiControlState::NORMAL;
-				soundPlayed = false; // Restablecer la bandera cuando el ratón sale del área
-			}
+			state = GuiControlState::PRESSED;
+		}
+
+		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+		{
+			NotifyObserver();
+		}
+	}
+	else
+	{
+		if (state != GuiControlState::NORMAL)
+		{
+
+			state = GuiControlState::NORMAL;
 		}
 	}
 

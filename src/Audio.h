@@ -3,6 +3,7 @@
 #include "Module.h"
 #include "SDL2/SDL_mixer.h"
 #include <list>
+#include "GuiControl.h"
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 

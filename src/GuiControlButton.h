@@ -16,7 +16,7 @@ public:
 	void Draw();
 
 private:
-	bool soundPlayed = false;
+
 	int SelectUp = 0;
 	bool canClick = true;
 	bool drawBasic = false;

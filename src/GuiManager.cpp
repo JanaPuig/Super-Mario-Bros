@@ -44,7 +44,6 @@ bool GuiManager::Update(float dt)
 	for (const auto& control : guiControlsList)
 	{
 		control->Update(dt);
-		
 	}
 
 	return true;

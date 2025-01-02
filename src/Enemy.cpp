@@ -135,7 +135,6 @@ bool Enemy::Update(float dt) {
     float currentTime = SDL_GetTicks();
     frameTime += dt;
 
-   
         if (isDying) {
             deathTimer += dt;
             b2Transform pbodyPos = pbody->body->GetTransform();
