@@ -196,7 +196,6 @@ bool Enemy::Update(float dt) {
                 // Si Bowser está atacando, comprobamos si ha terminado su animación
                 if (currentTime - attackStartTime >= attackDuration) {
                     isAttacking = false; // Finaliza el ataque
-                    currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL; // Vuelve a la animación idle
                 }
             }
             else {
