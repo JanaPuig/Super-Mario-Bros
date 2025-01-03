@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Item.h"
 #include "Enemy.h"
+#include "Projectile.h"
 #include "tracy/Tracy.hpp"
 EntityManager::EntityManager() : Module()
 {
@@ -78,6 +79,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::ENEMY:
 		entity = new Enemy();
+		break;
+	case EntityType::PROJECTILE:
+
 		break;
 	default:
 		break;

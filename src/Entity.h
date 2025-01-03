@@ -8,6 +8,7 @@ enum class EntityType
 	PLAYER,
 	ITEM,
 	ENEMY,
+	PROJECTILE,
 	UNKNOWN
 };
 
@@ -19,8 +20,6 @@ enum class EnemyType {
 inline bool operator==(EntityType lhs, EnemyType rhs) {
 	return static_cast<int>(lhs) == static_cast<int>(rhs);
 }
-
-
 
 class PhysBody;
 

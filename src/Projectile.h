@@ -9,10 +9,11 @@ public:
     virtual ~Projectile();
 
     bool Update(float dt) override;
+    void Draw();
     void SetDirection(Vector2D direction);
 
 private:
     Vector2D direction;
-    float speed = 500.0f; // Velocidad del proyectil
+    float speed = 5.0f; // Velocidad del proyectil
     SDL_Texture* texture; // Textura del proyectil
 };

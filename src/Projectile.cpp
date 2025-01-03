@@ -1,11 +1,16 @@
 #include "Projectile.h"
 #include "Engine.h"
 #include "Textures.h"
+#include "Log.h"
 
 Projectile::Projectile(Vector2D position, Vector2D direction) : Entity(EntityType::PROJECTILE), direction(direction) {
     // Cargar la textura del proyectil
-    texture = Engine::GetInstance().textures.get()->Load("ruta/a/tu/textura/proyectil.png");
+    texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Projectile.png");
     this->position = position;
+
+    if (texture == nullptr) {
+        LOG("Error loading projectile texture");
+    }
 }
 
 Projectile::~Projectile() {
@@ -14,9 +19,26 @@ Projectile::~Projectile() {
 
 bool Projectile::Update(float dt) {
     // Mover el proyectil
-    position += direction * speed * dt;
+    position = position + (direction * speed * dt);
 
-    // Aquí puedes agregar lógica para detectar colisiones o si el proyectil sale de la pantalla
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
+    // Obtener las dimensiones de la pantalla
+
+
+    // Verificar si el proyectil está fuera de los límites de la pantalla
+    if (position.getX() < 0 || position.getX() > cameraX || position.getY() < 0 || position.getY() > cameraY) {
+        toBeDestroyed = true; // Marcar el proyectil para ser destruido
+    }
 
     return true;
+}
+
+void Projectile::Draw() {
+    SDL_Rect destRect = { (int)position.getX(), (int)position.getY(), 32, 32 }; // Ajusta el tamaño según tu textura
+    Engine::GetInstance().render.get()->DrawTexture(texture, destRect.x, destRect.y, nullptr);
+}
+
+void Projectile::SetDirection(Vector2D newDirection) {
+    direction = newDirection;
 }

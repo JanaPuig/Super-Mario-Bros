@@ -11,6 +11,7 @@
 #include "EntityManager.h"
 #include "Physics.h"
 #include "tracy/Tracy.hpp"
+#include "Projectile.h" 
 
 Enemy::Enemy() : Entity(EntityType::ENEMY) {}
 
@@ -209,6 +210,13 @@ bool Enemy::Update(float dt) {
                         Engine::GetInstance().audio.get()->PlayFx(BowserAttack);
                         minAttackInterval = 5000.0f + rand() % 10; // Ajusta el intervalo entre ataques
                         currentAnimation = velocity.x > 0 ? &attackBowserR : &attackBowserL;
+
+                        // Crear el proyectil
+                        Vector2D projectileDirection = velocity.x > 0 ? Vector2D(1, 0) : Vector2D(-1, 0);
+                        Vector2D projectilePosition = GetPosition(); // Posición de Bowser
+                        Projectile* projectile = new Projectile(projectilePosition, projectileDirection);
+                        Engine::GetInstance().entityManager.get()->AddEntity(projectile); // Agregar el proyectil al EntityManager
+
                         // Reiniciar la animación de ataque
                         currentAnimation->Reset();
                     }
