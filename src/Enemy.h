@@ -34,17 +34,6 @@ public:
 
 	void UpdateColliderSize();
 	int GetHitCount();
-	bool isDead() {
-		if (isDying) {
-			return true;
-		}
-		else {
-
-			return false;
-		}
-	}
-
-	b2Vec2 MoveEnemy(Vector2D enemyPosition, float speed);
 
 	void ResetPosition();
     //Pausar movimiento

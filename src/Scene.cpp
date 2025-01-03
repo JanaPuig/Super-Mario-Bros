@@ -215,9 +215,6 @@ bool Scene::Update(float dt)
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
-    if (!showCredits) {
-
-    }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu; // Alternar el estado del menú
@@ -242,7 +239,6 @@ bool Scene::Update(float dt)
             showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
     }
-
     // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
     if (showPauseMenu) {
         funcion_menu_pause();
@@ -261,8 +257,6 @@ bool Scene::Update(float dt)
         }
         return true;
     }
-   
-
 
     Vector2D playerPos = player->GetPosition();
    
@@ -307,8 +301,6 @@ bool Scene::Update(float dt)
     if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20, 30, 30); }
     if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
-
-  
 
     return true;
 }
@@ -389,6 +381,7 @@ bool Scene::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(black);
     Engine::GetInstance().textures.get()->UnLoad(settings);
     Engine::GetInstance().textures.get()->UnLoad(tick);
+    Engine::GetInstance().textures.get()->UnLoad(menu_pause);
     Engine::GetInstance().textures.get()->UnLoad(menu_pause);
     Engine::GetInstance().audio.get()->StopMusic();
     LOG("Freeing scene");
@@ -760,8 +753,6 @@ void Scene::SaveState()
     SaveFile.save_file("config.xml");
     //guardar mas cosas; enemies, items...
 }
-
-
 
 void Scene::menu()
 {
