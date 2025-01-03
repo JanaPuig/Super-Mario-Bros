@@ -33,7 +33,6 @@ bool EntityManager::Awake()
 	return ret;
 
 }
-
 bool EntityManager::Start() {
 
 	bool ret = true;
@@ -116,30 +115,36 @@ void EntityManager::AddEntity(Entity* entity)
 bool EntityManager::Update(float dt)
 {
 	bool ret = true;
+
 	for (const auto entity : entities)
 	{
-		if (entity->active == false) continue;
+		if (!entity->active) continue;
+
 		ret = entity->Update(dt);
 
-		if (entity->position.getX() <= -Engine::GetInstance().render.get()->camera.x / 260 &&
-			entity->position.getX() >= -Engine::GetInstance().render.get()->camera.x / 2 - 50) {
-			if (entity->active == false)continue;
-			ret = entity->Update(dt);
+		float cameraX = -Engine::GetInstance().render.get()->camera.x;
+		if (entity->position.getX() <= cameraX / 260 &&
+			entity->position.getX() >= cameraX / 2 - 50) {
+			ret = entity->Update(dt); 
 		}
-		
 	}
-	for (auto it = entities.begin(); it != entities.end(); ) {
-		if ((*it)->toBeDestroyed) { //apunta a las entidades marcadas toBeDestryed
+
+	// Eliminar entidades marcadas para ser destruidas
+	for (auto it = entities.begin(); it != entities.end(); )
+	{
+		if ((*it)->toBeDestroyed) {
 			(*it)->CleanUp();
 			delete* it;
-			it = entities.erase(it); // Borra de la lista
+			it = entities.erase(it);
 		}
 		else {
 			++it;
 		}
 	}
+
 	return ret;
 }
+
 void EntityManager::RemoveAllItems() {
 	LOG("Starting removal of all items.");
 	for (auto it = entities.begin(); it != entities.end(); ) {

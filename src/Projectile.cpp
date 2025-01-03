@@ -9,7 +9,7 @@ Projectile::Projectile(Vector2D position, Vector2D direction) : Entity(EntityTyp
     this->position = position;
 
     if (texture == nullptr) {
-        LOG("Error loading projectile texture");
+        LOG("Error loading projectile texture: Assets/Textures/Projectile.png");
     }
 }
 
@@ -30,7 +30,12 @@ bool Projectile::Update(float dt) {
     if (position.getX() < 0 || position.getX() > cameraX || position.getY() < 0 || position.getY() > cameraY) {
         toBeDestroyed = true; // Marcar el proyectil para ser destruido
     }
-
+    SDL_Rect destRect = {
+    (int)(position.getX() - cameraX),
+    (int)(position.getY() - cameraY),
+    32, 32
+    }; // Ajusta el tamaño según tu textura
+    Engine::GetInstance().render.get()->DrawTexture(texture, destRect.x, destRect.y, nullptr);
     return true;
 }
 

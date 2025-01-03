@@ -14,6 +14,6 @@ public:
 
 private:
     Vector2D direction;
-    float speed = 5.0f; // Velocidad del proyectil
+    float speed = 200.0f; // Velocidad del proyectil
     SDL_Texture* texture; // Textura del proyectil
 };
