@@ -227,6 +227,8 @@ bool Item::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(coinTexture);
     Engine::GetInstance().textures.get()->UnLoad(flagpoleTexture);
     Engine::GetInstance().textures.get()->UnLoad(flagTexture);
+    Engine::GetInstance().textures.get()->UnLoad(finish_flagpoleTexture);
+    Engine::GetInstance().textures.get()->UnLoad(finish_flagTexture);
     Engine::GetInstance().textures.get()->UnLoad(BigCoinTexture);
     Engine::GetInstance().textures.get()->UnLoad(OneUpTexture);
     return true;
