@@ -95,6 +95,23 @@ void Scene::CreateLevelItems()
         pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
         PowerUp->SetParameters(PowerUpNode);
         LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
+
+        // Crear flagpole del final del nivel
+        const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
+        Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
+
+        pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
+        flagpole2->SetParameters(flagpoleNode2);
+        LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
+
+        // Crear flag del final del nivel
+        const int positionX_flag2 = 6299, positionY_flag2 = 110;
+        Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        flag2->position = Vector2D(positionX_flag2, positionY_flag2);
+
+        pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
+        flag2->SetParameters(flagNode2);
     } 
 }
 // Called before the first frame

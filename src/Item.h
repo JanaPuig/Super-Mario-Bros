@@ -45,6 +45,7 @@ public:
     bool isOneUp = false;    // Indica si el ítem es una VIDA
     bool isBigCoin = false;
     bool isPowerUp = false;// Indica si el ítem es una MONEDA GRANDE
+    bool isFinishFlag = false;
     std::vector<Item*> items;
 
 private:
@@ -55,6 +56,8 @@ private:
     SDL_Texture* flagTexture = NULL;
     SDL_Texture* flagpoleTexture = NULL;
     SDL_Texture* PowerUpTexture = NULL;
+    SDL_Texture* finish_flagTexture = NULL;
+    SDL_Texture* finish_flagpoleTexture = NULL;
 
     const char* texturePath;
     int texW= 0, texH = 0;
@@ -68,8 +71,14 @@ private:
     Animation lower_flag;
     Animation lower_lower_flag;
     Animation BigCoin;
- 
+    Animation update_finish_flag;
 
     Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;
+
+
+    Animation* currentAnimation_finish_flag = &finish_flag;
+    Animation finish_flag;
+    Animation* currentAnimation_finish_flagpole = &finish_flagpole;
+    Animation finish_flagpole;
 };
