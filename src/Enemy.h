@@ -39,7 +39,7 @@ public:
     //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
-public:
+
     // Variables públicas relacionadas con texturas y animaciones
     SDL_Texture* textureGoomba;
     SDL_Texture* textureKoopa;
@@ -107,6 +107,5 @@ public:
     float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
 
     bool canMove = true;
-
  
 };

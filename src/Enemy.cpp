@@ -145,7 +145,7 @@ bool Enemy::Update(float dt) {
             if (deathTimer >= 1000.0f) {
                 isEnemyDead = true;
                 toBeDestroyed = true;
-                return false;
+                return true;
             }
 
             if (currentAnimation) currentAnimation->Update();
@@ -254,7 +254,7 @@ bool Enemy::Update(float dt) {
         if (isEnemyDead) {
             toBeDestroyed = true;
             Engine::GetInstance().scene.get()->SaveState();
-            return false;
+            return true;
         }
 
         if (currentAnimation) currentAnimation->Update();

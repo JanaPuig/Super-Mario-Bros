@@ -59,7 +59,7 @@ bool GuiControlButton::Update(float dt)
 		}
 	}
 
-	return false;
+	return true;
 }
 
 void GuiControlButton::Draw()
