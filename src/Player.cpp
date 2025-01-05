@@ -61,6 +61,7 @@ bool Player::Start() {
 	JumpFireRAnimation.LoadAnimations(parameters.child("animations").child("jumpingRFire"));
 	crouchFireRAnimation.LoadAnimations(parameters.child("animations").child("crouchRFire"));
 	crouchFireLAnimation.LoadAnimations(parameters.child("animations").child("crouchLFire"));
+	FireyDeadAnimation.LoadAnimations(parameters.child("animations").child("dieFire"));
 
 	currentAnimation = &idleRAnimation;
 
@@ -107,13 +108,24 @@ bool Player::Update(float dt) {
 			deathSoundPlayed = true;
 		}
 		//Drawn Death Texture
-		currentAnimation = &deadAnimation;
-		Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
-		//Change collision 
-		Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + 16, (int)position.getY() + 16, texW / 2, bodyType::STATIC);
-		pbody->listener = this;
-		pbody->ctype = ColliderType::PLAYER;
+		if (Engine::GetInstance().entityManager->isFirey) {
+			currentAnimation = &FireyDeadAnimation;
+			Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
+			//Change collision 
+			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+			pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + 16, (int)position.getY() + 16, texW / 2, bodyType::STATIC);
+			pbody->listener = this;
+			pbody->ctype = ColliderType::PLAYER;
+		}
+		else {
+			currentAnimation = &deadAnimation;
+			Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
+			//Change collision 
+			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+			pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + 16, (int)position.getY() + 16, texW / 2, bodyType::STATIC);
+			pbody->listener = this;
+			pbody->ctype = ColliderType::PLAYER;
+		}
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
 			if (Engine::GetInstance().entityManager->lives <= 0 || Engine::GetInstance().scene->timeUp) {
 				// Volver al menú
@@ -127,6 +139,7 @@ bool Player::Update(float dt) {
 				pbody->ctype = ColliderType::PLAYER;
 				isDead = false;
 				deathSoundPlayed = false;
+				Engine::GetInstance().entityManager->isFirey = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
 				// Reiniciar enemigos
 				Engine::GetInstance().entityManager.get()->ResetEnemies();
@@ -436,9 +449,7 @@ void Player::LoseLife() {
 		isDead = true;
 		Engine::GetInstance().entityManager->lives--;
 	}
-	else {
-		return;
-	}
+	return;
 }
 void Player::UpdateColliderSize(bool isFirey) {
 	// Eliminar el cuerpo físico actual

@@ -93,6 +93,7 @@ private:
     Animation JumpFireLAnimation;
     Animation crouchFireLAnimation;
     Animation crouchFireRAnimation;
+    Animation FireyDeadAnimation;
 
 
     // Audio FX

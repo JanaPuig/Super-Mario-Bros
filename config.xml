@@ -158,6 +158,9 @@
 					<die loop="false">
 						<frame x="160" y="0" w="32" h="48" />
 					</die>
+					<dieFire loop="false">
+						<frame x="347" y="30" w="42" h="64" />
+					</dieFire>
 					<crouchL loop="false">
 						<frame x="129" y="59" w="30" h="38" />
 					</crouchL>
