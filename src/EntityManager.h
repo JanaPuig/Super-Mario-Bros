@@ -43,6 +43,8 @@ public:
 public:
 	bool isFirey = false;
 	int lives = 3;
+	int objects = 0;
+	float puntuation = 00.0f;
 	std::list<Entity*> entities;
 
 };

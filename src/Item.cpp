@@ -109,24 +109,30 @@ bool Item::Update(float dt)
 
             // Reproducir el sonido solo si es una moneda
             if (isCoin) {
+                Engine::GetInstance().entityManager->objects++;
+                Engine::GetInstance().entityManager->puntuation+=250;
                 Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId); // Reproducir sonido de Coin
             }
             else if (isPowerUp) {
+                Engine::GetInstance().entityManager->puntuation += 300;
                 Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
                 Engine::GetInstance().entityManager.get()->isFirey = true;; // Reproducir sonido de PowerU
                 LOG("PowerUp collected! Power granted.");
             }
             else if (isBigCoin) {
+                Engine::GetInstance().entityManager->puntuation += 250;
+                Engine::GetInstance().entityManager->objects++;
                 Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
                 LOG("Star Coin collected!");
             }
             else if (isOneUp) {
+                Engine::GetInstance().entityManager->puntuation += 300;
                 Engine::GetInstance().entityManager->lives++; // Suma una vida
                 Engine::GetInstance().audio.get()->PlayFx(oneUpFxId, 0); // Reproducir sonido de 1UP
                 LOG("1UP collected! Extra life granted.");
             }
             else if (isFinishFlag) {
-
+                Engine::GetInstance().entityManager->puntuation += 400;
                 Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Puede ser un efecto diferente
                 LOG("Collision with Finish Flag");
                 currentAnimation_finish_flag = &update_finish_flag;
@@ -140,6 +146,7 @@ bool Item::Update(float dt)
 
             else {
                 // Cambiar la animación de la flag
+                Engine::GetInstance().entityManager->puntuation += 400;
                 Engine::GetInstance().scene.get()->isFlaged = true;
                 Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Reproducir sonido de checkpoint
                 LOG("Collision with Flag");

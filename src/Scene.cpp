@@ -155,6 +155,8 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
     DrawLives();
+    DrawObject();
+    DrawPuntation();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
@@ -483,6 +485,9 @@ void Scene::StartNewGame() {
     saveNode.attribute("playerX").set_value(30);
     saveNode.attribute("playerY").set_value(430);
     saveNode.attribute("checkpoint").set_value(false);
+    saveNode.attribute("live").set_value(3);
+    saveNode.attribute("object").set_value(0);
+    saveNode.attribute("Puntuation").set_value(0);
   
     // Reiniciar enemigos
     saveNode.attribute("enemy1X").set_value(1500);
@@ -551,6 +556,8 @@ void Scene::LoadGame() {
     // Si hay más datos a cargar, puedes hacerlo aquí.
     //cargar checkpoint
     Engine::GetInstance().entityManager->lives = LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
+    Engine::GetInstance().entityManager->objects = LoadFile.child("config").child("scene").child("SaveFile").attribute("object").as_int();
+    Engine::GetInstance().entityManager->puntuation = LoadFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").as_int();
     elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
     isFlaged= saveNode.attribute("checkpoint").as_bool();
     showMainMenu = false;
@@ -573,7 +580,9 @@ void Scene::LoadState()
     Vector2D posPlayer;
     Vector2D posEnemy;
     elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
-    Engine::GetInstance().entityManager->lives=LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
+    Engine::GetInstance().entityManager->lives = LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
+    Engine::GetInstance().entityManager->objects = LoadFile.child("config").child("scene").child("SaveFile").attribute("object").as_int();
+    Engine::GetInstance().entityManager->puntuation=LoadFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").as_int();
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
     int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
@@ -687,6 +696,8 @@ void Scene::SaveState()
     // read the player position and set the value in the XML
     Vector2D playerPos = player->GetPosition();
     SaveFile.child("config").child("scene").child("SaveFile").attribute("lives").set_value(Engine::GetInstance().entityManager->lives);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("object").set_value(Engine::GetInstance().entityManager->objects);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").set_value(Engine::GetInstance().entityManager->puntuation);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("level").set_value(level);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerX").set_value(playerPos.getX());
     SaveFile.child("config").child("scene").child("SaveFile").attribute("playerY").set_value(playerPos.getY());
@@ -966,6 +977,9 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             LOG("New Game button clicked");
 
             StartNewGame();
+            Engine::GetInstance().entityManager->puntuation = 0;
+            Engine::GetInstance().entityManager->lives = 3;
+            Engine::GetInstance().entityManager->objects = 0;
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);
             Engine::GetInstance().audio.get()->PlayFx(marioTime);
             ShowTransitionScreen();
@@ -978,6 +992,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             Engine::GetInstance().audio.get()->StopMusic();
             isLoading = true;
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);         
+         
 
         }
         break;
@@ -1123,6 +1138,17 @@ void Scene::DrawLives() {
     char livesText[64];
     sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
     Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 30);  // Ajusta la posición y tamaño
+}
+void Scene::DrawObject() {
+    char objectText[74];
+    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);  // Muestra el número de vidas
+    Engine::GetInstance().render.get()->DrawText(objectText, 50, 50, 90, 35);  // Ajusta la posición y tamaño
+}
+void Scene::DrawPuntation() {
+    char puntuationText[74];
+    sprintf_s(puntuationText, "Puntuation: %f", Engine::GetInstance().entityManager->puntuation);  // Muestra el número de vidas
+    Engine::GetInstance().render.get()->DrawText(puntuationText, 1190, 20, 225, 30);  // Ajusta la posición y tamaño
+    
 }
 void Scene::CreateEnemies() {
     // Limpiar la lista de enemigos antes de crear nuevos

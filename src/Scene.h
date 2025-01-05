@@ -58,6 +58,8 @@ public:
     bool OnGuiMouseClickEvent(GuiControl* control);
     void Settings();
     void DrawLives();
+    void DrawObject();
+    void DrawPuntation();
     void GameOver();
 
     // Returns the player instance

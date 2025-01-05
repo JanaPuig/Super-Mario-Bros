@@ -137,6 +137,7 @@ bool Enemy::Update(float dt) {
     frameTime += dt;
 
         if (isDying) {
+            Engine::GetInstance().entityManager->puntuation += 650.50;
             deathTimer += dt;
             b2Transform pbodyPos = pbody->body->GetTransform();
             position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -186,6 +187,8 @@ bool Enemy::Update(float dt) {
         if (parameters.attribute("name").as_string() == std::string("bowser")) {
             // Muerte
             if (hitCount >= 3) {
+                Engine::GetInstance().entityManager->puntuation += 100000;
+
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");
                 currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
