@@ -146,6 +146,7 @@ private:
     // Player instance
     Player* player;
 
+    Enemy* enemy;
     //Item Instance
     Item* item;
 

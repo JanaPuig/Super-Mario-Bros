@@ -130,6 +130,12 @@ bool Player::Update(float dt) {
 			if (Engine::GetInstance().entityManager->lives <= 0 || Engine::GetInstance().scene->timeUp) {
 				// Volver al menú
 				Engine::GetInstance().scene.get()->GameOver();
+				Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+				pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
+				pbody->listener = this;
+				pbody->ctype = ColliderType::PLAYER;
+				Engine::GetInstance().entityManager->isFirey = false;
+
 			}
 			else {
 				// Reiniciar estado del jugador

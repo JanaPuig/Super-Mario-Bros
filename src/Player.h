@@ -48,6 +48,8 @@ public:
     void ResumeMovement();
     void CheckPlayerFire(float dt);
     bool canMove = true;
+   
+    bool isDead = false;
 
 private:
 
@@ -109,7 +111,6 @@ private:
     // Player state
     bool isMoving = false;
     bool isSprinting = false;
-    bool isDead = false;
     bool isJumping = false;
     bool deathSoundPlayed = false;
     bool facingLeft = false;

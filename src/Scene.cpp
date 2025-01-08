@@ -474,6 +474,8 @@ void Scene::StartNewGame() {
     player->SetPosition(Vector2D(30, 430));
     showMainMenu = false;
     // Guardar el estado inicial en el archivo XML
+
+
     pugi::xml_document SaveFile;
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     if (result == NULL) {
@@ -489,6 +491,14 @@ void Scene::StartNewGame() {
     saveNode.attribute("object").set_value(0);
     saveNode.attribute("Puntuation").set_value(0);
   
+
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
+    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
+ 
+    SaveFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").set_value(0);
+
     // Reiniciar enemigos
     saveNode.attribute("enemy1X").set_value(1500);
     saveNode.attribute("enemy1Y").set_value(100);
@@ -498,13 +508,9 @@ void Scene::StartNewGame() {
     saveNode.attribute("enemy3Y").set_value(415);
     saveNode.attribute("enemy4X").set_value(5500);
     saveNode.attribute("enemy4Y").set_value(415);
+    saveNode.attribute("itemX").set_value(1600);
+    saveNode.attribute("itemY").set_value(768);
 
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
-    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
-
-    SaveFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").set_value(0);
 
     SaveFile.save_file("config.xml");
     isFlaged = saveNode.attribute("checkpoint").as_bool();
@@ -563,6 +569,7 @@ void Scene::LoadGame() {
     showMainMenu = false;
     LOG("Game loaded successfully."); 
 }
+
 // Return the player position
 Vector2D Scene::GetPlayerPosition()
 {
@@ -975,8 +982,12 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 1: // Menu; New Game
         if (active_menu) {
             LOG("New Game button clicked");
+         
+
 
             StartNewGame();
+            player->isDead = false;
+            player->canMove = true;
             Engine::GetInstance().entityManager->puntuation = 0;
             Engine::GetInstance().entityManager->lives = 3;
             Engine::GetInstance().entityManager->objects = 0;
@@ -1105,10 +1116,13 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 10: //Menu pause: Back to tile
         if (active_menu_pause) {
             showMainMenu = true;
+
         }
         break;
     case 11: //Menu pause: Settings
         if (active_menu_pause) {
+            Engine::GetInstance().entityManager->ResetEnemies();
+
             manage_showSettings = true;
         }
         break;
