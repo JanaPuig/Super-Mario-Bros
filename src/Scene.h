@@ -59,6 +59,7 @@ public:
     void Settings();
     void DrawLives();
     void DrawObject();
+    void DrawWorld();
     void DrawPuntation();
     void GameOver();
 

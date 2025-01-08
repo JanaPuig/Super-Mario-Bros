@@ -157,6 +157,7 @@ bool Scene::Update(float dt)
     DrawLives();
     DrawObject();
     DrawPuntation();
+    DrawWorld();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
@@ -317,9 +318,9 @@ bool Scene::Update(float dt)
     char timerText[64];
     if (showRemainingTime)
         sprintf_s(timerText, "%0.f", currentTime / 1000);
-    if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1820, 20, 30, 30); }
-    if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1820, 20, 20, 30); }
-    Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1580, 20, 225, 30);
+    if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1620, 20, 30, 30); }
+    if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1620, 20, 20, 30); }
+    Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1380, 20, 225, 30);
 
     return true;
 }
@@ -1159,18 +1160,24 @@ void Scene::GameOver() {
 void Scene::DrawLives() {
     char livesText[64];
     sprintf_s(livesText, "Lives: %d", Engine::GetInstance().entityManager->lives);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(livesText, 50, 20, 80, 30);  // Ajusta la posición y tamaño
+    Engine::GetInstance().render.get()->DrawText(livesText, 600, 20, 80, 30);  // Ajusta la posición y tamaño
 }
 void Scene::DrawObject() {
-    char objectText[74];
+    char objectText[100];
     sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(objectText, 50, 50, 90, 35);  // Ajusta la posición y tamaño
+    Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);  // Ajusta la posición y tamaño
 }
 void Scene::DrawPuntation() {
-    char puntuationText[74];
+    char puntuationText[100];
     sprintf_s(puntuationText, "Puntuation: %f", Engine::GetInstance().entityManager->puntuation);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(puntuationText, 1190, 20, 225, 30);  // Ajusta la posición y tamaño
+    Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30);  // Ajusta la posición y tamaño
     
+}
+void Scene::DrawWorld() {
+    char drawlevel[64];
+    sprintf_s(drawlevel, "World: %d-3", level);  // Muestra el número de vidas
+    Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);  // Ajusta la posición y tamaño
+
 }
 void Scene::CreateEnemies() {
     // Limpiar la lista de enemigos antes de crear nuevos
