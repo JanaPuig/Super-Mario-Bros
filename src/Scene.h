@@ -101,7 +101,6 @@ public:
     bool FxButtonHeld = false; // Detecta si el clic está siendo mantenido
     bool mouseOverMusicControl = false;
     bool mouseOverFxControl = false;
-    bool variable_save = false;
 
     SDL_Texture* loadingScreen = NULL; //texture for the loading screen
     SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu

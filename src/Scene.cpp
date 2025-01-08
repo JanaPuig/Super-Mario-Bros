@@ -693,7 +693,6 @@ void Scene::UpdateItem(std::string itemName, int isPicked) {
 }
 void Scene::SaveState()
 {
-    variable_save = true;
     pugi::xml_document SaveFile;
     pugi::xml_parse_result result = SaveFile.load_file("config.xml");
     if (result == NULL) {
@@ -701,6 +700,8 @@ void Scene::SaveState()
         return;
     }
     // read the player position and set the value in the XML
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("isSave").set_value(true);
+
     Vector2D playerPos = player->GetPosition();
     SaveFile.child("config").child("scene").child("SaveFile").attribute("lives").set_value(Engine::GetInstance().entityManager->lives);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("object").set_value(Engine::GetInstance().entityManager->objects);
@@ -977,13 +978,15 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     pugi::xml_node fullscreenNode;
     static bool wasClicked = true;
 
+    pugi::xml_document LoadFile;
+    pugi::xml_parse_result result_load = LoadFile.load_file("config.xml");
+
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // Menu; New Game
         if (active_menu) {
             LOG("New Game button clicked");
          
-
 
             StartNewGame();
             player->isDead = false;
@@ -997,7 +1000,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         }   
         break;
     case 2: // Menu; Load Game
-        if (variable_save && active_menu) {           
+
+       
+        // read the player position and set the value in the XML
+        
+        if (LoadFile.child("config").child("scene").child("SaveFile").attribute("isSave").as_bool() == true && active_menu) {
             LOG("Load Game button clicked");
             LoadGame();
             Engine::GetInstance().audio.get()->StopMusic();
