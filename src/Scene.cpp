@@ -490,6 +490,7 @@ void Scene::StartNewGame() {
     saveNode.attribute("live").set_value(3);
     saveNode.attribute("object").set_value(0);
     saveNode.attribute("Puntuation").set_value(0);
+    saveNode.attribute("isSave").set_value(false);
   
 
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
