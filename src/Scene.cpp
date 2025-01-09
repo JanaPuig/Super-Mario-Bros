@@ -28,8 +28,6 @@ bool Scene::Awake()
 {
     LOG("Loading Scene");
 
-   
-
     player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
     player->SetParameters(configParameters.child("entities").child("player"));
     InitialItems();
@@ -168,7 +166,6 @@ void Scene::InitialEnemies()
 void Scene::CreateLevelItems(int level)
 {
     if (level == 1) {
-        Engine::GetInstance().entityManager.get()->ResetItems();
 
         for (auto& it : itemList)
         {
@@ -1171,6 +1168,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         if (active_menu) {
             LOG("New Game button clicked");
          
+            Engine::GetInstance().entityManager.get()->ResetItems();
 
             StartNewGame();
             player->isDead = false;

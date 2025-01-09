@@ -155,6 +155,9 @@ bool Enemy::Update(float dt) {
             Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
             Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX() + 25, (int)position.getY() + 25, &frameRect);
             Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
+           
+            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+
             return true;
         }
         //Goomba Animation
