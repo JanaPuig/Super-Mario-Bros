@@ -150,10 +150,9 @@ bool Player::Update(float dt) {
 				deathSoundPlayed = false;
 				Engine::GetInstance().entityManager->isFirey = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
-				Engine::GetInstance().entityManager.get()->ResetItems();
 
 				// Reiniciar enemigos
-				Engine::GetInstance().entityManager.get()->ResetEnemies();
+				if (Engine::GetInstance().scene.get()->level == 1)	Engine::GetInstance().entityManager.get()->ResetEnemies();
 
 				// Reiniciar posición del jugador
 				if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged) {

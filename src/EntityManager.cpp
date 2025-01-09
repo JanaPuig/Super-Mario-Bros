@@ -204,7 +204,7 @@ void EntityManager::ResetItems()
 {
 	for (Entity* entity : entities) {
 		if (entity->type == EntityType::ITEM) {
-			Item* item = static_cast<Item*>(entity);
+			Item* item = dynamic_cast<Item*>(entity);
 			if (item != nullptr) {
 
 				item->ResetPosition(); // Solo restablece la posición

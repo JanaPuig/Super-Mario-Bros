@@ -23,6 +23,8 @@ bool Item::Awake() {
 
 bool Item::Start() {
     // Cargar configuraciones desde XML
+    name = parameters.attribute("name").as_string();
+
     texW = parameters.attribute("w").as_int();
     texH = parameters.attribute("h").as_int();
     isPicked = parameters.attribute("isPicked").as_int(0);
@@ -243,52 +245,6 @@ bool Item::CleanUp()
 
 void Item::ResetPosition()
 {
-    pugi::xml_document doc;
-    if (!doc.load_file("config.xml")) {
-        LOG("Error al cargar config.xml para guardar el estado del ítem.");
-        return;
-    }
-
-    pugi::xml_node itemNode = doc.child("config").child("scene").child("entities").child("items");
-
-    if (itemNode) {
-        if (itemNode.child("item")) {
-            itemNode.child("item").attribute("isPicked").set_value(0);
-        }
-        else {
-            LOG("Nodo 'item' no encontrado en config.xml");
-        }
-
-        if (itemNode.child("Oneup")) {
-            itemNode.child("Oneup").attribute("isOneUp").set_value(true);
-        }
-        else {
-            LOG("Nodo 'Oneup' no encontrado en config.xml");
-        }
-
-        if (itemNode.child("PowerUp")) {
-            itemNode.child("PowerUp").attribute("isPowerUp").set_value(true);
-        }
-        else {
-            LOG("Nodo 'PowerUp' no encontrado en config.xml");
-        }
-
-        if (itemNode.child("BigCoin")) {
-            itemNode.child("BigCoin").attribute("isBigCoin").set_value(true);
-        }
-        else {
-            LOG("Nodo 'BigCoin' no encontrado en config.xml");
-        }
-
-        // Guardar el archivo y verificar el resultado
-        if (!doc.save_file("config.xml")) {
-            LOG("Error al guardar config.xml después de modificar el estado del ítem.");
-        }
-    }
-    else {
-        LOG("Nodo 'items' no encontrado en config.xml");
-    }
-
     idle.LoadAnimations(parameters.child("animations").child("idle"));
     currentAnimation = &idle;
 
@@ -310,4 +266,9 @@ void Item::ResetPosition()
 
     BigCoin.LoadAnimations(parameters.child("animations").child("idleBigCoin"));
 
+    isPicked = 0;
+    currentAnimation = &idle;
+    currentAnimation_flag = &flag;
+    currentAnimation_finish_flag = &finish_flag;
 }
+

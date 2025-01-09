@@ -29,16 +29,17 @@ bool Scene::Awake()
     LOG("Loading Scene");
     if (level == 1 || level == 2 || level == 3)
     {
-        CreateLevelItems();
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
         CreateEnemies(level);
+        CreateLevelItems(level);
+
     }
     return true;
 }
 // Creates items for Level 1
-void Scene::CreateLevelItems()
+void Scene::CreateLevelItems(int level)
 {
     if (level == 1) {
         const int startX = 1664, startY = 672;
@@ -49,6 +50,7 @@ void Scene::CreateLevelItems()
         item->position = Vector2D(startX, startY);
         item->SetParameters(defaultItemNode);
         itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
+        itemList.push_back(item);
         // Log the item's creation
         LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
 
@@ -59,6 +61,9 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
         flagpole->SetParameters(flagpoleNode);
+        itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
+        itemList.push_back(flagpole);
+
         LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
 
         // Crear flag
@@ -68,6 +73,8 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
         flag->SetParameters(flagNode); 
+        itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
+        itemList.push_back(flag);
 
         // Crear 1Up
         const int oneUpPpositionX = 500, oneUpPpositionY = 200;
@@ -76,6 +83,9 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
         OneUp->SetParameters(oneUpeNode);
+        itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
+        itemList.push_back(OneUp);
+
         LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
 
         //Crear BigCoin
@@ -85,6 +95,9 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
         BigCoin->SetParameters(BigCoinNode);
+        itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
+        itemList.push_back(BigCoin);
+
         LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
 
         //Crear PowerUp
@@ -94,6 +107,9 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
         PowerUp->SetParameters(PowerUpNode);
+        itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
+        itemList.push_back(PowerUp);
+
         LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
 
         // Crear flagpole del final del nivel
@@ -103,6 +119,9 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
         flagpole2->SetParameters(flagpoleNode2);
+        itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
+        itemList.push_back(flagpole2);
+
         LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
 
         // Crear flag del final del nivel
@@ -112,7 +131,44 @@ void Scene::CreateLevelItems()
 
         pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
         flag2->SetParameters(flagNode2);
-    } 
+        itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
+        itemList.push_back(flag2);
+
+    }
+
+    else if (level == 2)
+    {
+        LOG("itemList size before loop: %zu", itemList.size());
+        Engine::GetInstance().entityManager.get()->ResetItems();
+
+        for (auto& it : itemList) 
+        {
+            if (it->name == "flagpole") {
+                it->position = (Vector2D(3232+70, 384+415));
+
+            }
+            else if (it->name == "flag") {
+                it->position = (Vector2D(3248 + 70, 384+415));
+
+            }
+            else if (it->name == "finish_flagpole") {
+                it->position = (Vector2D(6343 + 190, 90 + 320));
+
+            }
+            else if (it->name == "finish_flag") {
+                it->position = (Vector2D(6299 + 190, 110 + 320));
+
+            }
+            else {
+                it->position = (Vector2D(-1000, -1000));
+            }
+        }
+
+        LOG("Unhandled level: %d", level);
+    }
+    else {
+        LOG("Unhandled level: %d", level);
+    }
 }
 
 void Scene::CreateEnemies(int level) {
@@ -476,11 +532,11 @@ void Scene::ChangeLevel(int newLevel)
 
     //Engine::GetInstance().entityManager->RemoveAllEnemies();
     Engine::GetInstance().map->CleanUp();
-    Engine::GetInstance().entityManager->RemoveAllItems();
+    //Engine::GetInstance().entityManager->RemoveAllItems();
 
     level = newLevel;
     CreateEnemies(level);
-
+    CreateLevelItems(level);
     ShowTransitionScreen();
 }
 // Shows the transition screen

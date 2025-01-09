@@ -25,7 +25,7 @@ public:
     bool Awake();
 
     // Creates items specific to Level 1
-    void CreateLevelItems();
+    void CreateLevelItems(int level);
     void CreateEnemies(int level);
 
     // Called before the first frame
@@ -152,9 +152,11 @@ private:
 
     //Private Lists
     std::vector<Enemy*> enemyList;
+    std::vector<int> hitcountList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList; 
-    std::vector<int> hitcountList;
+    std::vector<Item*> itemList;
+
 
     int gameIntroMusicId = 0; // Identificador de la música GameIntro
     int menuMusicId = 0; // Identificador de la música MenuMusic
