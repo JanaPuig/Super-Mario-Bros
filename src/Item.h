@@ -32,6 +32,8 @@ public:
 
     void SavePickedStateToFile();
 
+    void ResetPosition();
+
 public:
     // Audio Fx
     int pickCoinFxId= 0;

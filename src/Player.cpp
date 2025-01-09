@@ -134,7 +134,10 @@ bool Player::Update(float dt) {
 				pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), texW / 2, bodyType::DYNAMIC);
 				pbody->listener = this;
 				pbody->ctype = ColliderType::PLAYER;
+				isDead = false;
 				Engine::GetInstance().entityManager->isFirey = false;
+				Engine::GetInstance().entityManager.get()->ResetEnemies();
+				Engine::GetInstance().entityManager.get()->ResetItems();
 
 			}
 			else {
@@ -147,6 +150,8 @@ bool Player::Update(float dt) {
 				deathSoundPlayed = false;
 				Engine::GetInstance().entityManager->isFirey = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
+				Engine::GetInstance().entityManager.get()->ResetItems();
+
 				// Reiniciar enemigos
 				Engine::GetInstance().entityManager.get()->ResetEnemies();
 

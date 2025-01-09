@@ -240,3 +240,74 @@ bool Item::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(OneUpTexture);
     return true;
 }
+
+void Item::ResetPosition()
+{
+    pugi::xml_document doc;
+    if (!doc.load_file("config.xml")) {
+        LOG("Error al cargar config.xml para guardar el estado del ítem.");
+        return;
+    }
+
+    pugi::xml_node itemNode = doc.child("config").child("scene").child("entities").child("items");
+
+    if (itemNode) {
+        if (itemNode.child("item")) {
+            itemNode.child("item").attribute("isPicked").set_value(0);
+        }
+        else {
+            LOG("Nodo 'item' no encontrado en config.xml");
+        }
+
+        if (itemNode.child("Oneup")) {
+            itemNode.child("Oneup").attribute("isOneUp").set_value(true);
+        }
+        else {
+            LOG("Nodo 'Oneup' no encontrado en config.xml");
+        }
+
+        if (itemNode.child("PowerUp")) {
+            itemNode.child("PowerUp").attribute("isPowerUp").set_value(true);
+        }
+        else {
+            LOG("Nodo 'PowerUp' no encontrado en config.xml");
+        }
+
+        if (itemNode.child("BigCoin")) {
+            itemNode.child("BigCoin").attribute("isBigCoin").set_value(true);
+        }
+        else {
+            LOG("Nodo 'BigCoin' no encontrado en config.xml");
+        }
+
+        // Guardar el archivo y verificar el resultado
+        if (!doc.save_file("config.xml")) {
+            LOG("Error al guardar config.xml después de modificar el estado del ítem.");
+        }
+    }
+    else {
+        LOG("Nodo 'items' no encontrado en config.xml");
+    }
+
+    idle.LoadAnimations(parameters.child("animations").child("idle"));
+    currentAnimation = &idle;
+
+    flag.LoadAnimations(parameters.child("animations").child("idle_flag"));
+    currentAnimation_flag = &flag;
+
+    flagpole.LoadAnimations(parameters.child("animations").child("idle_flagpole"));
+    currentAnimation_finish_flagpole = &flagpole;
+
+    finish_flag.LoadAnimations(parameters.child("animations").child("idle_finish_flag"));
+    currentAnimation_finish_flag = &finish_flag;
+
+    finish_flagpole.LoadAnimations(parameters.child("animations").child("idle_finish_flagpole"));
+    currentAnimation_finish_flagpole = &finish_flagpole;
+
+    lower_flag.LoadAnimations(parameters.child("animations").child("lower_flag"));
+    lower_lower_flag.LoadAnimations(parameters.child("animations").child("lower_lower_flag"));
+    update_finish_flag.LoadAnimations(parameters.child("animations").child("update_finish_flag"));
+
+    BigCoin.LoadAnimations(parameters.child("animations").child("idleBigCoin"));
+
+}

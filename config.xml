@@ -12,10 +12,10 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="true" />
+		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="3" playerX="4080" playerY="521" itemX="1600" itemY="768" enemy1X="-1034" enemy2X="-946" enemy3X="-1173" enemy4X="-1286" enemy1Y="-1004" enemy2Y="-1005" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" object="0" Puntuation="0" time="19518.9727" isSave="true" />
+		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" object="0" Puntuation="0" time="19518.9727" isSave="false" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
