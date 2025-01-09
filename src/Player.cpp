@@ -11,7 +11,7 @@
 #include "EntityManager.h"
 #include "tracy/Tracy.hpp"
 
-Player::Player() : Entity(EntityType::PLAYER)
+Player::Player() : Entity(EntityType::PLAYER), starPowerDuration(15.0f), isStarPowerActive(false)
 {
 	name = "Player";
 }
@@ -53,15 +53,15 @@ bool Player::Start() {
 	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
 	crouchLAnimation.LoadAnimations(parameters.child("animations").child("crouchL"));
 	crouchRAnimation.LoadAnimations(parameters.child("animations").child("crouchR"));
-	WalkingFireLAnimation.LoadAnimations(parameters.child("animations").child("walkingLFire"));
-	WalkingFireRAnimation.LoadAnimations(parameters.child("animations").child("walkingRFire"));
-	IdleFireLAnimation.LoadAnimations(parameters.child("animations").child("idleLFire"));
-	IdleFireRAnimation.LoadAnimations(parameters.child("animations").child("idleRFire"));
-	JumpFireLAnimation.LoadAnimations(parameters.child("animations").child("jumpingLFire"));
-	JumpFireRAnimation.LoadAnimations(parameters.child("animations").child("jumpingRFire"));
-	crouchFireRAnimation.LoadAnimations(parameters.child("animations").child("crouchRFire"));
-	crouchFireLAnimation.LoadAnimations(parameters.child("animations").child("crouchLFire"));
-	FireyDeadAnimation.LoadAnimations(parameters.child("animations").child("dieFire"));
+	WalkingStarLAnimation.LoadAnimations(parameters.child("animations").child("walkingLStar"));
+	WalkingStarRAnimation.LoadAnimations(parameters.child("animations").child("walkingRStar"));
+	IdleStarLAnimation.LoadAnimations(parameters.child("animations").child("idleLStar"));
+	IdleStarRAnimation.LoadAnimations(parameters.child("animations").child("idleRStar"));
+	JumpStarLAnimation.LoadAnimations(parameters.child("animations").child("jumpingLStar"));
+	JumpStarRAnimation.LoadAnimations(parameters.child("animations").child("jumpingRStar"));
+	crouchStarRAnimation.LoadAnimations(parameters.child("animations").child("crouchRStar"));
+	crouchStarLAnimation.LoadAnimations(parameters.child("animations").child("crouchLStar"));
+	DeadStarAnimation.LoadAnimations(parameters.child("animations").child("dieStar"));
 
 	currentAnimation = &idleRAnimation;
 
@@ -81,21 +81,20 @@ bool Player::Start() {
 }
 
 bool Player::Update(float dt) {
-	CheckPlayerFire(dt);
-	
+	ManageStarPower(dt);
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
 	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
+
 	//Si se agota el tiempo...
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
 	}
 	//Actualize textures to be sure they are Drawn
-	if (toggleTexture) {
 		Engine::GetInstance().render.get()->DrawTexture(texturePlayer,(int)position.getX(),(int)position.getY(),&currentAnimation->GetCurrentFrame());
-	}
+
 	currentAnimation->Update();
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
 
@@ -108,8 +107,8 @@ bool Player::Update(float dt) {
 			deathSoundPlayed = true;
 		}
 		//Drawn Death Texture
-		if (Engine::GetInstance().entityManager->isFirey) {
-			currentAnimation = &FireyDeadAnimation;
+		if (Engine::GetInstance().entityManager->isStarPower) {
+			currentAnimation = &DeadStarAnimation;
 			Engine::GetInstance().render.get()->DrawTexture(Engine::GetInstance().scene->gameOver, -cameraX + 225, -cameraY);
 			//Change collision 
 			Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
@@ -135,7 +134,7 @@ bool Player::Update(float dt) {
 				pbody->listener = this;
 				pbody->ctype = ColliderType::PLAYER;
 				isDead = false;
-				Engine::GetInstance().entityManager->isFirey = false;
+				Engine::GetInstance().entityManager->isStarPower = false;
 				Engine::GetInstance().entityManager.get()->ResetEnemies();
 				Engine::GetInstance().entityManager.get()->ResetItems();
 
@@ -148,7 +147,7 @@ bool Player::Update(float dt) {
 				pbody->ctype = ColliderType::PLAYER;
 				isDead = false;
 				deathSoundPlayed = false;
-				Engine::GetInstance().entityManager->isFirey = false;
+				Engine::GetInstance().entityManager->isStarPower = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
 
 				// Reiniciar enemigos
@@ -192,9 +191,9 @@ bool Player::Update(float dt) {
 	}
 	//crouching animation
 	 if (iscrouching) {
-		if (Engine::GetInstance().entityManager->isFirey == true)
+		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
-			currentAnimation = facingLeft ? &crouchFireLAnimation : &crouchFireRAnimation;
+			currentAnimation = facingLeft ? &crouchStarLAnimation : &crouchStarRAnimation;
 		}
 		else {
 			currentAnimation = facingLeft ? &crouchLAnimation : &crouchRAnimation;
@@ -202,9 +201,9 @@ bool Player::Update(float dt) {
 	}
 	// Moving Animation
 	else if (isMoving&&!isJumping) {
-		if (Engine::GetInstance().entityManager->isFirey == true)
+		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
-			currentAnimation = facingLeft ? &WalkingFireLAnimation : &WalkingFireRAnimation;
+			currentAnimation = facingLeft ? &WalkingStarLAnimation : &WalkingStarRAnimation;
 		}
 		else {
 			currentAnimation = facingLeft ? &walkingLAnimation : &walkingRAnimation;
@@ -212,26 +211,25 @@ bool Player::Update(float dt) {
 	}
 	// Jumping Animation
 	else if (isJumping&&!iscrouching) {
-		if (Engine::GetInstance().entityManager->isFirey == true)
+		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
-			currentAnimation = facingLeft ? &JumpFireLAnimation : &JumpFireRAnimation;
+			currentAnimation = facingLeft ? &JumpStarLAnimation : &JumpStarRAnimation;
 		}
 		else {
 			currentAnimation = facingLeft ? &jumpLAnimation : &jumpRAnimation;
 		}
 	}
-	//Fire Power Up animation
+
 	//idle animation
 	else {
-		if (Engine::GetInstance().entityManager->isFirey == true)
+		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
-			currentAnimation = facingLeft ? &IdleFireLAnimation : &IdleFireRAnimation;
+			currentAnimation = facingLeft ? &IdleStarLAnimation : &IdleStarRAnimation;
 		}
 		else {
 			currentAnimation = facingLeft ? &idleLAnimation : &idleRAnimation;
 		}
 	}
-
 	//DEBUG FUNCTIONS
 	// God Mode toggle
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN && !godModeToggle) {
@@ -297,7 +295,7 @@ bool Player::Update(float dt) {
 			int randomSound = rand() % 8;
 			Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
 		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine::GetInstance().entityManager->isFirey == true)
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			//CODIGO DE CREACION ATAQUE DE FUEGO MARIO
 		}
@@ -350,34 +348,41 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			float playerVelocityY = pbody->body->GetLinearVelocity().y; // Velocidad en Y del jugador
 			float enemyTop = enemy->GetPosition().getY(); // Parte superior del enemigo
 
-			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo
-			if (playerBottom <= enemyTop + 5.0f && playerVelocityY > 0) { // Aseguramos que el jugador está cayendo
+			if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
+			{
+				//muerte enemigo
+
+				if (enemy->name == "bowser") {
+					enemy->hitCount= enemy->hitCount+3;
+					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+				}
+				else {
+					if (enemy->name == "koopa"|| enemy->name == "koopa2") {
+						Engine::GetInstance().entityManager->puntuation += 650.50;
+					}
+					if (enemy->name == "goomba"|| enemy->name == "goomba2") {
+						Engine::GetInstance().entityManager->puntuation += 300.0;
+					}
+					enemy->isDying = true;
+				}
+				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+			}
+			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo
+			else if (playerBottom <= enemyTop + 5.0f && playerVelocityY > 0&& Engine::GetInstance().entityManager->isStarPower==false) {
 				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
 
 				// Lógica específica para el enemigo (ejemplo con Bowser)
 				if (enemy->name == "bowser") {
-					Engine::GetInstance().audio.get()->StopFx(); // Detener sonidos actuales
-					Engine::GetInstance().audio.get()->PlayFx(BowserHit); // Sonido de impacto en Bowser
+					Engine::GetInstance().audio.get()->StopFx();
+					Engine::GetInstance().audio.get()->PlayFx(BowserHit); 
 				}
-				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0); // Sonido de muerte del enemigo
+				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 
-				enemy->hitCount++; // Incrementa el contador de impactos
+				enemy->hitCount++; 
 				Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 			}
 			else {
-				// Si el jugador no está cayendo o no está por encima del enemigo
-				if (!isInvincible) {
-					if (Engine::GetInstance().entityManager->isFirey) {
-						// El jugador pierde el power-up de fuego
-						Engine::GetInstance().entityManager->isFirey = false;
-						isInvincible = true;
-						invincibilityTimer = INVINCIBILITY_DURATION; // Temporizador de invencibilidad
-						Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder
-					}
-					else {
-						LoseLife(); // El jugador pierde una vida
-					}
-				}
+				LoseLife();
 			}
 		}
 		break;
@@ -461,25 +466,6 @@ void Player::LoseLife() {
 	}
 	return;
 }
-void Player::UpdateColliderSize(bool isFirey) {
-	// Eliminar el cuerpo físico actual
-	Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-
-	// Ajustar el tamaño del collider basado en el estado
-	int newRadius = isFirey ? texW / 1.25 : texW / 2; // Cambiar tamaño del collider
-	int yOffset = isFirey ? 0 : (texH / 4); // Ajustar el offset vertical para reducir hacia abajo
-
-	// Crear un nuevo collider con el tamaño actualizado
-	pbody = Engine::GetInstance().physics.get()->CreateCircle(
-		(int)position.getX(), (int)position.getY() + yOffset, newRadius, bodyType::DYNAMIC
-	);
-	pbody->listener = this;
-	pbody->ctype = ColliderType::PLAYER;
-
-	// Log para depuración
-	LOG("Collider actualizado: radio=%d, yOffset=%d", newRadius, yOffset);
-}
-
 void Player::StopMovement() {
 	canMove = false;
 }
@@ -487,40 +473,31 @@ void Player::ResumeMovement() {
 	canMove = true;
 }
 
-void Player::CheckPlayerFire(float dt)
-{
-	static bool wasFirey = false;
+void Player::ManageStarPower(float dt) {
+	if (Engine::GetInstance().entityManager->isStarPower) {
+		// Reproducir música de Star Power
 
-	if (Engine::GetInstance().entityManager->isFirey != wasFirey) {
-		wasFirey = Engine::GetInstance().entityManager->isFirey;
-		UpdateColliderSize(wasFirey);
-	}
-	// Lógica de invencibilidad
-	if (isInvincible) {
-		invincibilityTimer -= dt;
-
-		// Manejo del parpadeo
-		blinkTimer += dt;
-		if (blinkTimer >= 80.0f) { // Alternar visibilidad cada 0.1 segundos
-			toggleTexture = !toggleTexture;
-			blinkTimer = 0.0f;
+		if (StarMusicPlaying == false) {
+			Engine::GetInstance().audio->StopMusic();
+			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
+			StarMusicPlaying = true;
 		}
+		starPowerDuration += dt;
 
-		// Fin de invencibilidad
-		if (invincibilityTimer <= 0.0f) {
-			isInvincible = false;
-			toggleTexture = true; // Asegurar visibilidad al finalizar
+		if (starPowerDuration >= 10000.0f) {
+			Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder
+			Engine::GetInstance().entityManager->isStarPower = false; // Desactivar el poder de estrella
+			StarMusicPlaying = false;
+			Engine::GetInstance().audio->StopMusic();
+			if (Engine::GetInstance().scene->level == 1) {
+				Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
+			}
+			else if (Engine::GetInstance().scene->level == 2) {
+				Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/World2Theme.wav");
+			}
+			else if (Engine::GetInstance().scene->level == 3) {
+				Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
+			}
 		}
-	}
-	else {
-		toggleTexture = true; // Siempre visible si no es invencible
-	}
-
-	if (Engine::GetInstance().entityManager->isFirey == true)
-	{
-		jumpForce = 6.8f;
-	}
-	else {
-		jumpForce = 2.8f;
 	}
 }

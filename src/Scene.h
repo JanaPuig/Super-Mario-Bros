@@ -136,7 +136,7 @@ public:
     int sdlVolume;
     int musicPosX = 1350;
     int FxPosX = 1350;
-   
+    bool active_menu_pause = false;
 
     GuiControlButton* guiBt;
 private:
@@ -170,7 +170,7 @@ private:
     
     bool active_menu = false;
     bool active_settings = false;
-    bool active_menu_pause = false;
+  
     bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
 
     //Private Textures

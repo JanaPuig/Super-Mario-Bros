@@ -118,7 +118,7 @@ bool Item::Update(float dt)
             else if (isPowerUp) {
                 Engine::GetInstance().entityManager->puntuation += 300;
                 Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
-                Engine::GetInstance().entityManager.get()->isFirey = true;; // Reproducir sonido de PowerU
+                Engine::GetInstance().entityManager.get()->isStarPower = true;; // Reproducir sonido de PowerU
                 LOG("PowerUp collected! Power granted.");
             }
             else if (isBigCoin) {

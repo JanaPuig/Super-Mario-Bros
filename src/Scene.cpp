@@ -421,7 +421,6 @@ bool Scene::Update(float dt)
             for (Enemy* enemy : enemyList) {
                 enemy->StopMovement();
             }
-
             Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
             Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
@@ -524,12 +523,12 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(2);
     }
-    if (level == 2 && IsInTeleportArea(playerPos, 6690, 764, tolerance))
+    else if (level == 2 && IsInTeleportArea(playerPos, 6690, 764, tolerance))
     {
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(3);
     }
-    if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
+    else if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
     {
         Engine::GetInstance().audio.get()->StopMusic();
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav", 0.f);
@@ -1167,7 +1166,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 1: // Menu; New Game
         if (active_menu) {
             LOG("New Game button clicked");
-         
+
             Engine::GetInstance().entityManager.get()->ResetItems();
 
             StartNewGame();
@@ -1185,9 +1184,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         }   
         break;
     case 2: // Menu; Load Game
-
-       
-        // read the player position and set the value in the XML
         
         if (LoadFile.child("config").child("scene").child("SaveFile").attribute("isSave").as_bool() == true && active_menu) {
             LOG("Load Game button clicked");
@@ -1195,7 +1191,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             Engine::GetInstance().audio.get()->StopMusic();
             isLoading = true;
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);         
-         
 
         }
         break;
@@ -1347,19 +1342,19 @@ void Scene::DrawLives() {
 }
 void Scene::DrawObject() {
     char objectText[100];
-    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);  // Ajusta la posición y tamaño
+    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);  
+    Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);  
 }
 void Scene::DrawPuntation() {
     char puntuationText[100];
-    sprintf_s(puntuationText, "Puntuation: %f", Engine::GetInstance().entityManager->puntuation);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30);  // Ajusta la posición y tamaño
+    sprintf_s(puntuationText, "Puntuation: %.1f", Engine::GetInstance().entityManager->puntuation);  
+    Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30); 
     
 }
 void Scene::DrawWorld() {
     char drawlevel[64];
-    sprintf_s(drawlevel, "World: %d-3", level);  // Muestra el número de vidas
-    Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);  // Ajusta la posición y tamaño
+    sprintf_s(drawlevel, "World: 1-%d", level);  
+    Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);  
 
 }
 

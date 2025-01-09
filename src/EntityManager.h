@@ -41,10 +41,10 @@ public:
 	Entity* GetEntityByName(std::string name);
 
 public:
-	bool isFirey = false;
+	bool isStarPower = false;
 	int lives = 3;
 	int objects = 0;
-	float puntuation = 00.0f;
+	float puntuation = 0.0f;
 	std::list<Entity*> entities;
 
 };

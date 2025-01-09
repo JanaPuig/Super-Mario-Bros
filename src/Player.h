@@ -42,22 +42,15 @@ public:
     Vector2D GetPosition();
     void LoseLife();  // Función para perder una vida
 
-    void UpdateColliderSize(bool isFirey);
     //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
-    void CheckPlayerFire(float dt);
+    void ManageStarPower(float dt);
     bool canMove = true;
    
     bool isDead = false;
 
 private:
-
-    bool isInvincible = false; // Estado de invencibilidad
-    float invincibilityTimer = 0.0f; // Temporizador para controlar la duración de la invencibilidad
-    bool toggleTexture = false; // Alternar textura para parpadeo
-    const float INVINCIBILITY_DURATION = 800.0f; // Duración en segundos
-    float blinkTimer = 0.0f;
 
     SDL_Texture* texturePlayer;
     pugi::xml_node parameters;
@@ -67,7 +60,7 @@ private:
     float speed = 5.0f;
     float jumpForce = 2.8f;
     const float jumpFrameDuration = 120.0f;
-
+    float starPowerDuration = 3000000000000.0f;
     // Animation parameters
     int texW = 0, texH = 0;
     int frameWidth = 0, frameHeight = 0;
@@ -84,18 +77,18 @@ private:
     Animation jumpLAnimation;
     Animation walkingRAnimation;
     Animation walkingLAnimation;
-    Animation WalkingFireLAnimation;
-    Animation WalkingFireRAnimation;
-    Animation IdleFireLAnimation;
-    Animation IdleFireRAnimation;
+    Animation WalkingStarLAnimation;
+    Animation WalkingStarRAnimation;
+    Animation IdleStarLAnimation;
+    Animation IdleStarRAnimation;
     Animation deadAnimation;
     Animation crouchRAnimation;
     Animation crouchLAnimation;
-    Animation JumpFireRAnimation;
-    Animation JumpFireLAnimation;
-    Animation crouchFireLAnimation;
-    Animation crouchFireRAnimation;
-    Animation FireyDeadAnimation;
+    Animation JumpStarRAnimation;
+    Animation JumpStarLAnimation;
+    Animation crouchStarLAnimation;
+    Animation crouchStarRAnimation;
+    Animation DeadStarAnimation;
 
 
     // Audio FX
@@ -109,6 +102,7 @@ private:
     int EnemyDeathSound = 0;
     int BowserHit = 0;
     // Player state
+    bool isStarPowerActive = false;
     bool isMoving = false;
     bool isSprinting = false;
     bool isJumping = false;
@@ -121,5 +115,6 @@ private:
 
     // Internal state
     bool isActive = true;
+    bool StarMusicPlaying = false;
 
 };

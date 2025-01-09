@@ -125,7 +125,6 @@ bool Enemy::Update(float dt) {
         return true;
     }
     if (canMove) {
-
     // Detección del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
@@ -137,7 +136,6 @@ bool Enemy::Update(float dt) {
     frameTime += dt;
 
         if (isDying) {
-            Engine::GetInstance().entityManager->puntuation += 650.50;
             deathTimer += dt;
             b2Transform pbodyPos = pbody->body->GetTransform();
             position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -164,6 +162,7 @@ bool Enemy::Update(float dt) {
         if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
             if (hitCount >= 1) {
                 LOG("Goomba is Dead");
+                Engine::GetInstance().entityManager->puntuation += 300.50;
                 currentAnimation = &deadGoomba;
                 isDying = true;
                 return true;
@@ -173,6 +172,7 @@ bool Enemy::Update(float dt) {
         if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
             if (hitCount >= 1) {
                 LOG("Koopa is Dead");
+                Engine::GetInstance().entityManager->puntuation += 650.50;
                 UpdateColliderSize();
                 pbody->body->SetGravityScale(1);
                 currentAnimation = &deadkoopa;
@@ -189,9 +189,8 @@ bool Enemy::Update(float dt) {
         //Bowser Animation
         if (parameters.attribute("name").as_string() == std::string("bowser")) {
             // Muerte
-            if (hitCount >= 3) {
+            if (hitCount == 3) {
                 Engine::GetInstance().entityManager->puntuation += 100000;
-
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");
                 currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;

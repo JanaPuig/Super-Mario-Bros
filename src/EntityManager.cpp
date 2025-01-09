@@ -130,17 +130,17 @@ bool EntityManager::Update(float dt)
 	}
 
 	//// Eliminar entidades marcadas para ser destruidas
-	//for (auto it = entities.begin(); it != entities.end(); )
-	//{
-	//	if ((*it)->toBeDestroyed) {
-	//		(*it)->CleanUp();
-	//		delete* it;
-	//		it = entities.erase(it);
-	//	}
-	//	else {
-	//		++it;
-	//	}
-	//}
+	for (auto it = entities.begin(); it != entities.end(); )
+	{
+		if ((*it)->toBeDestroyed) {
+			(*it)->CleanUp();
+			delete* it;
+			it = entities.erase(it);
+		}
+		else {
+			++it;
+		}
+	}
 
 	return ret;
 }
