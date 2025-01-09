@@ -27,118 +27,190 @@ Scene::~Scene() {}
 bool Scene::Awake()
 {
     LOG("Loading Scene");
-    if (level == 1 || level == 2 || level == 3)
-    {
-        // Create the player entity
-        player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
-        player->SetParameters(configParameters.child("entities").child("player"));
-        CreateEnemies(level);
-        CreateLevelItems(level);
+
+   
+
+    player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
+    player->SetParameters(configParameters.child("entities").child("player"));
+    InitialItems();
+    InitialEnemies();
+    
+    return true;
+}
+
+void Scene::InitialItems()
+{
+    const int startX = 1664, startY = 672;
+
+    pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
+
+    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    item->position = Vector2D(startX, startY);
+    item->SetParameters(defaultItemNode);
+    itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
+    itemList.push_back(item);
+    // Log the item's creation
+    LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+
+    // Crear flagpole
+    const int positionX_flagpole = 3232, positionY_flagpole = 384;
+    Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+
+    pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+    flagpole->SetParameters(flagpoleNode);
+    itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
+    itemList.push_back(flagpole);
+
+    LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+
+    // Crear flag
+    const int positionX_flag = 3248, positionY_flag = 384;
+    Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    flag->position = Vector2D(positionX_flag, positionY_flag);
+
+    pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+    flag->SetParameters(flagNode);
+    itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
+    itemList.push_back(flag);
+
+    // Crear 1Up
+    const int oneUpPpositionX = 500, oneUpPpositionY = 200;
+    Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
+
+    pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
+    OneUp->SetParameters(oneUpeNode);
+    itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
+    itemList.push_back(OneUp);
+
+    LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
+
+    //Crear BigCoin
+    const int BigCoinpositionX = 800, BigCoinpositionY = 200;
+    Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
+
+    pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
+    BigCoin->SetParameters(BigCoinNode);
+    itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
+    itemList.push_back(BigCoin);
+
+    LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
+
+    //Crear PowerUp
+    const int PowerUppositionX = 800, PowerUppositionY = 300;
+    Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
+
+    pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
+    PowerUp->SetParameters(PowerUpNode);
+    itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
+    itemList.push_back(PowerUp);
+
+    LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
+
+    // Crear flagpole del final del nivel
+    const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
+    Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
+
+    pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
+    flagpole2->SetParameters(flagpoleNode2);
+    itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
+    itemList.push_back(flagpole2);
+
+    LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
+
+    // Crear flag del final del nivel
+    const int positionX_flag2 = 6299, positionY_flag2 = 110;
+    Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    flag2->position = Vector2D(positionX_flag2, positionY_flag2);
+
+    pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
+    flag2->SetParameters(flagNode2);
+    itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
+    itemList.push_back(flag2);
+}
+void Scene::InitialEnemies()
+{
+   // Iteramos a través de los enemigos del archivo XML
+    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
+        enemyNode;
+        enemyNode = enemyNode.next_sibling()) {
+
+        int levels = enemyNode.attribute("levels").as_int();
+        std::string enemyName = enemyNode.attribute("name").as_string();
+
+
+        LOG("Level createenemies: %d", levels);
+
+        // Crear un nuevo enemigo
+        Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+
+        if (!enemy) {
+            LOG("Failed to create enemy: %s.", enemyName.c_str());
+            continue;
+        }
+
+        // Establece los parámetros del enemigo
+        enemy->SetParameters(enemyNode);
+
+        // Agregar el enemigo a las listas de estados y enemigos
+        enemyStateList.push_back(std::make_pair(enemyName, 0));
+        enemyList.push_back(enemy);
+
+        LOG("Enemy %s created for level %d", enemyName.c_str(), level);
 
     }
-    return true;
 }
 // Creates items for Level 1
 void Scene::CreateLevelItems(int level)
 {
     if (level == 1) {
-        const int startX = 1664, startY = 672;
-        
-        pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
+        Engine::GetInstance().entityManager.get()->ResetItems();
 
-        Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        item->position = Vector2D(startX, startY);
-        item->SetParameters(defaultItemNode);
-        itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
-        itemList.push_back(item);
-        // Log the item's creation
-        LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+        for (auto& it : itemList)
+        {
+            if (it->name == "flagpole") {
+                it->position = (Vector2D(3232, 384));
 
-        // Crear flagpole
-        const int positionX_flagpole = 3232, positionY_flagpole = 384;
-        Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+            }
+            else if (it->name == "flag") {
+                it->position = (Vector2D(3248, 384));
 
-        pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
-        flagpole->SetParameters(flagpoleNode);
-        itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
-        itemList.push_back(flagpole);
+            }
+            else if (it->name == "finish_flagpole") {
+                it->position = (Vector2D(6343, 90));
 
-        LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+            }
+            else if (it->name == "finish_flag") {
+                it->position = (Vector2D(6299, 110));
 
-        // Crear flag
-        const int positionX_flag = 3248, positionY_flag = 384;
-        Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flag->position = Vector2D(positionX_flag, positionY_flag);
+            }
+            else if (it->name == "coin") {
+                it->position = (Vector2D(1664, 672));
 
-        pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
-        flag->SetParameters(flagNode); 
-        itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
-        itemList.push_back(flag);
+            }
+            else if (it->name == "OneUp") {
+                it->position = (Vector2D(500, 200));
 
-        // Crear 1Up
-        const int oneUpPpositionX = 500, oneUpPpositionY = 200;
-        Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
+            }
+            else if (it->name == "PowerUp") {
+                it->position = (Vector2D(800, 300));
 
-        pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
-        OneUp->SetParameters(oneUpeNode);
-        itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
-        itemList.push_back(OneUp);
+            }
+            else if (it->name == "BigCoin") {
+                it->position = (Vector2D(800, 200));
 
-        LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
-
-        //Crear BigCoin
-        const int BigCoinpositionX = 800, BigCoinpositionY = 200;
-        Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
-
-        pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
-        BigCoin->SetParameters(BigCoinNode);
-        itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
-        itemList.push_back(BigCoin);
-
-        LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
-
-        //Crear PowerUp
-        const int PowerUppositionX = 800, PowerUppositionY = 300;
-        Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
-
-        pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
-        PowerUp->SetParameters(PowerUpNode);
-        itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
-        itemList.push_back(PowerUp);
-
-        LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
-
-        // Crear flagpole del final del nivel
-        const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
-        Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
-
-        pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
-        flagpole2->SetParameters(flagpoleNode2);
-        itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
-        itemList.push_back(flagpole2);
-
-        LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
-
-        // Crear flag del final del nivel
-        const int positionX_flag2 = 6299, positionY_flag2 = 110;
-        Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-        flag2->position = Vector2D(positionX_flag2, positionY_flag2);
-
-        pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
-        flag2->SetParameters(flagNode2);
-        itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
-        itemList.push_back(flag2);
-
+            }
+            
+        }
     }
 
     else if (level == 2)
     {
-        LOG("itemList size before loop: %zu", itemList.size());
+       
         Engine::GetInstance().entityManager.get()->ResetItems();
 
         for (auto& it : itemList) 
@@ -164,46 +236,43 @@ void Scene::CreateLevelItems(int level)
             }
         }
 
-        LOG("Unhandled level: %d", level);
     }
-    else {
-        LOG("Unhandled level: %d", level);
+
+    else if (level == 3) {
+
+        for (auto& it : itemList)
+        {
+            it->position = (Vector2D(-1000, -1000));
+        }
     }
+   
 }
 
 void Scene::CreateEnemies(int level) {
     LOG("Creating enemies for level %d", level);
 
-    // Iteramos a través de los enemigos del archivo XML
-    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
-        enemyNode;
-        enemyNode = enemyNode.next_sibling()) {
+    if (level == 1) {
+        for (auto& e : enemyList) {
 
-        int levels = enemyNode.attribute("levels").as_int();
-        std::string enemyName = enemyNode.attribute("name").as_string();
-
-        if (level == 1) {
-            LOG("Level createenemies: %d", levels);
-
-            // Crear un nuevo enemigo
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-
-            if (!enemy) {
-                LOG("Failed to create enemy: %s.", enemyName.c_str());
-                continue;
+            if (e->name == "koopa") {
+                e->SetPosition(Vector2D(1500, 100));  // Cambiar la posición de Bowser
             }
 
-            // Establece los parámetros del enemigo
-            enemy->SetParameters(enemyNode);
+            else if (e->name == "koopa2") {
+                e->SetPosition(Vector2D(4500, 100));  // Cambiar la posición de Bowser
+            }
 
-            // Agregar el enemigo a las listas de estados y enemigos
-            enemyStateList.push_back(std::make_pair(enemyName, 0));
-            enemyList.push_back(enemy);
+            else if (e->name == "goomba") {
+                e->SetPosition(Vector2D(2000, 400));  // Cambiar la posición de Bowser
+            }
+            else if (e->name == "goomba2") {
+                e->SetPosition(Vector2D(5500, 400));  // Cambiar la posición de Bowser
+            }
 
-            LOG("Enemy %s created for level %d", enemyName.c_str(), level);
-
+            else if (e->name == "bowser") {
+                e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición de Bowser
+            }
         }
-
     }
 
     if (level == 2) {
@@ -1109,6 +1178,9 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             Engine::GetInstance().entityManager->puntuation = 0;
             Engine::GetInstance().entityManager->lives = 3;
             Engine::GetInstance().entityManager->objects = 0;
+            levelTime = 90000.0f;
+            timeUp = false;
+
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);
             Engine::GetInstance().audio.get()->PlayFx(marioTime);
             ShowTransitionScreen();

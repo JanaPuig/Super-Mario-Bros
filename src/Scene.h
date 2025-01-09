@@ -25,6 +25,9 @@ public:
     bool Awake();
 
     // Creates items specific to Level 1
+    void InitialItems();
+    void InitialEnemies();
+
     void CreateLevelItems(int level);
     void CreateEnemies(int level);
 
