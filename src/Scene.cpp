@@ -33,7 +33,7 @@ bool Scene::Awake()
         // Create the player entity
         player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
         player->SetParameters(configParameters.child("entities").child("player"));
-        CreateEnemies();
+        CreateEnemies(level);
     }
     return true;
 }
@@ -113,6 +113,61 @@ void Scene::CreateLevelItems()
         pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
         flag2->SetParameters(flagNode2);
     } 
+}
+
+void Scene::CreateEnemies(int level) {
+    LOG("Creating enemies for level %d", level);
+
+    // Iteramos a través de los enemigos del archivo XML
+    for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
+        enemyNode;
+        enemyNode = enemyNode.next_sibling()) {
+
+        int levels = enemyNode.attribute("levels").as_int();
+        std::string enemyName = enemyNode.attribute("name").as_string();
+
+        if (level == 1) {
+            LOG("Level createenemies: %d", levels);
+
+            // Crear un nuevo enemigo
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+
+            if (!enemy) {
+                LOG("Failed to create enemy: %s.", enemyName.c_str());
+                continue;
+            }
+
+            // Establece los parámetros del enemigo
+            enemy->SetParameters(enemyNode);
+
+            // Agregar el enemigo a las listas de estados y enemigos
+            enemyStateList.push_back(std::make_pair(enemyName, 0));
+            enemyList.push_back(enemy);
+
+            LOG("Enemy %s created for level %d", enemyName.c_str(), level);
+
+        }
+
+    }
+
+    if (level == 2) {
+        //Mover posiciones enemigos
+        for (auto& e : enemyList) {
+            e->SetPosition(Vector2D(-1000, -1000));
+        }
+    }
+
+    else if (level == 3) {
+        // Mover Bowser a la nueva posición
+        for (auto& e : enemyList) {
+            if (e->name == "bowser") {
+
+                e->SetPosition(Vector2D(4500, 300));  // Cambiar la posición de Bowser
+                LOG("Bowser moved to (4500, 300) in level 2");
+            }
+
+        }
+    }
 }
 // Called before the first frame
 bool Scene::Start()
@@ -419,11 +474,13 @@ void Scene::ChangeLevel(int newLevel)
     if (level == newLevel) return;
     LOG("Changing level from %d to %d", level, newLevel);
 
-    Engine::GetInstance().entityManager->RemoveAllEnemies();
+    //Engine::GetInstance().entityManager->RemoveAllEnemies();
     Engine::GetInstance().map->CleanUp();
     Engine::GetInstance().entityManager->RemoveAllItems();
 
     level = newLevel;
+    CreateEnemies(level);
+
     ShowTransitionScreen();
 }
 // Shows the transition screen
@@ -1179,56 +1236,7 @@ void Scene::DrawWorld() {
     Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);  // Ajusta la posición y tamaño
 
 }
-void Scene::CreateEnemies() {
-    // Limpiar la lista de enemigos antes de crear nuevos
-    enemyStateList.clear();
 
-    if (level == 1) {
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
-            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
-            enemyList.push_back(enemy);
-        }
-    }
-    else if (level == 2) {
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
-            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
-            enemyList.push_back(enemy);
-
-        }
-    }
-    else if (level == 3) {
-        // Crear enemigos para el nivel 3
-        for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child(); enemyNode; enemyNode = enemyNode.next_sibling())
-        {
-            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-            enemy->SetParameters(enemyNode);
-            enemyStateList.push_back(std::make_pair(std::string(enemyNode.attribute("name").as_string()), 0));
-            LOG("Enemy created: %s", enemyNode.attribute("name").as_string());
-            enemyList.push_back(enemy);
-
-        }
-
-        // Crear a Bowser
-        Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        pugi::xml_node bowserNode = configParameters.child("entities").child("enemies").child("bowser"); 
-        bowser->SetParameters(bowserNode);
-        enemyStateList.push_back(std::make_pair("bowser", 0));
-        enemyList.push_back(bowser);
-
-        LOG("Bowser created");
-
-        // Establecer la posición de Bowser
-        bowser->SetPosition(Vector2D(500, 300)); // Reemplaza con las coordenadas deseadas
-    }
-}
 void Scene::ToggleFullscreen()
 {
     pugi::xml_document LoadFile;

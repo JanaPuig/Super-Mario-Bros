@@ -15,7 +15,7 @@
 		<fullscreen_window value="true" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" object="0" Puntuation="0" time="1344.89209" isSave="false" />
+		<SaveFile level="3" playerX="4102" playerY="577" itemX="1600" itemY="768" enemy1X="-971" enemy2X="-1045" enemy3X="-1219" enemy4X="-1221" enemy1Y="-975" enemy2Y="-1067" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" object="0" Puntuation="0" time="17015.9824" isSave="true" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -170,7 +170,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="1500" y="100" w="80" h="85" hitcount="0" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="1500" y="100" w="80" h="85" hitcount="0" levels="1" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />

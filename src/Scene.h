@@ -26,6 +26,7 @@ public:
 
     // Creates items specific to Level 1
     void CreateLevelItems();
+    void CreateEnemies(int level);
 
     // Called before the first frame
     bool Start();
@@ -74,7 +75,6 @@ public:
 
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
-    void CreateEnemies();
   
     void Credits();   
     void menu();

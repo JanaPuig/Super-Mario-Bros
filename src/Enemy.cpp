@@ -87,8 +87,8 @@ bool Enemy::Start() {
     else if (enemyName == "goomba2") {
         pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
     }
-    else if (parameters.attribute("name").as_string() == "bowser") {
-        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    else if (enemyName == "bowser") {
+        pbody->body->SetGravityScale(0); // Gravedad normal para Bowser
     }
     // Inicializar pathfinding
     pathfinding = new Pathfinding();
@@ -260,80 +260,81 @@ bool Enemy::Update(float dt) {
             return true;
         }
 
-        if (currentAnimation) currentAnimation->Update();
-
-        SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-
-        Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY(), &frameRect);
-
-
-        b2Transform pbodyPos = pbody->body->GetTransform();
-        position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
-        position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-
-        // Mostrar u ocultar path al presionar F9
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
-            showPath = !showPath;
+        if (currentAnimation) {
+            currentAnimation->Update();
+            SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+            Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
+            Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX() + 25, (int)position.getY() + 25, &frameRect);
+            Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
         }
-        // Dibujar el path si está habilitado
-        if (showPath) {
-            pathfinding->DrawPath();
-        }
+        if (pbody != NULL)
+        {
+            b2Transform pbodyPos = pbody->body->GetTransform();
+            position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+            position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-        if (distanceToPlayer <= detectionRange) {
-            ResetPath();
-
-            int steps = 0;  // Número de pasos máximo del pathfinding
-            int maxSteps = 100; // -> Ajustar según les parezca
-            while (pathfinding->pathTiles.empty() && steps < maxSteps) {
-                pathfinding->PropagateAStar(SQUARED);
-                steps++;
+            // Mostrar u ocultar path al presionar F9
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
+                showPath = !showPath;
+            }
+            // Dibujar el path si está habilitado
+            if (showPath) {
+                pathfinding->DrawPath();
             }
 
-            int i = 0;
-            for (const auto& pos : pathfinding->pathTiles) {
-                if (i == pathfinding->pathTiles.size() - 2) {
-                    nextPos = pos;
-                }
-                i++;
-            }
+            if (distanceToPlayer <= detectionRange) {
+                ResetPath();
 
-            if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
-                velocity = b2Vec2(0, 0); // Resetear la velocidad en X
-                if (nextPos.getX() > enemyPositionTiles.getX()) {
-                    velocity = b2Vec2(2, 0);
+                int steps = 0;  // Número de pasos máximo del pathfinding
+                int maxSteps = 100; // -> Ajustar según les parezca
+                while (pathfinding->pathTiles.empty() && steps < maxSteps) {
+                    pathfinding->PropagateAStar(SQUARED);
+                    steps++;
                 }
-                else if (nextPos.getX() < enemyPositionTiles.getX()) {
-                    velocity = b2Vec2(-2, 0);
+
+                int i = 0;
+                for (const auto& pos : pathfinding->pathTiles) {
+                    if (i == pathfinding->pathTiles.size() - 2) {
+                        nextPos = pos;
+                    }
+                    i++;
                 }
-                else if (nextPos.getY() > enemyPositionTiles.getY()) {
-                    velocity = b2Vec2(0, 2); // Movimiento solo en el eje Y
+
+                if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
+                    velocity = b2Vec2(0, 0); // Resetear la velocidad en X
+                    if (nextPos.getX() > enemyPositionTiles.getX()) {
+                        velocity = b2Vec2(2, 0);
+                    }
+                    else if (nextPos.getX() < enemyPositionTiles.getX()) {
+                        velocity = b2Vec2(-2, 0);
+                    }
+                    else if (nextPos.getY() > enemyPositionTiles.getY()) {
+                        velocity = b2Vec2(0, 2); // Movimiento solo en el eje Y
+                    }
+                    else if (nextPos.getY() < enemyPositionTiles.getY()) {
+                        velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
+                    }
                 }
-                else if (nextPos.getY() < enemyPositionTiles.getY()) {
-                    velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
+                else {
+                    if (nextPos.getX() > enemyPositionTiles.getX()) {
+                        velocity = b2Vec2(2, 0);
+                    }
+                    else if (nextPos.getX() < enemyPositionTiles.getX()) {
+                        velocity = b2Vec2(-2, 0);
+                    }
                 }
+
+                pbody->body->SetLinearVelocity(velocity);
             }
             else {
-                if (nextPos.getX() > enemyPositionTiles.getX()) {
-                    velocity = b2Vec2(2, 0);
-                }
-                else if (nextPos.getX() < enemyPositionTiles.getX()) {
-                    velocity = b2Vec2(-2, 0);
-                }
+                pbody->body->SetLinearVelocity(b2Vec2(0, 0));
             }
 
-            pbody->body->SetLinearVelocity(velocity);
-        }
-        else {
-            pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-        }
-
-        if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-            if (GetPosition().getY() > 490) {
-                isEnemyDead = true;
-                toBeDestroyed = true;
+            if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+                if (GetPosition().getY() > 490) {
+                    isEnemyDead = true;
+                    toBeDestroyed = true;
+                }
             }
         }
     }
@@ -355,7 +356,9 @@ void Enemy::SetPosition(Vector2D pos) {
     pos.setX(pos.getX() + texW / 2);
     pos.setY(pos.getY() + texH / 2);
     b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
-    pbody->body->SetTransform(bodyPos, 0);
+    if (pbody != nullptr) {
+        pbody->body->SetTransform(bodyPos, 0);
+    }
 }
 
 Vector2D Enemy::GetPosition() {
@@ -410,8 +413,8 @@ void Enemy::ResetPosition() {
     else if (enemyName == "goomba" || enemyName == "goomba2") {
         pbody->body->SetGravityScale(1);
     }
-    else if (parameters.attribute("name").as_string() == "bowser") {
-        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    else if (enemyName == "bowser") {
+        pbody->body->SetGravityScale(0); // Gravedad normal para Bowser
     }
 }
 
