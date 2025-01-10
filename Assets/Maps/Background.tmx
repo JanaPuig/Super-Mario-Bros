@@ -8913,9 +8913,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -9125,9 +9125,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>

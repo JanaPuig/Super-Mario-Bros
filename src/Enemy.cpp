@@ -125,16 +125,6 @@ bool Enemy::Update(float dt) {
         return true;
     }
 
-    if (Engine::GetInstance().scene.get()->activate_gravity_goomba) {
-        if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-            pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
-        }
-    }
-    else if(Engine::GetInstance().scene.get()->activate_gravity_goomba==false){
-        if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-            pbody->body->SetGravityScale(0); // Gravedad normal para Goomba
-        }
-    }
     if(canMove){
     // Detección del jugador
     Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();

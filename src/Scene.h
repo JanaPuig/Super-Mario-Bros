@@ -143,8 +143,7 @@ public:
 
     GuiControlButton* guiBt;
 
-    void position_player();
-    bool activate_gravity_goomba = true;
+    
 private:
 
     void ShowTransitionScreen();

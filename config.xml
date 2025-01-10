@@ -234,7 +234,7 @@
 						</deadkoopa>
 					</animations>
 				</enemy_koopa2>
-				<enemy name="goomba" x="2000" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy name="goomba" x="2000" y="416" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />
@@ -246,7 +246,7 @@
 						</dead>
 					</animations>
 				</enemy>
-				<enemy2 name="goomba2" x="5500" y="400" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
+				<enemy2 name="goomba2" x="5500" y="416" w="32" h="32" hitcount="0" texture="Assets/Textures/goomba_walking.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.1">
 							<frame x="0" y="0" w="32" h="32" />

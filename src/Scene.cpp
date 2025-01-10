@@ -253,26 +253,34 @@ void Scene::CreateEnemies(int level) {
 
             if (e->name == "koopa") {
                 e->SetPosition(Vector2D(1500, 100));  // Cambiar la posición de Bowser
+                e->ResetPath();
+
             }
 
             else if (e->name == "koopa2") {
                 e->SetPosition(Vector2D(4500, 100));  // Cambiar la posición de Bowser
+                e->ResetPath();
+
             }
 
             else if (e->name == "goomba") {
-                e->SetPosition(Vector2D(2000, 400));  // Cambiar la posición de Bowser
+                e->SetPosition(Vector2D(2000, 416));  // Cambiar la posición de Bowser
+                e->ResetPath();
 
             }
             else if (e->name == "goomba2") {
-                e->SetPosition(Vector2D(5500, 400));  // Cambiar la posición de Bowser
+                e->SetPosition(Vector2D(5500, 416));  // Cambiar la posición de Bowser
+                e->ResetPath();
 
             }
 
             else if (e->name == "bowser") {
                 e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición de Bowser
+                e->ResetPath();
+
             }
+
         }
-        activate_gravity_goomba = true;
 
     }
 
@@ -280,8 +288,9 @@ void Scene::CreateEnemies(int level) {
         //Mover posiciones enemigos
         for (auto& e : enemyList) {
             e->SetPosition(Vector2D(-1000, -1000));
+            e->ResetPath();
+
         }
-        activate_gravity_goomba = false;
 
     }
 
@@ -289,12 +298,15 @@ void Scene::CreateEnemies(int level) {
         // Mover Bowser a la nueva posición
         for (auto& e : enemyList) {
             if (e->name == "bowser") {
-
                 e->SetPosition(Vector2D(5500, 320));  // Cambiar la posición de Bowser
+
+                e->ResetPath();
                 LOG("Bowser moved to (4500, 300) in level 2");
             }
             else {
                 e->SetPosition(Vector2D(-1000, -1000));
+
+                e->ResetPath();
             }
 
         }
@@ -622,17 +634,7 @@ bool Scene::PostUpdate()
     return true;
 }
 
-void Scene::position_player() 
-{
-    if (level == 1 && player->GetPosition().getY()== 429) 
-    {
-        activate_gravity_goomba = true;
-    }
-    else {
-        activate_gravity_goomba = false;
 
-    }
-}
 // Cleans up the scene
 bool Scene::CleanUp()
 {

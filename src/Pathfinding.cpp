@@ -53,7 +53,7 @@ void Pathfinding::ResetPath(Vector2D pos) {
     breadcrumbs.push_back(pos);
 
     //reset the costSoFar matrix
-    costSoFar = std::vector<std::vector<int>>(map->GetWidth(), std::vector<int>(map->GetHeight(), 0));
+    //costSoFar = std::vector<std::vector<int>>(map->GetWidth(), std::vector<int>(map->GetHeight(), 0));
 
 }
 
@@ -140,12 +140,14 @@ bool Pathfinding::IsWalkable(int x, int y) {
     //Set isWalkable to true if the position is inside map limits and is a position that is not blocked in the navigation layer
     //Get the navigation layer
 
-    if (layerNav != nullptr) {
-        if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
-            int gid = layerNav->Get(x, y);
-            if (gid != blockedGid) isWalkable = true;
-        }
-    }
+    //if (layerNav != nullptr) {
+    //    if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
+    //        float gid = layerNav->Get(x, y);
+    //        if (gid != blockedGid) isWalkable = true;
+    //    }
+    //}
+
+    isWalkable = true;
     return isWalkable;
 }
 
@@ -316,16 +318,16 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
 
 int Pathfinding::MovementCost(int x, int y)
 {
-    int ret = -1;
+    int ret = 1;
 
-    if ((x >= 0) && (x < map->GetWidth()) && (y >= 0) && (y < map->GetHeight()))
-    {
-        int gid = layerNav->Get(x, y);
-        if (gid == highCostGid) {
-            ret = 5;
-        }
-        else ret = 1;
-    }
+    //if ((x >= 0) && (x < map->GetWidth()) && (y >= 0) && (y < map->GetHeight()))
+    //{
+    //    int gid = layerNav->Get(x, y);
+    //    if (gid == highCostGid) {
+    //        ret = 5;
+    //    }
+    //    else ret = 1;
+    //}
     return ret;
 }
 void Pathfinding::ComputePath(int x, int y)
