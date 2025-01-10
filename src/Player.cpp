@@ -383,7 +383,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 			}
 			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo
-			else if (playerBottom <= enemyTop + 5.0f && playerVelocityY > 0&& Engine::GetInstance().entityManager->isStarPower==false) {
+			else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower==false) {
 				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
 
 				// Lógica específica para el enemigo (ejemplo con Bowser)
