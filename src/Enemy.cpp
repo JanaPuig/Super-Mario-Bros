@@ -37,6 +37,7 @@ bool Enemy::Start() {
     else if (parameters.attribute("name").as_string() == std::string("bowser")) {
         textureBowser = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_bowser").as_string());
         currentAnimation = &idleBowserL; 
+        detectionRange = 1000.0f;
     }
 
     //asigna nombre al enemigo
@@ -318,7 +319,15 @@ bool Enemy::Update(float dt) {
                     velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
                 }
             }
-            else {
+            else if (parameters.attribute("name").as_string() == std::string("bowser")) {
+                if (nextPos.getX() > enemyPositionTiles.getX()) {
+                    velocity = b2Vec2(2.5, 0);
+                }
+                else if (nextPos.getX() < enemyPositionTiles.getX()) {
+                    velocity = b2Vec2(-2.5, 0);
+                }
+            }
+            else{
                 if (nextPos.getX() > enemyPositionTiles.getX()) {
                     velocity = b2Vec2(2, 0);
                 }
@@ -366,7 +375,6 @@ void Enemy::SetPosition(Vector2D pos) {
 }
 
 Vector2D Enemy::GetPosition() {
- 
     b2Vec2 bodyPos = pbody->body->GetTransform().p;
     Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
     return pos;
