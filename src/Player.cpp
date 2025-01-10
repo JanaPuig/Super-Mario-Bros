@@ -11,7 +11,7 @@
 #include "EntityManager.h"
 #include "tracy/Tracy.hpp"
 
-Player::Player() : Entity(EntityType::PLAYER), starPowerDuration(15.0f), isStarPowerActive(false)
+Player::Player() : Entity(EntityType::PLAYER), starPowerDuration(15.0f)
 {
 	name = "Player";
 }
@@ -249,10 +249,23 @@ bool Player::Update(float dt) {
 
 	
 		// PLAYER MOVEMENT CODE
-		float movementSpeed = 3.5f;  // walking speed
+	if (Engine::GetInstance().entityManager->isStarPower)
+	{
+		movementSpeed = 5.0f;
+	}
+	else{ 
+		movementSpeed = 3.5f;  // walking speed
+	}
+
 		// Sprint
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) {
-			movementSpeed = 5.5f;
+			if (Engine::GetInstance().entityManager->isStarPower)
+			{
+				movementSpeed = 7.0f;
+			}
+			else {
+				movementSpeed = 5.5f;
+			}
 			isSprinting = true;
 			frameDuration = 80.0f;
 		}
@@ -364,6 +377,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 						Engine::GetInstance().entityManager->puntuation += 300.0;
 					}
 					enemy->isDying = true;
+					b2Vec2 bounceVelocity(0, -7.0f); // Rebote hacia arriba
+					enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 				}
 				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 			}

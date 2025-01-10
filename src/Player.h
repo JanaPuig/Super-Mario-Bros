@@ -57,7 +57,7 @@ private:
     Animation* currentAnimation = nullptr;
 
     // Player parameters
-    float speed = 5.0f;
+    float movementSpeed = 0.0f;
     float jumpForce = 2.8f;
     const float jumpFrameDuration = 120.0f;
     float starPowerDuration = 3000000000000.0f;
