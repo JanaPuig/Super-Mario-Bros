@@ -53,6 +53,7 @@ bool Player::Start() {
 	deadAnimation.LoadAnimations(parameters.child("animations").child("die"));
 	crouchLAnimation.LoadAnimations(parameters.child("animations").child("crouchL"));
 	crouchRAnimation.LoadAnimations(parameters.child("animations").child("crouchR"));
+	winAnimation.LoadAnimations(parameters.child("animations").child("Win"));
 	WalkingStarLAnimation.LoadAnimations(parameters.child("animations").child("walkingLStar"));
 	WalkingStarRAnimation.LoadAnimations(parameters.child("animations").child("walkingRStar"));
 	IdleStarLAnimation.LoadAnimations(parameters.child("animations").child("idleLStar"));

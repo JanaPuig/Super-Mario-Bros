@@ -50,7 +50,7 @@ public:
    
     bool isDead = false;
 
-private:
+public:
 
     SDL_Texture* texturePlayer;
     pugi::xml_node parameters;
@@ -89,7 +89,7 @@ private:
     Animation crouchStarLAnimation;
     Animation crouchStarRAnimation;
     Animation DeadStarAnimation;
-
+    Animation winAnimation;
 
     // Audio FX
     int pickCoinFxId= 0;

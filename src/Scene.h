@@ -46,6 +46,8 @@ public:
     // Checks if the player is within a teleportation area
     bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
 
+    void EndGameScreen();
+
     // Called after all updates
     bool PostUpdate();
 
@@ -85,6 +87,7 @@ public:
     void funcion_menu_pause();
   
     // Public member variables
+    bool showWinScreen = false;
     bool isLoading = false; // Bandera para mostrar pantalla de carga
     bool limitFPS = false;
     bool showRemainingTime = true;  // Mostrar tiempo restante o acumulado (true = restante, false = acumulado)

@@ -290,7 +290,7 @@ void Scene::CreateEnemies(int level) {
         for (auto& e : enemyList) {
             if (e->name == "bowser") {
 
-                e->SetPosition(Vector2D(4500, 300));  // Cambiar la posición de Bowser
+                e->SetPosition(Vector2D(5500, 320));  // Cambiar la posición de Bowser
                 LOG("Bowser moved to (4500, 300) in level 2");
             }
             else {
@@ -340,7 +340,31 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
-    if (!showPauseMenu) {       //Si el menu pause no está activado, que se vea pantalla HUD
+    if (showWinScreen) {
+        int cameraX = Engine::GetInstance().render.get()->camera.x;
+        int cameraY = Engine::GetInstance().render.get()->camera.y;
+
+        // Dibuja la pantalla negra
+        Engine::GetInstance().render.get()->DrawRectangle({ 0, 0, 1920, 1080 }, 0, 0, 0, 255, true, true); 
+
+        // Dibuja el texto "YOU WIN!"
+        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 960, 400, 200, 100); 
+
+        // Centra al jugador en la pantalla
+        Vector2D playerPos = Vector2D(960 - (player->texW / 2), 500); 
+        player->SetPosition(playerPos);
+
+        // Dibuja la animación de victoria del jugador
+
+        Engine::GetInstance().render.get()->DrawTexture(player->texturePlayer, (int)playerPos.getX(), (int)playerPos.getY(), &player->winAnimation.GetCurrentFrame());
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
+            showWinScreen = false; 
+            showMainMenu = true; 
+        }
+        return true;
+    }
+
+    if (!showPauseMenu) { 
         DrawLives();
         DrawObject();
         DrawPuntation();
@@ -552,9 +576,15 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
     }
     else if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
     {
-        Engine::GetInstance().audio.get()->StopMusic();
-        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav", 0.f);
         Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
+        Engine::GetInstance().audio.get()->StopMusic();
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav");
+        
+    }
+    else if (level == 3 && IsInTeleportArea(playerPos, 6100, 764, tolerance))
+    {
+        EndGameScreen();
+        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/WorldClear_Theme.wav");
     }
 }
 // Checks if the player is in a teleportation area
@@ -562,6 +592,9 @@ bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float 
 {
     return playerPos.getX() >= x - tolerance && playerPos.getX() <= x + tolerance &&
         playerPos.getY() >= y - tolerance && playerPos.getY() <= y + tolerance;
+}
+void Scene::EndGameScreen() {
+    showWinScreen = true; // Activa la pantalla de victoria
 }
 // Post-update logic
 bool Scene::PostUpdate()
@@ -1424,6 +1457,4 @@ void Scene::ToggleFullscreen()
     else {
         LOG("Window is not initialized properly.");
     }
-
-
 }
