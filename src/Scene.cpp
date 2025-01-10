@@ -345,7 +345,7 @@ bool Scene::Update(float dt)
         int cameraY = Engine::GetInstance().render.get()->camera.y;
 
         // Dibuja la pantalla negra
-        Engine::GetInstance().render.get()->DrawRectangle({ 0, 0, 1920, 1080 }, 0, 0, 0, 255, true, true); 
+        Engine::GetInstance().render.get()->DrawTexture(black, cameraX, cameraY);
 
         // Dibuja el texto "YOU WIN!"
         Engine::GetInstance().render.get()->DrawText("YOU WIN!", 960, 400, 200, 100); 
