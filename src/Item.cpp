@@ -96,118 +96,120 @@ bool Item::Update(float dt)
         return true; // No hacer nada si se está en el menú o en transición
     }
 
-    Player* player = Engine::GetInstance().scene.get()->GetPlayer();
-    if (player != nullptr)
-    {
-        // Comprobar la distancia entre el ítem y el jugador
-        float distance = sqrt(pow(position.getX() - player->position.getX(), 2) + pow(position.getY() - player->position.getY(), 2));
+    if (apear) {
+        Player* player = Engine::GetInstance().scene.get()->GetPlayer();
+        if (player != nullptr)
+        {
+            // Comprobar la distancia entre el ítem y el jugador
+            float distance = sqrt(pow(position.getX() - player->position.getX(), 2) + pow(position.getY() - player->position.getY(), 2));
 
-        // Si la distancia es menor al umbral, recoger el ítem
-        if (distance < 35.0f && isPicked == 0) {
-            isPicked = 1;
-            LOG("Item picked up!");
-            Engine::GetInstance().scene->UpdateItem(name, isPicked);
-            SavePickedStateToFile();
+            // Si la distancia es menor al umbral, recoger el ítem
+            if (distance < 35.0f && isPicked == 0) {
+                isPicked = 1;
+                LOG("Item picked up!");
+                Engine::GetInstance().scene->UpdateItem(name, isPicked);
+                SavePickedStateToFile();
 
-            // Reproducir el sonido solo si es una moneda
-            if (isCoin) {
-                Engine::GetInstance().entityManager->objects++;
-                Engine::GetInstance().entityManager->puntuation+=250;
-                Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId); // Reproducir sonido de Coin
-            }
-            else if (isPowerUp) {
-                Engine::GetInstance().entityManager->puntuation += 300;
-                Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
-                Engine::GetInstance().entityManager.get()->isStarPower = true;; // Reproducir sonido de PowerU
-                LOG("PowerUp collected! Power granted.");
-            }
-            else if (isBigCoin) {
-                Engine::GetInstance().entityManager->puntuation += 250;
-                Engine::GetInstance().entityManager->objects++;
-                Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
-                LOG("Star Coin collected!");
-            }
-            else if (isOneUp) {
-                Engine::GetInstance().entityManager->puntuation += 300;
-                Engine::GetInstance().entityManager->lives++; // Suma una vida
-                Engine::GetInstance().audio.get()->PlayFx(oneUpFxId, 0); // Reproducir sonido de 1UP
-                LOG("1UP collected! Extra life granted.");
-            }
-            else if (isFinishFlag) {
-                Engine::GetInstance().entityManager->puntuation += 400;
-                Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Puede ser un efecto diferente
-                LOG("Collision with Finish Flag");
-                currentAnimation_finish_flag = &update_finish_flag;
-                float targetY = position.getY() + 248.0f;
-                float moveSpeed = 3.0f;
-                if (position.getY() < targetY) {
-                    position.setY(position.getY() + 248.0f);
+                // Reproducir el sonido solo si es una moneda
+                if (isCoin) {
+                    Engine::GetInstance().entityManager->objects++;
+                    Engine::GetInstance().entityManager->puntuation += 250;
+                    Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId); // Reproducir sonido de Coin
+                }
+                else if (isPowerUp) {
+                    Engine::GetInstance().entityManager->puntuation += 300;
+                    Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
+                    Engine::GetInstance().entityManager.get()->isStarPower = true;; // Reproducir sonido de PowerU
+                    LOG("PowerUp collected! Power granted.");
+                }
+                else if (isBigCoin) {
+                    Engine::GetInstance().entityManager->puntuation += 250;
+                    Engine::GetInstance().entityManager->objects++;
+                    Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
+                    LOG("Star Coin collected!");
+                }
+                else if (isOneUp) {
+                    Engine::GetInstance().entityManager->puntuation += 300;
+                    Engine::GetInstance().entityManager->lives++; // Suma una vida
+                    Engine::GetInstance().audio.get()->PlayFx(oneUpFxId, 0); // Reproducir sonido de 1UP
+                    LOG("1UP collected! Extra life granted.");
+                }
+                else if (isFinishFlag) {
+                    Engine::GetInstance().entityManager->puntuation += 400;
+                    Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Puede ser un efecto diferente
+                    LOG("Collision with Finish Flag");
+                    currentAnimation_finish_flag = &update_finish_flag;
+                    float targetY = position.getY() + 248.0f;
+                    float moveSpeed = 3.0f;
+                    if (position.getY() < targetY) {
+                        position.setY(position.getY() + 248.0f);
+                    }
+
                 }
 
+                else {
+                    // Cambiar la animación de la flag
+                    Engine::GetInstance().entityManager->puntuation += 400;
+                    Engine::GetInstance().scene.get()->isFlaged = true;
+                    Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Reproducir sonido de checkpoint
+                    LOG("Collision with Flag");
+                    currentAnimation_flag = &lower_flag;
+                }
             }
+            // Cambiar animación a "lower_lower_flag" si la actual termina
+            if (currentAnimation_flag == &lower_flag && currentAnimation_flag->HasFinished()) {
+                currentAnimation_flag = &lower_lower_flag;
+            }
+            if (isFinishFlag && currentAnimation_finish_flag != nullptr) {
+                // Actualizar y dibujar animación de Finish Flag
+                currentAnimation_finish_flag->Update();
+                Engine::GetInstance().render.get()->DrawTexture(
+                    finish_flagTexture,
+                    (int)position.getX(),
+                    (int)position.getY(),
+                    &currentAnimation_finish_flag->GetCurrentFrame()
+                );
 
-            else {
-                // Cambiar la animación de la flag
-                Engine::GetInstance().entityManager->puntuation += 400;
-                Engine::GetInstance().scene.get()->isFlaged = true;
-                Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Reproducir sonido de checkpoint
-                LOG("Collision with Flag");
-                currentAnimation_flag = &lower_flag;
+                // Cambiar de animación si ha terminado
+                if (currentAnimation_finish_flag == &update_finish_flag && currentAnimation_finish_flag->HasFinished()) {
+                    LOG("Finish flag animation completed.");
+                    currentAnimation_finish_flag = &finish_flag;
+                }
             }
         }
-        // Cambiar animación a "lower_lower_flag" si la actual termina
-        if (currentAnimation_flag == &lower_flag && currentAnimation_flag->HasFinished()) {
-            currentAnimation_flag = &lower_lower_flag;
+        if (isBigCoin && isPicked == 0) {
+            Engine::GetInstance().render.get()->DrawTexture(BigCoinTexture, (int)position.getX(), (int)position.getY(), &BigCoin.GetCurrentFrame());
+            BigCoin.Update();
         }
-        if (isFinishFlag && currentAnimation_finish_flag != nullptr) {
-            // Actualizar y dibujar animación de Finish Flag
-            currentAnimation_finish_flag->Update();
-            Engine::GetInstance().render.get()->DrawTexture(
-                finish_flagTexture,
-                (int)position.getX(),
-                (int)position.getY(),
-                &currentAnimation_finish_flag->GetCurrentFrame()
-            );
-
-            // Cambiar de animación si ha terminado
-            if (currentAnimation_finish_flag == &update_finish_flag && currentAnimation_finish_flag->HasFinished()) {
-                LOG("Finish flag animation completed.");
-                currentAnimation_finish_flag = &finish_flag;
-            }
+        else if (isPowerUp && isPicked == 0) {
+            Engine::GetInstance().render.get()->DrawTexture(PowerUpTexture, (int)position.getX(), (int)position.getY());
         }
-    }
-    if (isBigCoin && isPicked == 0) {
-        Engine::GetInstance().render.get()->DrawTexture(BigCoinTexture, (int)position.getX(), (int)position.getY(), &BigCoin.GetCurrentFrame());
-        BigCoin.Update();
-    }
-    else if (isPowerUp && isPicked == 0) {
-        Engine::GetInstance().render.get()->DrawTexture(PowerUpTexture, (int)position.getX(), (int)position.getY());
-    }
-    if (isPicked == 0) {
-        Engine::GetInstance().render.get()->DrawTexture(isOneUp ? OneUpTexture : coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-        currentAnimation->Update();
+        if (isPicked == 0) {
+            Engine::GetInstance().render.get()->DrawTexture(isOneUp ? OneUpTexture : coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+            currentAnimation->Update();
 
-        Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
-        currentAnimation_flag->Update();
+            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
+            currentAnimation_flag->Update();
+        }
+        else {
+            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
+            currentAnimation_flag->Update();
+        }
+
+        // Dibujar el mástil de la bandera
+        Engine::GetInstance().render.get()->DrawTexture(flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flagpole->GetCurrentFrame());
+        currentAnimation_flagpole->Update();
+
+        Engine::GetInstance().render.get()->DrawTexture(finish_flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flagpole->GetCurrentFrame());
+        currentAnimation_finish_flagpole->Update();
+
+        Engine::GetInstance().render.get()->DrawTexture(
+            finish_flagTexture,
+            (int)position.getX(),
+            (int)position.getY(),
+            &currentAnimation_finish_flag->GetCurrentFrame()
+        );
     }
-    else {
-        Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
-        currentAnimation_flag->Update();
-    }
-
-    // Dibujar el mástil de la bandera
-    Engine::GetInstance().render.get()->DrawTexture(flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flagpole->GetCurrentFrame());
-    currentAnimation_flagpole->Update();
-
-    Engine::GetInstance().render.get()->DrawTexture(finish_flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flagpole->GetCurrentFrame());
-    currentAnimation_finish_flagpole->Update();
-
-    Engine::GetInstance().render.get()->DrawTexture(
-        finish_flagTexture,
-        (int)position.getX(),
-        (int)position.getY(),
-        &currentAnimation_finish_flag->GetCurrentFrame()
-    );
 
     return true;
 }
