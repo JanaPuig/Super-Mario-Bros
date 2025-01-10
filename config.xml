@@ -12,7 +12,7 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="true" />
+		<fullscreen_window value="false" />
 	</window>
 	<scene>
 		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" enemy1X="1500" enemy2X="4500" enemy3X="2000" enemy4X="5500" enemy1Y="100" enemy2Y="100" enemy3Y="415" enemy4Y="415" checkpoint="false" lives="3" object="0" Puntuation="0" time="5201.41406" isSave="false" />
@@ -258,7 +258,7 @@
 						</dead>
 					</animations>
 				</enemy2>
-				<enemy_bowser name="bowser" x="3000" y="400" w="102" h="117" hitcount="0" texture_bowser="Assets/Textures/Bowser.png" gravity="true">
+				<enemy_bowser name="bowser" x="-1000" y="-1000" w="102" h="117" hitcount="0" texture_bowser="Assets/Textures/Bowser.png" gravity="true">
 					<animations>
 						<idleBowserL loop="true" speed="0.05">
 							<frame x="1032" y="528" w="99" h="123" />

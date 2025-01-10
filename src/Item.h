@@ -34,6 +34,7 @@ public:
 
     void ResetPosition();
 
+
 public:
     // Audio Fx
     int pickCoinFxId= 0;
@@ -49,6 +50,8 @@ public:
     bool isPowerUp = false;// Indica si el ítem es una MONEDA GRANDE
     bool isFinishFlag = false;
     std::vector<Item*> items;
+
+    bool apear=true;
 
 private:
 
@@ -83,4 +86,6 @@ private:
     Animation finish_flag;
     Animation* currentAnimation_finish_flagpole = &finish_flagpole;
     Animation finish_flagpole;
+
+
 };

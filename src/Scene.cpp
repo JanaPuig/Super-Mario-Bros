@@ -261,15 +261,19 @@ void Scene::CreateEnemies(int level) {
 
             else if (e->name == "goomba") {
                 e->SetPosition(Vector2D(2000, 400));  // Cambiar la posición de Bowser
+
             }
             else if (e->name == "goomba2") {
                 e->SetPosition(Vector2D(5500, 400));  // Cambiar la posición de Bowser
+
             }
 
             else if (e->name == "bowser") {
                 e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición de Bowser
             }
         }
+        activate_gravity_goomba = true;
+
     }
 
     if (level == 2) {
@@ -277,6 +281,8 @@ void Scene::CreateEnemies(int level) {
         for (auto& e : enemyList) {
             e->SetPosition(Vector2D(-1000, -1000));
         }
+        activate_gravity_goomba = false;
+
     }
 
     else if (level == 3) {
@@ -286,6 +292,9 @@ void Scene::CreateEnemies(int level) {
 
                 e->SetPosition(Vector2D(4500, 300));  // Cambiar la posición de Bowser
                 LOG("Bowser moved to (4500, 300) in level 2");
+            }
+            else {
+                e->SetPosition(Vector2D(-1000, -1000));
             }
 
         }
@@ -331,10 +340,12 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
-    DrawLives();
-    DrawObject();
-    DrawPuntation();
-    DrawWorld();
+    if (!showPauseMenu) {       //Si el menu pause no está activado, que se vea pantalla HUD
+        DrawLives();
+        DrawObject();
+        DrawPuntation();
+        DrawWorld();
+    }
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
@@ -387,7 +398,6 @@ bool Scene::Update(float dt)
 
     }
   
- 
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -416,21 +426,28 @@ bool Scene::Update(float dt)
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu; // Alternar el estado del menú
 
-        if (showPauseMenu) {
-            player->StopMovement();
-            for (Enemy* enemy : enemyList) {
-                enemy->StopMovement();
+        if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
+            player->StopMovement(); //Parar movimineto del player
+            for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
+                enemy->StopMovement(); 
             }
+            for (Item* item : itemList) { //Dejar de ver items
+                item->apear = false;
+            }
+            
             Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
             Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
         else {
             LOG("Calling player->ResumeMovement()");
 
-            player->ResumeMovement();
+            player->ResumeMovement(); //Renundar movimineto del player
 
-            for (Enemy* enemy : enemyList) {
+            for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
                 enemy->ResumeMovement();
+            }
+            for (Item* item : itemList) { //Ver items
+                item->apear = true;
             }
             showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
@@ -469,6 +486,8 @@ bool Scene::Update(float dt)
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {
         ToggleHelpMenu = false;
     }
+
+
     // Camera follows the player
     const float cameraMinX = 0.0f, cameraMaxX = 4862.0f, cameraFollowOffset = 192.0f;
     float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
@@ -478,6 +497,8 @@ bool Scene::Update(float dt)
     if (level == 1 ||level ==2) {
         HandleTeleport(playerPos);
     }
+
+    //position_player();
 
     // Temporizador del nivel
     elapsedTime += dt;  // Aumenta el tiempo acumulado
@@ -527,6 +548,7 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
     {
         Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
         ChangeLevel(3);
+
     }
     else if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
     {
@@ -565,6 +587,18 @@ bool Scene::PostUpdate()
         SaveState();
     }
     return true;
+}
+
+void Scene::position_player() 
+{
+    if (level == 1 && player->GetPosition().getY()== 429) 
+    {
+        activate_gravity_goomba = true;
+    }
+    else {
+        activate_gravity_goomba = false;
+
+    }
 }
 // Cleans up the scene
 bool Scene::CleanUp()
