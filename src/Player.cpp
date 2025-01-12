@@ -176,7 +176,7 @@ bool Player::Update(float dt) {
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged) {
-					SetPosition(Vector2D(3300, 830)); // Posición del banderín
+					SetPosition(Vector2D(3500, 600)); // Posición del banderín
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}

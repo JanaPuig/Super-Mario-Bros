@@ -38,97 +38,60 @@ bool Scene::Awake()
 
 void Scene::InitialItems()
 {
-    //const int startX = 1664, startY = 672;
+    pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("coin");
 
-    //pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
+    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    item->SetParameters(defaultItemNode);
+    itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
+    itemList.push_back(item);
+    // Log the item's creation
+    LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
 
-    //Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //item->position = Vector2D(startX, startY);
-    //item->SetParameters(defaultItemNode);
-    //itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
-    //itemList.push_back(item);
-    //// Log the item's creation
-    //LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+    //Crear Flagpole
+    Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+    flagpole->SetParameters(flagpoleNode);
+    itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
+    itemList.push_back(flagpole);
 
-    //// Crear flagpole
-    //const int positionX_flagpole = 3232, positionY_flagpole = 384;
-    //Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+    // Crear flag
+    Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+    flag->SetParameters(flagNode);
+    itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
+    itemList.push_back(flag);
 
-    //pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
-    //flagpole->SetParameters(flagpoleNode);
-    //itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
-    //itemList.push_back(flagpole);
+    // Crear 1Up
+    Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
+    OneUp->SetParameters(oneUpeNode);
+    itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
+    itemList.push_back(OneUp);
 
-    //LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+    //Crear BigCoin
+    const int hiddenX = -1000, hiddenY = -1000;
+    Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+     pugi::xml_node bigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
 
-    //// Crear flag
-    //const int positionX_flag = 3248, positionY_flag = 384;
-    //Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //flag->position = Vector2D(positionX_flag, positionY_flag);
+     for (int i = 0; i < 3; i++) {  // Siempre crear 3 BigCoins
+         Item* bigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+         bigCoin->position = Vector2D(hiddenX, hiddenY); // Inicialmente fuera de pantalla
+         bigCoin->SetParameters(bigCoinNode);
+         itemStateList.push_back(std::make_pair(std::string(bigCoinNode.attribute("name").as_string()), 0));
+         itemList.push_back(bigCoin);
 
-    //pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
-    //flag->SetParameters(flagNode);
-    //itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
-    //itemList.push_back(flag);
+         LOG("BigCoin %d created at hidden position.", i + 1);
+     }
 
-    //// Crear 1Up
-    //const int oneUpPpositionX = 500, oneUpPpositionY = 200;
-    //Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
+    //Crear PowerUp
+    Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
 
-    //pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
-    //OneUp->SetParameters(oneUpeNode);
-    //itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
-    //itemList.push_back(OneUp);
+    // Crear flagpole del final del nivel
+    Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
 
-    //LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
+    // Crear flag del final del nivel
+    Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
 
-    ////Crear BigCoin
-    //const int BigCoinpositionX = 800, BigCoinpositionY = 200;
-    //Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
-
-    //pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
-    //BigCoin->SetParameters(BigCoinNode);
-    //itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
-    //itemList.push_back(BigCoin);
-
-    //LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
-
-    ////Crear PowerUp
-    //const int PowerUppositionX = 800, PowerUppositionY = 300;
-    //Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
-
-    //pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
-    //PowerUp->SetParameters(PowerUpNode);
-    //itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
-    //itemList.push_back(PowerUp);
-
-    //LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
-
-    //// Crear flagpole del final del nivel
-    //const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
-    //Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
-
-    //pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
-    //flagpole2->SetParameters(flagpoleNode2);
-    //itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
-    //itemList.push_back(flagpole2);
-
-    //LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
-
-    //// Crear flag del final del nivel
-    //const int positionX_flag2 = 6299, positionY_flag2 = 110;
-    //Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    //flag2->position = Vector2D(positionX_flag2, positionY_flag2);
-
-    //pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
-    //flag2->SetParameters(flagNode2);
-    //itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
-    //itemList.push_back(flag2);
 }
 void Scene::InitialEnemies()
 {
@@ -165,91 +128,114 @@ void Scene::InitialEnemies()
 // Creates items for Level 1
 void Scene::CreateLevelItems(int level)
 {
-    /*if (level == 1) {
 
-        for (auto& it : itemList)
-        {
-            if (it->name == "flagpole") {
-                it->position = (Vector2D(3232, 384));
+    Engine::GetInstance().entityManager->ResetItems(); // Reiniciar ítems al cambiar de nivel
 
+    if (level == 1) {
+        // Posiciones para BigCoins en el nivel 1
+        std::vector<Vector2D> bigCoinPositions = {
+            Vector2D(623, 120),
+            Vector2D(3407, 120),
+            Vector2D(4580, 30)
+        };
+
+        int bigCoinIndex = 0;
+        for (auto& it : itemList) {
+            if (it->name == "BigCoin" && bigCoinIndex < bigCoinPositions.size()) {
+                it->position = bigCoinPositions[bigCoinIndex++];
+            }
+            else if (it->name == "flagpole") {
+                it->position = Vector2D(3232, 384);
             }
             else if (it->name == "flag") {
-                it->position = (Vector2D(3248, 384));
-
+                it->position = Vector2D(3248, 384);
             }
             else if (it->name == "finish_flagpole") {
-                it->position = (Vector2D(6343, 90));
-
+                it->position = Vector2D(6343, 90);
             }
             else if (it->name == "finish_flag") {
-                it->position = (Vector2D(6299, 110));
-
-            }
-            else if (it->name == "coin") {
-                it->position = (Vector2D(1664, 672));
-
+                it->position = Vector2D(6299, 110);
             }
             else if (it->name == "OneUp") {
-                it->position = (Vector2D(500, 200));
-
+                it->position = Vector2D(1690, 543);
             }
             else if (it->name == "PowerUp") {
-                it->position = (Vector2D(800, 300));
-
+                it->position = Vector2D(640, 285);
             }
-            else if (it->name == "BigCoin") {
-                it->position = (Vector2D(800, 200));
-
+            else if (it->name == "coin") {
+                it->position = Vector2D(1690, 720);
             }
-            
+            else {
+                it->position = Vector2D(-1000, -1000); // Ocultar ítems que no se usan
+            }
         }
     }
+    else if (level == 2) {
+        // Posiciones para BigCoins en el nivel 2
+        std::vector<Vector2D> bigCoinPositions = {
+            Vector2D(5040, 230),
+            Vector2D(2700, 715),
+            Vector2D(5840, 720)
+        };
 
-    else if (level == 2)
-    {
-       
-        Engine::GetInstance().entityManager.get()->ResetItems();
-
-        for (auto& it : itemList) 
-        {
-            if (it->name == "flagpole") {
-                it->position = (Vector2D(3232+70, 384+415));
-
+        int bigCoinIndex = 0;
+        for (auto& it : itemList) {
+            if (it->name == "BigCoin" && bigCoinIndex < bigCoinPositions.size()) {
+                it->position = bigCoinPositions[bigCoinIndex++];
+            }
+            else if (it->name == "flagpole") {
+                it->position = Vector2D(3302, 800);
             }
             else if (it->name == "flag") {
-                it->position = (Vector2D(3248 + 70, 384+415));
-
+                it->position = Vector2D(3318, 800);
             }
             else if (it->name == "finish_flagpole") {
-                it->position = (Vector2D(6343 + 190, 90 + 320));
-
+                it->position = Vector2D(6533, 410);
             }
             else if (it->name == "finish_flag") {
-                it->position = (Vector2D(6299 + 190, 110 + 320));
-
+                it->position = Vector2D(6489, 430);
+            }
+            else if (it->name == "OneUp") {
+                it->position = Vector2D(2575, 770);
+            }
+            else if (it->name == "PowerUp") {
+                it->position = Vector2D(3910, 740);
             }
             else {
-                it->position = (Vector2D(-1000, -1000));
+                it->position = Vector2D(-1000, -1000);
             }
-
         }
-
     }
-
     else if (level == 3) {
+        // Posiciones para BigCoins en el nivel 3
+        std::vector<Vector2D> bigCoinPositions = {
+            Vector2D(4650, 560),
+            Vector2D(3410, 735),
+            Vector2D(1800, 735)
+        };
 
-        for (auto& it : itemList)
-        {
-            if (it->name == "BigCoin") {
-                it->position = (Vector2D(4650, 560));
+        int bigCoinIndex = 0;
+        for (auto& it : itemList) {
+            if (it->name == "BigCoin" && bigCoinIndex < bigCoinPositions.size()) {
+                it->position = bigCoinPositions[bigCoinIndex++];
+            }
+            else if (it->name == "flagpole") {
+                it->position = Vector2D(3480, 545);
+            }
+            else if (it->name == "flag") {
+                it->position = Vector2D(3496, 545);
+            }
+            else if (it->name == "OneUp") {
+                it->position = Vector2D(2575, 767);
+            }
+            else if (it->name == "PowerUp") {
+                it->position = Vector2D(3902, 735);
             }
             else {
-                it->position = (Vector2D(-1000, -1000));
+                it->position = Vector2D(-1000, -1000); // Ocultar ítems que no se usan
             }
-      
         }
-    }*/
- 
+    }
 }
 
 void Scene::CreateEnemies(int level) {
@@ -329,6 +315,7 @@ void Scene::CreateEnemies(int level) {
 
     else if (level == 3) {
         // Mover Bowser a la nueva posición
+
         for (auto it = enemyList.begin(); it != enemyList.end(); ) {
             Enemy* e = *it;
             if (e == nullptr) {
@@ -336,7 +323,6 @@ void Scene::CreateEnemies(int level) {
                 continue;
             }
             if (e->hitCount != 0) {
-
                 it = enemyList.erase(it);
             }
             else {
@@ -562,7 +548,6 @@ bool Scene::Update(float dt)
         ToggleHelpMenu = false;
     }
 
-
     // Camera follows the player
     const float cameraMinX = 0.0f, cameraMaxX = 4862.0f, cameraFollowOffset = 192.0f;
     float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
@@ -572,8 +557,6 @@ bool Scene::Update(float dt)
     if (level == 1 ||level ==2||level==3) {
         HandleTeleport(playerPos);
     }
-
-    //position_player();
 
     // Temporizador del nivel
     elapsedTime += dt;  // Aumenta el tiempo acumulado
@@ -790,7 +773,7 @@ void Scene::StartNewGame() {
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
  
-    SaveFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").set_value(0);
+    SaveFile.child("config").child("scene").child("entities").child("items").child("coin").attribute("isPicked").set_value(0);
 
     // Reiniciar enemigos
     saveNode.attribute("enemy1X").set_value(1500);
@@ -1017,7 +1000,7 @@ void Scene::LoadState()
         posEnemy.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").as_int());
     }
     //Item
-    int isPicked = LoadFile.child("config").child("scene").child("entities").child("items").child("item").attribute("isPicked").as_int();
+    int isPicked = LoadFile.child("config").child("scene").child("entities").child("items").child("coin").attribute("isPicked").as_int();
     Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name")); // Obtén la referencia al ítem
     if (item != nullptr) {
         item->SetIsPicked(isPicked); // Sincroniza el estado del ítem
@@ -1142,7 +1125,7 @@ void Scene::SaveState()
         }
     }
     //Item
-    pugi::xml_node itemNode = SaveFile.child("config").child("scene").child("entities").child("items").child("item");
+    pugi::xml_node itemNode = SaveFile.child("config").child("scene").child("entities").child("items").child("coin");
     Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->GetEntityByName("item_name"));
     if (item != nullptr) {
         itemNode.attribute("isPicked").set_value(item->GetisPicked());
@@ -1347,6 +1330,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     switch (control->id) {
     case 1: // Menu; New Game
         if (active_menu) {
+            CreateLevelItems(1);
             LOG("New Game button clicked");
 
             Engine::GetInstance().entityManager.get()->ResetItems();

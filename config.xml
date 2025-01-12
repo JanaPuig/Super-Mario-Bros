@@ -32,13 +32,13 @@
 		</textures>
 		<entities>
 			<items>
-				<item name="coin" x="1600" y="768" w="32" h="32" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="1600" y="768" w="32" h="32" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
 						</idle>
 					</animations>
-				</item>
+				</coin>
 				<OneUp name="OneUp" x="500" y="200" w="16" h="16" isOneUp="true" OneUpTexture="Assets/Textures/OneUp.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
@@ -140,10 +140,10 @@
 						<frame x="96" y="52" w="32" h="44" />
 					</jumpingL>
 					<crouchRStar loop="false">
-						<frame x="319" y="20" w="30" h="28" />
+						<frame x="319" y="10" w="30" h="38" />
 					</crouchRStar>
 					<crouchLStar loop="false">
-						<frame x="319" y="68" w="30" h="28" />
+						<frame x="319" y="58" w="30" h="38" />
 					</crouchLStar>
 					<jumpingRStar loop="false" speed="0.5">
 						<frame x="254" y="8" w="32" h="40" />

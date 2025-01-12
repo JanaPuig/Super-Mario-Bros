@@ -83,8 +83,6 @@ bool Item::Start() {
     BigCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BigCoin.wav"); // Sonido BigCoin
     PowerUpFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/PowerUp.wav"); // Sonido BigCoin
 
-
-
     return true;
 }
 
@@ -136,7 +134,6 @@ bool Item::Update(float dt)
                 }
                 else if (isFinishFlag) {
                     Engine::GetInstance().entityManager->puntuation += 400;
-                    Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Puede ser un efecto diferente
                     LOG("Collision with Finish Flag");
                     currentAnimation_finish_flag = &update_finish_flag;
                     float targetY = position.getY() + 248.0f;
@@ -146,7 +143,6 @@ bool Item::Update(float dt)
                     }
 
                 }
-
                 else {
                     // Cambiar la animación de la flag
                     Engine::GetInstance().entityManager->puntuation += 400;
@@ -195,7 +191,6 @@ bool Item::Update(float dt)
             Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
             currentAnimation_flag->Update();
         }
-
         // Dibujar el mástil de la bandera
         Engine::GetInstance().render.get()->DrawTexture(flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flagpole->GetCurrentFrame());
         currentAnimation_flagpole->Update();
@@ -203,36 +198,25 @@ bool Item::Update(float dt)
         Engine::GetInstance().render.get()->DrawTexture(finish_flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flagpole->GetCurrentFrame());
         currentAnimation_finish_flagpole->Update();
 
-        Engine::GetInstance().render.get()->DrawTexture(
-            finish_flagTexture,
-            (int)position.getX(),
-            (int)position.getY(),
-            &currentAnimation_finish_flag->GetCurrentFrame()
-        );
+        Engine::GetInstance().render.get()->DrawTexture( finish_flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flag->GetCurrentFrame());
     }
-
     return true;
 }
-
 void Item::SavePickedStateToFile() {
     pugi::xml_document doc;
     if (!doc.load_file("config.xml")) {
         LOG("Error al cargar config.xml para guardar el estado del ítem.");
         return;
     }
-
-    pugi::xml_node itemNode = doc.child("config").child("scene").child("entities").child("items").child("item");
+    pugi::xml_node itemNode = doc.child("config").child("scene").child("entities").child("items").child("coin");
     itemNode.attribute("isPicked").set_value(isPicked);
-
     // Guardar el archivo
     doc.save_file("config.xml");
 }
-
 int Item::GetisPicked()
 {
     return isPicked;
 }
-
 bool Item::CleanUp()
 {
     Engine::GetInstance().textures.get()->UnLoad(coinTexture);
@@ -244,7 +228,6 @@ bool Item::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(OneUpTexture);
     return true;
 }
-
 void Item::ResetPosition()
 {
     idle.LoadAnimations(parameters.child("animations").child("idle"));

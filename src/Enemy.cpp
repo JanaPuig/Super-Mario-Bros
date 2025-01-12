@@ -153,7 +153,7 @@ bool Enemy::Update(float dt) {
 
         SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
         Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX() + 25, (int)position.getY() + 25, &frameRect);
+        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY() + 15, &frameRect);
         Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
 
 
@@ -267,7 +267,7 @@ bool Enemy::Update(float dt) {
         currentAnimation->Update();
         SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
         Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
-        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX() + 25, (int)position.getY() + 25, &frameRect);
+        Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY() + 15, &frameRect);
         Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
     }
     if (pbody != NULL)
