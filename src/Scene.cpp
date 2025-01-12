@@ -83,8 +83,14 @@ void Scene::InitialItems()
          LOG("BigCoin %d created at hidden position.", i + 1);
      }
 
-    //Crear PowerUp
-    Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+     // Crear PowerUp
+     Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+     pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
+     PowerUp->SetParameters(PowerUpNode);
+     PowerUp->position = Vector2D(640, 285); // Asigna una posición inicial válida
+     itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
+     itemList.push_back(PowerUp);
+     LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
 
     // Crear flagpole del final del nivel
     Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
@@ -95,7 +101,7 @@ void Scene::InitialItems()
 }
 void Scene::InitialEnemies()
 {
-   // Iteramos a través de los enemigos del archivo XML
+    // Iteramos a través de los enemigos del archivo XML
     for (pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").first_child();
         enemyNode;
         enemyNode = enemyNode.next_sibling()) {
@@ -103,26 +109,27 @@ void Scene::InitialEnemies()
         int levels = enemyNode.attribute("levels").as_int();
         std::string enemyName = enemyNode.attribute("name").as_string();
 
+        // Solo crear enemigos para los niveles 1, 2 y 3
+        if (levels == 1 || levels == 2 || levels == 3) {
+            LOG("Level create enemies: %d", levels);
 
-        LOG("Level createenemies: %d", levels);
+            // Crear un nuevo enemigo
+            Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
 
-        // Crear un nuevo enemigo
-        Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+            if (!enemy) {
+                LOG("Failed to create enemy: %s.", enemyName.c_str());
+                continue;
+            }
 
-        if (!enemy) {
-            LOG("Failed to create enemy: %s.", enemyName.c_str());
-            continue;
+            // Establece los parámetros del enemigo
+            enemy->SetParameters(enemyNode);
+
+            // Agregar el enemigo a las listas de estados y enemigos
+            enemyStateList.push_back(std::make_pair(enemyName, 0));
+            enemyList.push_back(enemy);
+
+            LOG("Enemy %s created for level %d", enemyName.c_str(), level);
         }
-
-        // Establece los parámetros del enemigo
-        enemy->SetParameters(enemyNode);
-
-        // Agregar el enemigo a las listas de estados y enemigos
-        enemyStateList.push_back(std::make_pair(enemyName, 0));
-        enemyList.push_back(enemy);
-
-        LOG("Enemy %s created for level %d", enemyName.c_str(), level);
-
     }
 }
 // Creates items for Level 1
@@ -134,9 +141,9 @@ void Scene::CreateLevelItems(int level)
     if (level == 1) {
         // Posiciones para BigCoins en el nivel 1
         std::vector<Vector2D> bigCoinPositions = {
-            Vector2D(623, 120),
-            Vector2D(3407, 120),
-            Vector2D(4580, 30)
+            Vector2D(633, 120),
+            Vector2D(3417, 120),
+            Vector2D(4590, 30)
         };
 
         int bigCoinIndex = 0;
@@ -173,9 +180,9 @@ void Scene::CreateLevelItems(int level)
     else if (level == 2) {
         // Posiciones para BigCoins en el nivel 2
         std::vector<Vector2D> bigCoinPositions = {
-            Vector2D(5040, 230),
-            Vector2D(2700, 715),
-            Vector2D(5840, 720)
+            Vector2D(5050, 230),
+            Vector2D(2712, 715),
+            Vector2D(5850, 720)
         };
 
         int bigCoinIndex = 0;
@@ -195,11 +202,8 @@ void Scene::CreateLevelItems(int level)
             else if (it->name == "finish_flag") {
                 it->position = Vector2D(6489, 430);
             }
-            else if (it->name == "OneUp") {
-                it->position = Vector2D(2575, 770);
-            }
             else if (it->name == "PowerUp") {
-                it->position = Vector2D(3910, 740);
+                it->position = Vector2D(1535, 575);
             }
             else {
                 it->position = Vector2D(-1000, -1000);
@@ -209,9 +213,9 @@ void Scene::CreateLevelItems(int level)
     else if (level == 3) {
         // Posiciones para BigCoins en el nivel 3
         std::vector<Vector2D> bigCoinPositions = {
-            Vector2D(4650, 560),
-            Vector2D(3410, 735),
-            Vector2D(1800, 735)
+            Vector2D(4660, 560),
+            Vector2D(3420, 735),
+            Vector2D(1810, 735)
         };
 
         int bigCoinIndex = 0;
@@ -237,115 +241,68 @@ void Scene::CreateLevelItems(int level)
         }
     }
 }
-
 void Scene::CreateEnemies(int level) {
     LOG("Creating enemies for level %d", level);
 
+    // Limpiar enemigos existentes
+    Engine::GetInstance().entityManager->RemoveAllEnemies();
+
     if (level == 1) {
-        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
-            Enemy* e = *it;
+        // Crear Koopas y Goombas para el nivel 1
+        Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
+        koopa1->SetPosition(Vector2D(1500, 100));
+        enemyList.push_back(koopa1);
 
-            if (e == nullptr) {
-                ++it;  // No hacer nada con un nullptr
-                continue;
-            }
+        Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
+        koopa2->SetPosition(Vector2D(4500, 100));
+        enemyList.push_back(koopa2);
 
-            if (e->hitCount != 0) {
+        Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"));
+        goomba1->SetPosition(Vector2D(1500, 300));
+        enemyList.push_back(goomba1);
 
-                it = enemyList.erase(it);
-            }
-            else {
-
-                if (e->name == "koopa" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(1500, 100));  // Cambiar la posición
-                    e->ResetPath();
-
-                }
-
-                else if (e->name == "koopa2" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(4500, 100));  // Cambiar la posición
-                    e->ResetPath();
-
-                }
-
-                else if (e->name == "goomba" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(2000, 416));  // Cambiar la posición
-                    e->ResetPath();
-
-                }
-                else if (e->name == "goomba2" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(5500, 416));  // Cambiar la posición
-                    e->ResetPath();
-
-                }
-
-                else if (e->name == "bowser" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición
-                    e->ResetPath();
-
-                }
-             
-
-                ++it;
-            }
-
-        }
+        Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"));
+        goomba2->SetPosition(Vector2D(4500, 300));
+        enemyList.push_back(goomba2);
     }
-    if (level == 2) {
-        // Mover posiciones enemigos
-        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
-            Enemy* e = *it;
+    else if (level == 2) {
+        // Crear Koopas para el nivel 2
+        Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
+        koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
+        enemyList.push_back(koopa1);
 
-            if (e == nullptr) {
-                ++it;  // No hacer nada con un nullptr
-                continue;
-            }
-
-            if (e->hitCount != 0) {
-              
-                it = enemyList.erase(it);  
-            }
-            else {
-                e->SetPosition(Vector2D(-1000, -1000));
-                e->ResetPath();
-                ++it;  // Avanzamos al siguiente enemigo
-            }
-        }
+        Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
+        koopa2->SetPosition(Vector2D(3700, 150)); // Nueva posición
+        enemyList.push_back(koopa2);
     }
-
     else if (level == 3) {
-        // Mover Bowser a la nueva posición
+        // Crear Koopas para el nivel 3
+        Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
+        koopa1->SetPosition(Vector2D(3000, 100));
+        enemyList.push_back(koopa1);
 
-        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
-            Enemy* e = *it;
-            if (e == nullptr) {
-                ++it;  // No hacer nada con un nullptr
-                continue;
-            }
-            if (e->hitCount != 0) {
-                it = enemyList.erase(it);
-            }
-            else {
-                if (e->name == "bowser") {
-                    e->SetPosition(Vector2D(6200, 330));  // Cambiar la posición de Bowser
+        Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
+        koopa2->SetPosition(Vector2D(4000, 100));
+        enemyList.push_back(koopa2);
 
-                    e->ResetPath();
-                    LOG("Bowser moved to (4500, 300) in level 2");
-                }
-                else if (e->name != "bowser" && e->hitCount == 0) {
-                    e->SetPosition(Vector2D(-1000, -1000));
+        // Crear Bowser para nivel 3
+        Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        bowser->SetParameters(configParameters.child("entities").child("enemies").child("enemy_bowser"));
+        bowser->SetPosition(Vector2D(6200, 330)); // Posición de Bowser
+        enemyList.push_back(bowser);
 
-                    e->ResetPath();
-                }
-
-                ++it;  // Avanzamos al siguiente enemigo
-
-            }
-          
-
-        }
+        LOG("Bowser created for level 3 at position (6200, 330)");
     }
 }
+    
 // Called before the first frame
 bool Scene::Start()
 {
@@ -696,9 +653,8 @@ void Scene::ChangeLevel(int newLevel)
     //Engine::GetInstance().entityManager->RemoveAllItems();
 
     level = newLevel;
-    CreateEnemies(level);
-    CreateLevelItems(level);
     ShowTransitionScreen();
+    CreateLevelItems(level);
 }
 // Shows the transition screen
 void Scene::ShowTransitionScreen()
@@ -728,18 +684,21 @@ void Scene::FinishTransition()
         Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
         Mix_VolumeMusic(sdlVolume);
+        CreateEnemies(1);
     }
     else if (level == 2) {
         player->SetPosition(Vector2D(100, 740));
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
         Mix_VolumeMusic(sdlVolume);
+        CreateEnemies(2);
     }
     else if (level == 3) {
         player->SetPosition(Vector2D(100, 580));
         Engine::GetInstance().map->Load(configParameters.child("map3").attribute("path").as_string(), configParameters.child("map3").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 0.f);
         Mix_VolumeMusic(sdlVolume);
+        CreateEnemies(3);
     }
 }
 

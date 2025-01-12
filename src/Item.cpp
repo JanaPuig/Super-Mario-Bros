@@ -101,8 +101,19 @@ bool Item::Update(float dt)
             // Comprobar la distancia entre el ítem y el jugador
             float distance = sqrt(pow(position.getX() - player->position.getX(), 2) + pow(position.getY() - player->position.getY(), 2));
 
-            // Si la distancia es menor al umbral, recoger el ítem
-            if (distance < 35.0f && isPicked == 0) {
+            // Si el ítem es BigCoin, la distancia mínima es 50.0f
+            if (isBigCoin && distance < 50.0f && isPicked == 0) {
+                isPicked = 1;
+                LOG("BigCoin picked up!");
+                Engine::GetInstance().scene->UpdateItem(name, isPicked);
+                SavePickedStateToFile();
+                Engine::GetInstance().entityManager->puntuation += 250;
+                Engine::GetInstance().entityManager->objects++;
+                Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
+                LOG("Star Coin collected!");
+            }
+            // Para los otros ítems, la distancia mínima sigue siendo 35.0f
+            else if (!isBigCoin && distance < 35.0f && isPicked == 0) {
                 isPicked = 1;
                 LOG("Item picked up!");
                 Engine::GetInstance().scene->UpdateItem(name, isPicked);
@@ -120,12 +131,6 @@ bool Item::Update(float dt)
                     Engine::GetInstance().entityManager.get()->isStarPower = true;; // Reproducir sonido de PowerU
                     LOG("PowerUp collected! Power granted.");
                 }
-                else if (isBigCoin) {
-                    Engine::GetInstance().entityManager->puntuation += 250;
-                    Engine::GetInstance().entityManager->objects++;
-                    Engine::GetInstance().audio.get()->PlayFx(BigCoinFxId); // Reproducir sonido de BigCoin
-                    LOG("Star Coin collected!");
-                }
                 else if (isOneUp) {
                     Engine::GetInstance().entityManager->puntuation += 300;
                     Engine::GetInstance().entityManager->lives++; // Suma una vida
@@ -141,7 +146,6 @@ bool Item::Update(float dt)
                     if (position.getY() < targetY) {
                         position.setY(position.getY() + 248.0f);
                     }
-
                 }
                 else {
                     // Cambiar la animación de la flag
@@ -152,6 +156,7 @@ bool Item::Update(float dt)
                     currentAnimation_flag = &lower_flag;
                 }
             }
+
             // Cambiar animación a "lower_lower_flag" si la actual termina
             if (currentAnimation_flag == &lower_flag && currentAnimation_flag->HasFinished()) {
                 currentAnimation_flag = &lower_lower_flag;
@@ -174,7 +179,7 @@ bool Item::Update(float dt)
             }
         }
         if (isBigCoin && isPicked == 0) {
-            Engine::GetInstance().render.get()->DrawTexture(BigCoinTexture, (int)position.getX(), (int)position.getY(), &BigCoin.GetCurrentFrame());
+            Engine::GetInstance().render.get()->DrawTexture(BigCoinTexture, (int)position.getX()-10, (int)position.getY(), &BigCoin.GetCurrentFrame());
             BigCoin.Update();
         }
         else if (isPowerUp && isPicked == 0) {
