@@ -143,6 +143,7 @@ public:
     bool active_menu_pause = false;
 
     GuiControlButton* guiBt;
+    std::vector<Enemy*> enemyList;
 
     
 private:
@@ -160,7 +161,6 @@ private:
     Item* item;
 
     //Private Lists
-    std::vector<Enemy*> enemyList;
     std::vector<int> hitcountList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList; 

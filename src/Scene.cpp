@@ -256,61 +256,108 @@ void Scene::CreateEnemies(int level) {
     LOG("Creating enemies for level %d", level);
 
     if (level == 1) {
-        for (auto& e : enemyList) {
+        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+            Enemy* e = *it;
 
-            if (e->name == "koopa") {
-                e->SetPosition(Vector2D(1500, 100));  // Cambiar la posición de Bowser
-                e->ResetPath();
-
+            if (e == nullptr) {
+                ++it;  // No hacer nada con un nullptr
+                continue;
             }
 
-            else if (e->name == "koopa2") {
-                e->SetPosition(Vector2D(4500, 100));  // Cambiar la posición de Bowser
-                e->ResetPath();
+            if (e->hitCount != 0) {
 
+                it = enemyList.erase(it);
             }
+            else {
 
-            else if (e->name == "goomba") {
-                e->SetPosition(Vector2D(2000, 416));  // Cambiar la posición de Bowser
-                e->ResetPath();
+                if (e->name == "koopa" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(1500, 100));  // Cambiar la posición
+                    e->ResetPath();
 
-            }
-            else if (e->name == "goomba2") {
-                e->SetPosition(Vector2D(5500, 416));  // Cambiar la posición de Bowser
-                e->ResetPath();
+                }
 
-            }
+                else if (e->name == "koopa2" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(4500, 100));  // Cambiar la posición
+                    e->ResetPath();
 
-            else if (e->name == "bowser") {
-                e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición de Bowser
-                e->ResetPath();
+                }
 
+                else if (e->name == "goomba" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(2000, 416));  // Cambiar la posición
+                    e->ResetPath();
+
+                }
+                else if (e->name == "goomba2" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(5500, 416));  // Cambiar la posición
+                    e->ResetPath();
+
+                }
+
+                else if (e->name == "bowser" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(-1000, -1000));  // Cambiar la posición
+                    e->ResetPath();
+
+                }
+                else if (e->hitCount != 0 && e != nullptr) {
+                    e->CleanUp();
+                }
+
+                ++it;
             }
 
         }
     }
     if (level == 2) {
-        //Mover posiciones enemigos
-        for (auto& e : enemyList) {
-            e->SetPosition(Vector2D(-1000, -1000));
-            e->ResetPath();
+        // Mover posiciones enemigos
+        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+            Enemy* e = *it;
+
+            if (e == nullptr) {
+                ++it;  // No hacer nada con un nullptr
+                continue;
+            }
+
+            if (e->hitCount != 0) {
+              
+                it = enemyList.erase(it);  
+            }
+            else {
+                e->SetPosition(Vector2D(-1000, -1000));
+                e->ResetPath();
+                ++it;  // Avanzamos al siguiente enemigo
+            }
         }
     }
 
     else if (level == 3) {
         // Mover Bowser a la nueva posición
-        for (auto& e : enemyList) {
-            if (e->name == "bowser") {
-                e->SetPosition(Vector2D(6200, 330));  // Cambiar la posición de Bowser
+        for (auto it = enemyList.begin(); it != enemyList.end(); ) {
+            Enemy* e = *it;
+            if (e == nullptr) {
+                ++it;  // No hacer nada con un nullptr
+                continue;
+            }
+            if (e->hitCount != 0) {
 
-                e->ResetPath();
-                LOG("Bowser moved to (4500, 300) in level 2");
+                it = enemyList.erase(it);
             }
             else {
-                e->SetPosition(Vector2D(-1000, -1000));
+                if (e->name == "bowser") {
+                    e->SetPosition(Vector2D(6200, 330));  // Cambiar la posición de Bowser
 
-                e->ResetPath();
+                    e->ResetPath();
+                    LOG("Bowser moved to (4500, 300) in level 2");
+                }
+                else if (e->name != "bowser" && e->hitCount == 0) {
+                    e->SetPosition(Vector2D(-1000, -1000));
+
+                    e->ResetPath();
+                }
+
+                ++it;  // Avanzamos al siguiente enemigo
+
             }
+          
 
         }
     }
