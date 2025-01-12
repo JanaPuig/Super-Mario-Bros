@@ -231,6 +231,7 @@ void Scene::CreateLevelItems(int level)
             else {
                 it->position = (Vector2D(-1000, -1000));
             }
+
         }
 
     }
@@ -239,10 +240,16 @@ void Scene::CreateLevelItems(int level)
 
         for (auto& it : itemList)
         {
-            it->position = (Vector2D(-1000, -1000));
+            if (it->name == "BigCoin") {
+                it->position = (Vector2D(4650, 560));
+            }
+            else {
+                it->position = (Vector2D(-1000, -1000));
+            }
+      
         }
     }
-   
+ 
 }
 
 void Scene::CreateEnemies(int level) {
@@ -281,24 +288,20 @@ void Scene::CreateEnemies(int level) {
             }
 
         }
-
     }
-
     if (level == 2) {
         //Mover posiciones enemigos
         for (auto& e : enemyList) {
             e->SetPosition(Vector2D(-1000, -1000));
             e->ResetPath();
-
         }
-
     }
 
     else if (level == 3) {
         // Mover Bowser a la nueva posición
         for (auto& e : enemyList) {
             if (e->name == "bowser") {
-                e->SetPosition(Vector2D(5500, 320));  // Cambiar la posición de Bowser
+                e->SetPosition(Vector2D(6200, 330));  // Cambiar la posición de Bowser
 
                 e->ResetPath();
                 LOG("Bowser moved to (4500, 300) in level 2");
@@ -352,30 +355,7 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
-    if (showWinScreen) {
-        int cameraX = Engine::GetInstance().render.get()->camera.x;
-        int cameraY = Engine::GetInstance().render.get()->camera.y;
-
-        // Dibuja la pantalla negra
-        Engine::GetInstance().render.get()->DrawTexture(black, cameraX, cameraY);
-
-        // Dibuja el texto "YOU WIN!"
-        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 960, 400, 200, 100); 
-
-        // Centra al jugador en la pantalla
-        Vector2D playerPos = Vector2D(960 - (player->texW / 2), 500); 
-        player->SetPosition(playerPos);
-
-        // Dibuja la animación de victoria del jugador
-
-        Engine::GetInstance().render.get()->DrawTexture(player->texturePlayer, (int)playerPos.getX(), (int)playerPos.getY(), &player->winAnimation.GetCurrentFrame());
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
-            showWinScreen = false; 
-            showMainMenu = true; 
-        }
-        return true;
-    }
-
+   
     if (!showPauseMenu) { 
         DrawLives();
         DrawObject();
@@ -414,7 +394,6 @@ bool Scene::Update(float dt)
             }
             return true;
         }
-
         if (showSettings) {
             Settings();
          
@@ -433,7 +412,22 @@ bool Scene::Update(float dt)
         Engine::GetInstance().guiManager->CleanUp();
 
     }
-  
+    if (showWinScreen) {
+        int cameraX = Engine::GetInstance().render.get()->camera.x;
+        int cameraY = Engine::GetInstance().render.get()->camera.y;
+
+        // Dibuja la pantalla negra
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+
+        // Dibuja el texto "YOU WIN!"
+        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 540, 400, 400, 200);
+
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
+            showWinScreen = false;
+            showMainMenu = true;
+        }
+        return true;
+    }
     // Handle level transition screen
     if (showingTransition) {
         transitionTimer += dt;
@@ -530,7 +524,7 @@ bool Scene::Update(float dt)
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
     // Handle teleportation in Level 1
-    if (level == 1 ||level ==2) {
+    if (level == 1 ||level ==2||level==3) {
         HandleTeleport(playerPos);
     }
 
@@ -560,43 +554,49 @@ bool Scene::Update(float dt)
 // Handles teleportation logic
 void Scene::HandleTeleport(const Vector2D& playerPos)
 {
-    const float tolerance = 15.0f;
-
-    if (IsInTeleportArea(playerPos, 1440, 290, tolerance) ||
-        IsInTeleportArea(playerPos, 1472, 288, tolerance))
-    {
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-            Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
-            player->SetPosition(Vector2D(1550, 550));
+    const float tolerance = 20.0f;
+    if (level == 1) {
+        if (IsInTeleportArea(playerPos, 1440, 290, tolerance) ||
+            IsInTeleportArea(playerPos, 1472, 288, tolerance))
+        {
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+                Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
+                player->SetPosition(Vector2D(1550, 550));
+            }
+        }
+        else if (IsInTeleportArea(playerPos, 1885, 864, tolerance)) {
+            if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+                player->SetPosition(Vector2D(1800, 290));
+                Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
+            }
+        }
+        else if (IsInTeleportArea(playerPos, 6527, 416, tolerance)) {
+            Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
+            ChangeLevel(2);
         }
     }
-    else if (IsInTeleportArea(playerPos, 1885, 864, tolerance)) {
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-            player->SetPosition(Vector2D(1800, 290));
-            Engine::GetInstance().audio.get()->PlayFx(pipeFxId);
+    if (level == 2) {
+        if (IsInTeleportArea(playerPos, 6690, 764, tolerance))
+        {
+            Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
+            ChangeLevel(3);
+
         }
     }
-    else if (IsInTeleportArea(playerPos, 6527, 416, tolerance)) {
-        Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-        ChangeLevel(2);
-    }
-    else if (level == 2 && IsInTeleportArea(playerPos, 6690, 764, tolerance))
+    if (level == 3) {
+    if (bossFightActive == false && (IsInTeleportArea(playerPos, 5100, 400, tolerance) || IsInTeleportArea(playerPos, 5100, 360, tolerance) || IsInTeleportArea(playerPos, 5100, 440, tolerance)))
     {
-        Engine::GetInstance().audio.get()->PlayFx(CastleFxId);
-        ChangeLevel(3);
-
-    }
-    else if (level == 3 && IsInTeleportArea(playerPos, 5000, 764, tolerance))
-    {
+        bossFightActive = true;
         Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
         Engine::GetInstance().audio.get()->StopMusic();
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav");
-        
+
     }
-    else if (level == 3 && IsInTeleportArea(playerPos, 6100, 764, tolerance))
+    else if (IsInTeleportArea(playerPos, 6630, 415, tolerance) || IsInTeleportArea(playerPos, 6630, 375, tolerance))
     {
         EndGameScreen();
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/WorldClear_Theme.wav");
+    }
     }
 }
 // Checks if the player is in a teleportation area
@@ -633,7 +633,6 @@ bool Scene::PostUpdate()
     }
     return true;
 }
-
 
 // Cleans up the scene
 bool Scene::CleanUp()

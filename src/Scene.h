@@ -87,6 +87,7 @@ public:
     void funcion_menu_pause();
   
     // Public member variables
+    bool bossFightActive = false;
     bool showWinScreen = false;
     bool isLoading = false; // Bandera para mostrar pantalla de carga
     bool limitFPS = false;
