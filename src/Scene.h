@@ -143,7 +143,6 @@ public:
     bool active_menu_pause = false;
 
     GuiControlButton* guiBt;
-    std::vector<Enemy*> enemyList;
 
     
 private:
@@ -165,6 +164,8 @@ private:
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList; 
     std::vector<Item*> itemList;
+    std::vector<Enemy*> enemyList;
+
 
 
     int gameIntroMusicId = 0; // Identificador de la música GameIntro

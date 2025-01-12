@@ -38,97 +38,97 @@ bool Scene::Awake()
 
 void Scene::InitialItems()
 {
-    const int startX = 1664, startY = 672;
+    //const int startX = 1664, startY = 672;
 
-    pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
+    //pugi::xml_node defaultItemNode = configParameters.child("entities").child("items").child("item");
 
-    Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    item->position = Vector2D(startX, startY);
-    item->SetParameters(defaultItemNode);
-    itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
-    itemList.push_back(item);
-    // Log the item's creation
-    LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
+    //Item* item = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //item->position = Vector2D(startX, startY);
+    //item->SetParameters(defaultItemNode);
+    //itemStateList.push_back(std::make_pair(std::string(defaultItemNode.attribute("name").as_string()), 0));
+    //itemList.push_back(item);
+    //// Log the item's creation
+    //LOG("Creating item at position: (%f, %f)", item->position.getX(), item->position.getY());
 
-    // Crear flagpole
-    const int positionX_flagpole = 3232, positionY_flagpole = 384;
-    Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
+    //// Crear flagpole
+    //const int positionX_flagpole = 3232, positionY_flagpole = 384;
+    //Item* flagpole = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //flagpole->position = Vector2D(positionX_flagpole, positionY_flagpole);
 
-    pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
-    flagpole->SetParameters(flagpoleNode);
-    itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
-    itemList.push_back(flagpole);
+    //pugi::xml_node flagpoleNode = configParameters.child("entities").child("items").child("flagpole");
+    //flagpole->SetParameters(flagpoleNode);
+    //itemStateList.push_back(std::make_pair(std::string(flagpoleNode.attribute("name").as_string()), 0));
+    //itemList.push_back(flagpole);
 
-    LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
+    //LOG("Creating flagpole at position: (%f, %f)", flagpole->position.getX(), flagpole->position.getY());
 
-    // Crear flag
-    const int positionX_flag = 3248, positionY_flag = 384;
-    Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    flag->position = Vector2D(positionX_flag, positionY_flag);
+    //// Crear flag
+    //const int positionX_flag = 3248, positionY_flag = 384;
+    //Item* flag = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //flag->position = Vector2D(positionX_flag, positionY_flag);
 
-    pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
-    flag->SetParameters(flagNode);
-    itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
-    itemList.push_back(flag);
+    //pugi::xml_node flagNode = configParameters.child("entities").child("items").child("flag");
+    //flag->SetParameters(flagNode);
+    //itemStateList.push_back(std::make_pair(std::string(flagNode.attribute("name").as_string()), 0));
+    //itemList.push_back(flag);
 
-    // Crear 1Up
-    const int oneUpPpositionX = 500, oneUpPpositionY = 200;
-    Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
+    //// Crear 1Up
+    //const int oneUpPpositionX = 500, oneUpPpositionY = 200;
+    //Item* OneUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //OneUp->position = Vector2D(oneUpPpositionX, oneUpPpositionY);
 
-    pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
-    OneUp->SetParameters(oneUpeNode);
-    itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
-    itemList.push_back(OneUp);
+    //pugi::xml_node oneUpeNode = configParameters.child("entities").child("items").child("OneUp");
+    //OneUp->SetParameters(oneUpeNode);
+    //itemStateList.push_back(std::make_pair(std::string(oneUpeNode.attribute("name").as_string()), 0));
+    //itemList.push_back(OneUp);
 
-    LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
+    //LOG("Creating 1UP at position: (%f, %f)", OneUp->position.getX(), OneUp->position.getY());
 
-    //Crear BigCoin
-    const int BigCoinpositionX = 800, BigCoinpositionY = 200;
-    Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
+    ////Crear BigCoin
+    //const int BigCoinpositionX = 800, BigCoinpositionY = 200;
+    //Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //BigCoin->position = Vector2D(BigCoinpositionX, BigCoinpositionY);
 
-    pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
-    BigCoin->SetParameters(BigCoinNode);
-    itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
-    itemList.push_back(BigCoin);
+    //pugi::xml_node BigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
+    //BigCoin->SetParameters(BigCoinNode);
+    //itemStateList.push_back(std::make_pair(std::string(BigCoinNode.attribute("name").as_string()), 0));
+    //itemList.push_back(BigCoin);
 
-    LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
+    //LOG("Creating Star Coin at position: (%f, %f)", BigCoin->position.getX(), BigCoin->position.getY());
 
-    //Crear PowerUp
-    const int PowerUppositionX = 800, PowerUppositionY = 300;
-    Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
+    ////Crear PowerUp
+    //const int PowerUppositionX = 800, PowerUppositionY = 300;
+    //Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //PowerUp->position = Vector2D(PowerUppositionX, PowerUppositionY);
 
-    pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
-    PowerUp->SetParameters(PowerUpNode);
-    itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
-    itemList.push_back(PowerUp);
+    //pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
+    //PowerUp->SetParameters(PowerUpNode);
+    //itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
+    //itemList.push_back(PowerUp);
 
-    LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
+    //LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
 
-    // Crear flagpole del final del nivel
-    const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
-    Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
+    //// Crear flagpole del final del nivel
+    //const int positionX_flagpole2 = 6343, positionY_flagpole2 = 90;
+    //Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //flagpole2->position = Vector2D(positionX_flagpole2, positionY_flagpole2);
 
-    pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
-    flagpole2->SetParameters(flagpoleNode2);
-    itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
-    itemList.push_back(flagpole2);
+    //pugi::xml_node flagpoleNode2 = configParameters.child("entities").child("items").child("finish_flagpole");
+    //flagpole2->SetParameters(flagpoleNode2);
+    //itemStateList.push_back(std::make_pair(std::string(flagpoleNode2.attribute("name").as_string()), 0));
+    //itemList.push_back(flagpole2);
 
-    LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
+    //LOG("Creating flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
 
-    // Crear flag del final del nivel
-    const int positionX_flag2 = 6299, positionY_flag2 = 110;
-    Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-    flag2->position = Vector2D(positionX_flag2, positionY_flag2);
+    //// Crear flag del final del nivel
+    //const int positionX_flag2 = 6299, positionY_flag2 = 110;
+    //Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    //flag2->position = Vector2D(positionX_flag2, positionY_flag2);
 
-    pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
-    flag2->SetParameters(flagNode2);
-    itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
-    itemList.push_back(flag2);
+    //pugi::xml_node flagNode2 = configParameters.child("entities").child("items").child("finish_flag");
+    //flag2->SetParameters(flagNode2);
+    //itemStateList.push_back(std::make_pair(std::string(flagNode2.attribute("name").as_string()), 0));
+    //itemList.push_back(flag2);
 }
 void Scene::InitialEnemies()
 {
@@ -165,7 +165,7 @@ void Scene::InitialEnemies()
 // Creates items for Level 1
 void Scene::CreateLevelItems(int level)
 {
-    if (level == 1) {
+    /*if (level == 1) {
 
         for (auto& it : itemList)
         {
@@ -248,7 +248,7 @@ void Scene::CreateLevelItems(int level)
             }
       
         }
-    }
+    }*/
  
 }
 
@@ -298,9 +298,7 @@ void Scene::CreateEnemies(int level) {
                     e->ResetPath();
 
                 }
-                else if (e->hitCount != 0 && e != nullptr) {
-                    e->CleanUp();
-                }
+             
 
                 ++it;
             }
@@ -841,20 +839,16 @@ void Scene::LoadGame() {
 
             }
             else {
-                Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy_koopa");
                 if (enemyNode) {
-                    Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                     std::string enemyName = enemyNode.attribute("name").as_string();
 
-                    enemy->SetParameters(enemyNode);
+                    newEnemy->SetParameters(enemyNode);
+                    newEnemy->SetPosition(Vector2D(posX, posY));
 
-                    // Agregar el enemigo a las listas de estados y enemigos
-                    enemyStateList.emplace_back(enemyName, 0);
+                    enemyStateList.push_back(std::make_pair(enemyName, 0));
                     enemyList.push_back(enemy);
-                }
-                else {
-                    std::cerr << "Error: Enemy configuration for 'enemy_koopa' not found in XML." << std::endl;
                 }
             }
         }
@@ -862,17 +856,68 @@ void Scene::LoadGame() {
         //Koopa2
         else if (i == 2) {
             Enemy* enemyKoopa2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa2");
-            enemyKoopa2->SetPosition(Vector2D(posX, posY));
+
+            if (enemyKoopa2 != nullptr) {
+                enemyKoopa2->SetPosition(Vector2D(posX, posY));
+
+            }
+            else {
+                Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy_koopa2");
+                if (enemyNode) {
+                    std::string enemyName = enemyNode.attribute("name").as_string();
+
+                    newEnemy->SetParameters(enemyNode);
+                    newEnemy->SetPosition(Vector2D(posX, posY));
+
+                    enemyStateList.push_back(std::make_pair(enemyName, 0));
+                    enemyList.push_back(enemy);
+                }
+            }
         }
         //Goomba
         else if (i == 3) {
             Enemy* enemyGoomba = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba");
-            enemyGoomba->SetPosition(Vector2D(posX, posY));
+            if (enemyGoomba != nullptr) {
+                enemyGoomba->SetPosition(Vector2D(posX, posY));
+
+            }
+            else {
+                Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
+                if (enemyNode) {
+                    std::string enemyName = enemyNode.attribute("name").as_string();
+
+                    newEnemy->SetParameters(enemyNode);
+                    newEnemy->SetPosition(Vector2D(posX, posY));
+
+                    enemyStateList.push_back(std::make_pair(enemyName, 0));
+                    enemyList.push_back(enemy);
+                }
+            }
         }
         //Goomba2
         else if (i == 4) {
             Enemy* enemyGoomba2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba2");
-            enemyGoomba2->SetPosition(Vector2D(posX, posY));
+
+            if (enemyGoomba2 != nullptr) {
+                enemyGoomba2->SetPosition(Vector2D(posX, posY));
+
+            }
+            else {
+                Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy2");
+                if (enemyNode) {
+                    std::string enemyName = enemyNode.attribute("name").as_string();
+
+                    newEnemy->SetParameters(enemyNode);
+                    newEnemy->SetPosition(Vector2D(posX, posY));
+
+                    enemyStateList.push_back(std::make_pair(enemyName, 0));
+                    enemyList.push_back(enemy);
+                }
+            }
+
         }
 
     }

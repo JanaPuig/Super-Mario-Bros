@@ -325,7 +325,15 @@ bool Physics::PostUpdate()
 
 	// Process bodies to delete after the world step
 	for (PhysBody* physBody : bodiesToDelete) {
-		world->DestroyBody(physBody->body);
+		if (physBody != nullptr) {
+			LOG("Destroying body: %p", physBody);
+			if (physBody->body != nullptr) {
+				world->DestroyBody(physBody->body);
+			}
+		}
+		else {
+			LOG("Tried to destroy a nullptr body");
+		}
 	}
 	bodiesToDelete.clear();
 

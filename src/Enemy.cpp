@@ -24,7 +24,6 @@ bool Enemy::Awake() {
 }
 
 bool Enemy::Start() {
-    name = parameters.attribute("name").as_string();
     // Inicialización de texturas
     if (parameters.attribute("name").as_string() == std::string("koopa")|| parameters.attribute("name").as_string() == std::string("koopa2")) {
         textureKoopa = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_koopa").as_string());
@@ -375,13 +374,10 @@ void Enemy::SetPosition(Vector2D pos) {
 }
 
 Vector2D Enemy::GetPosition() {
-    //if (pbody == nullptr) {
-    //    ResetPosition();
+    if (pbody == nullptr) {
+        Start();
 
-    //    //Engine::GetInstance().scene.get()->CreateLevelItems(Engine::GetInstance().scene.get()->level);
-    //    //// Inicializar pathfinding
-    //    ResetPath();
-    //}
+    }
  
     if (pbody != nullptr) {
         b2Vec2 bodyPos = pbody->body->GetTransform().p;
@@ -440,6 +436,7 @@ void Enemy::ResetPosition() {
     else if (enemyName == "bowser") {
         pbody->body->SetGravityScale(0); // Gravedad normal para Bowser
     }
+
 }
 
 void Enemy::StopMovement() {

@@ -53,7 +53,7 @@ void Pathfinding::ResetPath(Vector2D pos) {
     breadcrumbs.push_back(pos);
 
     //reset the costSoFar matrix
-    //costSoFar = std::vector<std::vector<int>>(map->GetWidth(), std::vector<int>(map->GetHeight(), 0));
+    costSoFar = std::vector<std::vector<int>>(map->GetWidth(), std::vector<int>(map->GetHeight(), 0));
 
 }
 
@@ -257,8 +257,7 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
     Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
     bool foundDestination = false;
     
-   
-
+  
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
 
@@ -308,19 +307,7 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
                 break;
             }
 
-            ////creacio meva
-            //if (!frontierAStar.empty()) {
-            //    Vector2D frontierTile = frontierAStar.top().second;
-            //    frontierAStar.pop();
-            //}
-            //else {
-
-
-            //    std::cerr << "Error: frontierAStar está vacío." << std::endl;
-            //    return;
-            //}
-            ////fins aqui
-          
+      
             // A* Priority function
             int f = g + h;
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end() || g < costSoFar[neighbor.getX()][neighbor.getY()]) {
