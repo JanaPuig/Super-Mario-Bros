@@ -256,6 +256,9 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
     Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
     Vector2D playerPosTile = Engine::GetInstance().map.get()->WorldToMap((int)playerPos.getX(), (int)playerPos.getY());
     bool foundDestination = false;
+    
+   
+
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
 
@@ -304,6 +307,20 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic) {
                 h = neighbor.distanceSquared(playerPosTile);
                 break;
             }
+
+            ////creacio meva
+            //if (!frontierAStar.empty()) {
+            //    Vector2D frontierTile = frontierAStar.top().second;
+            //    frontierAStar.pop();
+            //}
+            //else {
+
+
+            //    std::cerr << "Error: frontierAStar está vacío." << std::endl;
+            //    return;
+            //}
+            ////fins aqui
+          
             // A* Priority function
             int f = g + h;
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end() || g < costSoFar[neighbor.getX()][neighbor.getY()]) {

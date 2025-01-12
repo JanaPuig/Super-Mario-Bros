@@ -786,11 +786,33 @@ void Scene::LoadGame() {
         int posX = saveNode.attribute(enemyPosX.c_str()).as_int();
         int posY = saveNode.attribute(enemyPosY.c_str()).as_int();
 
-        //koopa
+   
+
         if (i == 1) {
             Enemy* enemyKoopa = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa");
-            enemyKoopa->SetPosition(Vector2D(posX, posY));
+            if (enemyKoopa != nullptr) {
+                enemyKoopa->SetPosition(Vector2D(posX, posY));
+
+            }
+            else {
+                Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy_koopa");
+                if (enemyNode) {
+                    Enemy* enemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+                    std::string enemyName = enemyNode.attribute("name").as_string();
+
+                    enemy->SetParameters(enemyNode);
+
+                    // Agregar el enemigo a las listas de estados y enemigos
+                    enemyStateList.emplace_back(enemyName, 0);
+                    enemyList.push_back(enemy);
+                }
+                else {
+                    std::cerr << "Error: Enemy configuration for 'enemy_koopa' not found in XML." << std::endl;
+                }
+            }
         }
+        
         //Koopa2
         else if (i == 2) {
             Enemy* enemyKoopa2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa2");

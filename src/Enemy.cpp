@@ -366,10 +366,20 @@ void Enemy::SetPosition(Vector2D pos) {
 }
 
 Vector2D Enemy::GetPosition() {
+    //if (pbody == nullptr) {
+    //    ResetPosition();
+
+    //    //Engine::GetInstance().scene.get()->CreateLevelItems(Engine::GetInstance().scene.get()->level);
+    //    //// Inicializar pathfinding
+    //    ResetPath();
+    //}
  
-    b2Vec2 bodyPos = pbody->body->GetTransform().p;
-    Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
-    return pos;
+    if (pbody != nullptr) {
+        b2Vec2 bodyPos = pbody->body->GetTransform().p;
+        Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
+        return pos;
+    }
+    
     
 }
 void Enemy::ResetPath() {
