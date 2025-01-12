@@ -285,13 +285,13 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 3
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
-        koopa1->SetPosition(Vector2D(3000, 100));
         enemyList.push_back(koopa1);
+        koopa1->SetPosition(Vector2D(3000, 100));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
-        koopa2->SetPosition(Vector2D(4000, 100));
         enemyList.push_back(koopa2);
+        koopa2->SetPosition(Vector2D(4000, 100));
 
         // Crear Bowser para nivel 3
         Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -343,7 +343,6 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
-   
     if (!showPauseMenu) { 
         DrawLives();
         DrawObject();
@@ -408,7 +407,8 @@ bool Scene::Update(float dt)
         Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
 
         // Dibuja el texto "YOU WIN!"
-        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 540, 400, 400, 200);
+        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 750, 400, 400, 250);
+        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 100);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
             showWinScreen = false;

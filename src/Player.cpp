@@ -85,7 +85,7 @@ bool Player::Update(float dt) {
 	ManageStarPower(dt);
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
-	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove) {
+	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove|| Engine::GetInstance().scene->showWinScreen==true) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 
