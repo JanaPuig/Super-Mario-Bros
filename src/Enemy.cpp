@@ -154,7 +154,7 @@ bool Enemy::Update(float dt) {
             position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
             if (parameters.attribute("name").as_string() == std::string("bowser"))
             {  
-                if (deathTimer >= 3000.0f) {
+                if (deathTimer >= 2000.0f) {
                     isEnemyDead = true;
                     toBeDestroyed = true;
                     return true;
