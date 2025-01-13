@@ -129,6 +129,7 @@ bool Item::Update(float dt)
                     Engine::GetInstance().entityManager->puntuation += 300;
                     Engine::GetInstance().audio.get()->PlayFx(PowerUpFxId); // Reproducir sonido de PowerUp
                     Engine::GetInstance().entityManager.get()->isStarPower = true;; // Reproducir sonido de PowerU
+                    player->starPowerDuration = 0;
                     LOG("PowerUp collected! Power granted.");
                 }
                 else if (isOneUp) {
@@ -170,7 +171,6 @@ bool Item::Update(float dt)
                     (int)position.getY(),
                     &currentAnimation_finish_flag->GetCurrentFrame()
                 );
-
                 // Cambiar de animación si ha terminado
                 if (currentAnimation_finish_flag == &update_finish_flag && currentAnimation_finish_flag->HasFinished()) {
                     LOG("Finish flag animation completed.");

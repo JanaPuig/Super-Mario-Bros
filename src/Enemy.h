@@ -54,8 +54,7 @@ public:
     // Animaciones específicas de Bowser
     Animation idleBowserL;
     Animation idleBowserR;
-    Animation attackBowserL;
-    Animation attackBowserR;
+    Animation attackBowser;
     Animation deadBowserL;
     Animation deadBowserR;
     Animation walkingBowserL;
@@ -85,7 +84,9 @@ public:
     int BowserDeath = 1;
     int BowserAttack = 1;
 
-    bool isAttacking = false;
+    b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); // Velocidad de ataque de Bowser
+  
+    bool isAttacking = false; // Estado del ataque
     bool isEnemyDead = false;
     bool isDying = false;
     bool movingRight = true;
@@ -99,8 +100,8 @@ public:
     float frameDuration = 200.0f;
     float lastAttackTime = 0.0f;
     float minAttackInterval = 2000.0f;
-    float attackStartTime = 0.0f;
-    float attackDuration = 1500.0f;
+    float attackTimer = 0.0f;
+    float attackDuration = 6000.0f; // Duración del ataque en milisegundos (6 segundos)
     float detectionRange = 500.0f;
     float speed = 3.0f;
     float lastStepTime = 0.0f;

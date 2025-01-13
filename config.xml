@@ -266,16 +266,11 @@
 						<idleBowserR loop="true" speed="0.05">
 							<frame x="1153" y="528" w="99" h="123" />
 						</idleBowserR>
-						<attackL loop="false" speed="0.08">
-							<frame x="243" y="192" w="96" h="123" />
-							<frame x="393" y="192" w="90" h="123" />
-							<frame x="507" y="191" w="120" h="124" />
-						</attackL>
-						<attackR loop="false" speed="0.08">
-							<frame x="536" y="522" w="96" h="123" />
-							<frame x="392" y="522" w="90" h="123" />
-							<frame x="248" y="521" w="120" h="124" />
-						</attackR>
+						<attack loop="true" speed="0.20">
+							<frame x="750" y="756" w="84" h="63" />
+							<frame x="893" y="756" w="84" h="63" />
+							<frame x="1032" y="756" w="96" h="63" />
+						</attack>
 						<walkBowserL loop="true" speed="0.07">
 							<frame x="21" y="27" w="102" h="120" />
 							<frame x="165" y="24" w="102" h="123" />

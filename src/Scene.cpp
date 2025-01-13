@@ -408,7 +408,7 @@ bool Scene::Update(float dt)
 
         // Dibuja el texto "YOU WIN!"
         Engine::GetInstance().render.get()->DrawText("YOU WIN!", 750, 400, 400, 250);
-        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 100);
+        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 75);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
             showWinScreen = false;
@@ -1300,7 +1300,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             Engine::GetInstance().entityManager->puntuation = 0;
             Engine::GetInstance().entityManager->lives = 3;
             Engine::GetInstance().entityManager->objects = 0;
-            levelTime = 90000.0f;
+            levelTime = 150000.0f;
             timeUp = false;
 
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);

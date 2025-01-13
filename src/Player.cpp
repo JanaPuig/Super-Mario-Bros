@@ -147,6 +147,7 @@ bool Player::Update(float dt) {
 				pbody->listener = this;
 				pbody->ctype = ColliderType::PLAYER;
 				isDead = false;
+				Engine::GetInstance().scene->bossFightActive = false;
 				deathSoundPlayed = false;
 				Engine::GetInstance().entityManager->isStarPower = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
@@ -179,6 +180,7 @@ bool Player::Update(float dt) {
 					SetPosition(Vector2D(3500, 600)); // Posición del banderín
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
+
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3) {
 					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
@@ -365,7 +367,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
 			{
 				//muerte enemigo
-
+				b2Filter filter = enemy->pbody->body->GetFixtureList()->GetFilterData();
+				filter.maskBits = 0x0000;
+				enemy->pbody->body->GetFixtureList()->SetFilterData(filter);
 				if (enemy->name == "bowser") {
 					enemy->hitCount= enemy->hitCount+3;
 					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
@@ -378,7 +382,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 						Engine::GetInstance().entityManager->puntuation += 300.0;
 					}
 					enemy->isDying = true;
-					b2Vec2 bounceVelocity(0, -7.0f); // Rebote hacia arriba
+					b2Vec2 bounceVelocity(-5.0f, -7.0f); // Rebote hacia arriba
 					enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 				}
 				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
@@ -387,15 +391,22 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower==false) {
 				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
 
-				// Lógica específica para el enemigo (ejemplo con Bowser)
-				if (enemy->name == "bowser") {
+				if (enemy->name == "bowser" && enemy->isAttacking == false) {
 					Engine::GetInstance().audio.get()->StopFx();
 					Engine::GetInstance().audio.get()->PlayFx(BowserHit); 
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+					enemy->hitCount++;
+					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 				}
-				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-
-				enemy->hitCount++; 
-				Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+				else if (enemy->name == "bowser" && enemy->isAttacking == true)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+				}
+				else {
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+					enemy->hitCount++;
+					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+				}
 			}
 			else {
 				LoseLife();
@@ -492,7 +503,6 @@ void Player::ResumeMovement() {
 void Player::ManageStarPower(float dt) {
 	if (Engine::GetInstance().entityManager->isStarPower) {
 		// Reproducir música de Star Power
-
 		if (StarMusicPlaying == false) {
 			Engine::GetInstance().audio->StopMusic();
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
