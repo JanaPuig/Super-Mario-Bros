@@ -329,12 +329,14 @@ bool Physics::PostUpdate()
 			LOG("Destroying body: %p", physBody);
 			if (physBody->body != nullptr) {
 				world->DestroyBody(physBody->body);
+				//physBody->body = nullptr;
 			}
 		}
 		else {
 			LOG("Tried to destroy a nullptr body");
 		}
 	}
+	
 	bodiesToDelete.clear();
 
 	return ret;

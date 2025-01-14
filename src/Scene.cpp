@@ -243,7 +243,7 @@ void Scene::CreateLevelItems(int level)
 }
 void Scene::CreateEnemies(int level) {
     LOG("Creating enemies for level %d", level);
-
+    enemyList.clear();
     // Limpiar enemigos existentes
     Engine::GetInstance().entityManager->RemoveAllEnemies();
 
@@ -274,7 +274,7 @@ void Scene::CreateEnemies(int level) {
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
         koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
-        enemyList.push_back(koopa1);
+        //enemyList.push_back(koopa1);
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
@@ -285,7 +285,7 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 3
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
-        enemyList.push_back(koopa1);
+       enemyList.push_back(koopa1);
         koopa1->SetPosition(Vector2D(3000, 100));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -446,9 +446,12 @@ bool Scene::Update(float dt)
 
         if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
             player->StopMovement(); //Parar movimineto del player
-            for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
-                enemy->StopMovement(); 
+           
+            for (Enemy* enemy : enemyList) {  // Parar movimiento de los enemigos
+                enemy->visible = false;
+                enemy->StopMovement();
             }
+
             for (Item* item : itemList) { //Dejar de ver items
                 item->apear = false;
             }
@@ -461,9 +464,11 @@ bool Scene::Update(float dt)
 
             player->ResumeMovement(); //Renundar movimineto del player
 
-            for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
+            for (Enemy* enemy : enemyList) {
+                enemy->visible = true;
                 enemy->ResumeMovement();
             }
+            
             for (Item* item : itemList) { //Ver items
                 item->apear = true;
             }
@@ -1439,7 +1444,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         }
         break;
     case 12: //Menu pause: Resume
-        if (active_menu_pause) {
+        if (active_menu_pause){
 
         showPauseMenu = true;
         LOG("Calling player->ResumeMovement()");
@@ -1447,7 +1452,12 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         player->ResumeMovement();
 
         for (Enemy* enemy : enemyList) {
-            enemy->ResumeMovement();
+            enemy->visible = true; //Que la textura de los enemigos se vean por pantalla
+            enemy->ResumeMovement(); //Poner el cuerpo físico del enemigo que se pueda mover
+        }
+
+        for (Item* item : itemList) { //Ver items
+            item->apear = true;
         }
         showPauseMenu = false; // Cerrar el menú al presionar Backspace        
         }

@@ -106,6 +106,6 @@ public:
     float lastStepTime = 0.0f;
     float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
 
-    bool canMove = true;
+    bool visible = true;
  
 };
