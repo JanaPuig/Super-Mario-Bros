@@ -236,8 +236,7 @@ bool Enemy::Update(float dt) {
 
                 return true; // Termina la actualización de Bowser
             }
-
-            if (hitCount == 3) {
+            if (hitCount >= 3) {
                 Engine::GetInstance().entityManager->puntuation += 100000;
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");

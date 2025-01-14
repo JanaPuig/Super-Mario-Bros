@@ -517,6 +517,7 @@ void Player::ManageStarPower(float dt) {
 
 		if (Engine::GetInstance().entityManager->starPowerDuration >= 10000.0f) {
 			Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder
+			Engine::GetInstance().entityManager->starPowerDuration = 0;
 			Engine::GetInstance().entityManager->isStarPower = false; // Desactivar el poder de estrella
 			Engine::GetInstance().entityManager->StarMusicPlaying = false;
 			Engine::GetInstance().audio->StopMusic();

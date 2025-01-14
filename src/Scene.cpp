@@ -94,9 +94,21 @@ void Scene::InitialItems()
 
     // Crear flagpole del final del nivel
     Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node flagpole2Node = configParameters.child("entities").child("items").child("finish_flagpole");
+    flagpole2->SetParameters(flagpole2Node);
+    flagpole2->position = Vector2D(640, 285); // Asigna una posición inicial válida
+    itemStateList.push_back(std::make_pair(std::string(flagpole2Node.attribute("name").as_string()), 0));
+    itemList.push_back(flagpole2);
+    LOG("Creating Final Flagpole at position: (%f, %f)", flagpole2->position.getX(), flagpole2->position.getY());
 
     // Crear flag del final del nivel
     Item* flag2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node flag2Node = configParameters.child("entities").child("items").child("finish_flag");
+    flag2->SetParameters(flag2Node);
+    flag2->position = Vector2D(640, 285); // Asigna una posición inicial válida
+    itemStateList.push_back(std::make_pair(std::string(flag2Node.attribute("name").as_string()), 0));
+    itemList.push_back(flag2);
+    LOG("Creating Final Flag at position: (%f, %f)", flag2->position.getX(), flag2->position.getY());
 
 }
 void Scene::InitialEnemies()
@@ -274,25 +286,26 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 2
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
-        koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
+        koopa1->SetPosition(Vector2D(2500, 150)); // Nueva posición
         enemyList.push_back(koopa1);
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
-        koopa2->SetPosition(Vector2D(3700, 150)); // Nueva posición
+        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
+        koopa2->SetPosition(Vector2D(3000, 150)); // Nueva posición
         enemyList.push_back(koopa2);
+
     }
     else if (level == 3) {
         // Crear Koopas para el nivel 3
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
         enemyList.push_back(koopa1);
-        koopa1->SetPosition(Vector2D(3000, 100));
+        koopa1->SetPosition(Vector2D(2600, 100));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
         enemyList.push_back(koopa2);
-        koopa2->SetPosition(Vector2D(4000, 100));
+        koopa2->SetPosition(Vector2D(3500, 100));
 
         // Crear Bowser para nivel 3
         Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -409,7 +422,7 @@ bool Scene::Update(float dt)
 
         // Dibuja el texto "YOU WIN!"
         Engine::GetInstance().render.get()->DrawText("YOU WIN!", 750, 400, 400, 250);
-        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 75);
+        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 400, 75);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
             showWinScreen = false;
@@ -674,6 +687,8 @@ void Scene::FinishTransition()
 {
     elapsedTime = 0.0f;
     isFlaged = false;
+    Engine::GetInstance().entityManager->starPowerDuration = 0;
+    Engine::GetInstance().entityManager->isStarPower = false;
     showingTransition = false;
     Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
     // Reactivate the player after transition
@@ -839,8 +854,6 @@ void Scene::UpdateItem(std::string itemName, int isPicked) {
     {
         if (item.first == itemName)
         {
-            //itemStateList[i].second = isPicked;  // Update the state in the list
-
             itemStateList[i].second = isPicked;
 
             break;

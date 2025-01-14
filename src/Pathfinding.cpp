@@ -131,24 +131,18 @@ void Pathfinding::DrawPath() {
 }
 
 bool Pathfinding::IsWalkable(int x, int y) {
+    // Verificar que las coordenadas estén dentro de los límites del mapa
+    if (x < 0 || y < 0 || x >= map->GetWidth() || y >= map->GetHeight()) {
+        return false; // Fuera de límites
+    }
 
-    bool isWalkable = false;
+    // Verificar si el tile es transitable
+    if (layerNav != nullptr) {
+        float gid = layerNav->Get(x, y);
+        return gid == 0; // Suponiendo que 0 es el ID de un tile transitable
+    }
 
-    // L11: TODO 3: return true only if x and y are within map limits
-    // and the tile is walkable (tile id 0 in the navigation layer)
-
-    //Set isWalkable to true if the position is inside map limits and is a position that is not blocked in the navigation layer
-    //Get the navigation layer
-
-    //if (layerNav != nullptr) {
-    //    if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
-    //        float gid = layerNav->Get(x, y);
-    //        if (gid != blockedGid) isWalkable = true;
-    //    }
-    //}
-
-    isWalkable = true;
-    return isWalkable;
+    return false; // Si no hay capa de navegación, no es transitable
 }
 
 void Pathfinding::PropagateBFS() {
@@ -324,14 +318,14 @@ int Pathfinding::MovementCost(int x, int y)
 {
     int ret = 1;
 
-    //if ((x >= 0) && (x < map->GetWidth()) && (y >= 0) && (y < map->GetHeight()))
-    //{
-    //    int gid = layerNav->Get(x, y);
-    //    if (gid == highCostGid) {
-    //        ret = 5;
-    //    }
-    //    else ret = 1;
-    //}
+    if ((x >= 0) && (x < map->GetWidth()) && (y >= 0) && (y < map->GetHeight()))
+    {
+        int gid = layerNav->Get(x, y);
+        if (gid == highCostGid) {
+            ret = 5;
+        }
+        else ret = 1;
+    }
     return ret;
 }
 void Pathfinding::ComputePath(int x, int y)

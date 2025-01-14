@@ -174,7 +174,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="1500" y="100" w="80" h="85" hitcount="0" isAlive="" levels="1,2,3" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="2500" y="100" w="80" h="85" hitcount="0" isAlive="" levels="1,2,3" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
@@ -204,7 +204,7 @@
 						</deadkoopa>
 					</animations>
 				</enemy_koopa>
-				<enemy_koopa2 name="koopa2" x="4500" y="100" w="80" h="85" hitcount="0" isAlive="" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false" levels="1,2,3">
+				<enemy_koopa2 name="koopa2" x="4000" y="100" w="80" h="85" hitcount="0" isAlive="" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false" levels="1,2,3">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
