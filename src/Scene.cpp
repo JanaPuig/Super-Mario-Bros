@@ -32,7 +32,7 @@ bool Scene::Awake()
     player->SetParameters(configParameters.child("entities").child("player"));
     InitialItems();
     InitialEnemies();
-    
+
     return true;
 }
 
@@ -71,26 +71,26 @@ void Scene::InitialItems()
     //Crear BigCoin
     const int hiddenX = -1000, hiddenY = -1000;
     Item* BigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-     pugi::xml_node bigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
+    pugi::xml_node bigCoinNode = configParameters.child("entities").child("items").child("BigCoin");
 
-     for (int i = 0; i < 3; i++) {  // Siempre crear 3 BigCoins
-         Item* bigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-         bigCoin->position = Vector2D(hiddenX, hiddenY); // Inicialmente fuera de pantalla
-         bigCoin->SetParameters(bigCoinNode);
-         itemStateList.push_back(std::make_pair(std::string(bigCoinNode.attribute("name").as_string()), 0));
-         itemList.push_back(bigCoin);
+    for (int i = 0; i < 3; i++) {  // Siempre crear 3 BigCoins
+        Item* bigCoin = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+        bigCoin->position = Vector2D(hiddenX, hiddenY); // Inicialmente fuera de pantalla
+        bigCoin->SetParameters(bigCoinNode);
+        itemStateList.push_back(std::make_pair(std::string(bigCoinNode.attribute("name").as_string()), 0));
+        itemList.push_back(bigCoin);
 
-         LOG("BigCoin %d created at hidden position.", i + 1);
-     }
+        LOG("BigCoin %d created at hidden position.", i + 1);
+    }
 
-     // Crear PowerUp
-     Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
-     pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
-     PowerUp->SetParameters(PowerUpNode);
-     PowerUp->position = Vector2D(640, 285); // Asigna una posición inicial válida
-     itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
-     itemList.push_back(PowerUp);
-     LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
+    // Crear PowerUp
+    Item* PowerUp = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
+    pugi::xml_node PowerUpNode = configParameters.child("entities").child("items").child("PowerUp");
+    PowerUp->SetParameters(PowerUpNode);
+    PowerUp->position = Vector2D(640, 285); // Asigna una posición inicial válida
+    itemStateList.push_back(std::make_pair(std::string(PowerUpNode.attribute("name").as_string()), 0));
+    itemList.push_back(PowerUp);
+    LOG("Creating Power-Up at position: (%f, %f)", PowerUp->position.getX(), PowerUp->position.getY());
 
     // Crear flagpole del final del nivel
     Item* flagpole2 = static_cast<Item*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM));
@@ -243,8 +243,9 @@ void Scene::CreateLevelItems(int level)
 }
 void Scene::CreateEnemies(int level) {
     LOG("Creating enemies for level %d", level);
-    enemyList.clear();
+
     // Limpiar enemigos existentes
+    enemyList.clear();
     Engine::GetInstance().entityManager->RemoveAllEnemies();
 
     if (level == 1) {
@@ -274,7 +275,7 @@ void Scene::CreateEnemies(int level) {
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
         koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
-        //enemyList.push_back(koopa1);
+        enemyList.push_back(koopa1);
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"));
@@ -285,7 +286,7 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 3
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"));
-       enemyList.push_back(koopa1);
+        enemyList.push_back(koopa1);
         koopa1->SetPosition(Vector2D(3000, 100));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -302,12 +303,12 @@ void Scene::CreateEnemies(int level) {
         LOG("Bowser created for level 3 at position (6200, 330)");
     }
 }
-    
+
 // Called before the first frame
 bool Scene::Start()
 {
     Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
-    
+
     // Load sound effects
     pipeFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Pipe.wav");
     CastleFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/StageClear_Theme.wav");
@@ -317,7 +318,7 @@ bool Scene::Start()
     marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
     BowserLaugh = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserLaugh.wav");
-   
+
     // Load textures for menus and transitions
     mainMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("mainMenu").attribute("path").as_string());
     Title = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("title").attribute("path").as_string());
@@ -343,7 +344,7 @@ bool Scene::PreUpdate()
 // Main update logic for the Scene
 bool Scene::Update(float dt)
 {
-    if (!showPauseMenu) { 
+    if (!showPauseMenu) {
         DrawLives();
         DrawObject();
         DrawPuntation();
@@ -370,7 +371,7 @@ bool Scene::Update(float dt)
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
-            }
+        }
         menu();
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
         Engine::GetInstance().guiManager->Draw();
@@ -383,7 +384,7 @@ bool Scene::Update(float dt)
         }
         if (showSettings) {
             Settings();
-         
+
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
             Engine::GetInstance().guiManager->Draw();
@@ -392,7 +393,7 @@ bool Scene::Update(float dt)
             }
             return true;
         }
-  
+
         return true; // Evita que se ejecute el código del resto del juego mientras el menú esté activo
     }
     else {
@@ -408,7 +409,7 @@ bool Scene::Update(float dt)
 
         // Dibuja el texto "YOU WIN!"
         Engine::GetInstance().render.get()->DrawText("YOU WIN!", 750, 400, 400, 250);
-        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 100);
+        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 200, 75);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
             showWinScreen = false;
@@ -446,16 +447,14 @@ bool Scene::Update(float dt)
 
         if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
             player->StopMovement(); //Parar movimineto del player
-           
-            for (Enemy* enemy : enemyList) {  // Parar movimiento de los enemigos
+            for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
                 enemy->visible = false;
                 enemy->StopMovement();
             }
-
             for (Item* item : itemList) { //Dejar de ver items
                 item->apear = false;
             }
-            
+
             Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
             Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
@@ -464,11 +463,10 @@ bool Scene::Update(float dt)
 
             player->ResumeMovement(); //Renundar movimineto del player
 
-            for (Enemy* enemy : enemyList) {
+            for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
                 enemy->visible = true;
                 enemy->ResumeMovement();
             }
-            
             for (Item* item : itemList) { //Ver items
                 item->apear = true;
             }
@@ -495,7 +493,7 @@ bool Scene::Update(float dt)
     }
 
     Vector2D playerPos = player->GetPosition();
-   
+
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN && !ToggleHelpMenu) {
         ToggleMenu();
         ToggleHelpMenu = true;
@@ -503,7 +501,7 @@ bool Scene::Update(float dt)
     if (showHelpMenu) {
         int cameraX = Engine::GetInstance().render.get()->camera.x;
         int cameraY = Engine::GetInstance().render.get()->camera.y;
-        Engine::GetInstance().render.get()->DrawTexture(helpMenuTexture, -cameraX, -cameraY+375);
+        Engine::GetInstance().render.get()->DrawTexture(helpMenuTexture, -cameraX, -cameraY + 375);
         Engine::GetInstance().render.get()->DrawTexture(Title, -cameraX - 275, -cameraY - 250);
     }
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {
@@ -516,7 +514,7 @@ bool Scene::Update(float dt)
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
     // Handle teleportation in Level 1
-    if (level == 1 ||level ==2||level==3) {
+    if (level == 1 || level == 2 || level == 3) {
         HandleTeleport(playerPos);
     }
 
@@ -525,7 +523,7 @@ bool Scene::Update(float dt)
     float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
 
     // Lógica si se acaba el tiempo
-    if ((currentTime/1000) <= 0.0f)
+    if ((currentTime / 1000) <= 0.0f)
     {
         std::cout << "Time's up! Game over!" << std::endl;
         timeUp = true;
@@ -574,19 +572,19 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         }
     }
     if (level == 3) {
-    if (bossFightActive == false && (IsInTeleportArea(playerPos, 5100, 400, tolerance) || IsInTeleportArea(playerPos, 5100, 360, tolerance) || IsInTeleportArea(playerPos, 5100, 440, tolerance)))
-    {
-        bossFightActive = true;
-        Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
-        Engine::GetInstance().audio.get()->StopMusic();
-        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav");
+        if (bossFightActive == false && (IsInTeleportArea(playerPos, 5100, 400, tolerance) || IsInTeleportArea(playerPos, 5100, 360, tolerance) || IsInTeleportArea(playerPos, 5100, 440, tolerance)))
+        {
+            bossFightActive = true;
+            Engine::GetInstance().audio.get()->PlayFx(BowserLaugh);
+            Engine::GetInstance().audio.get()->StopMusic();
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/BossFight.wav");
 
-    }
-    else if (IsInTeleportArea(playerPos, 6630, 415, tolerance) || IsInTeleportArea(playerPos, 6630, 375, tolerance))
-    {
-        EndGameScreen();
-        Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/WorldClear_Theme.wav");
-    }
+        }
+        else if (IsInTeleportArea(playerPos, 6630, 415, tolerance) || IsInTeleportArea(playerPos, 6630, 375, tolerance))
+        {
+            EndGameScreen();
+            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/WorldClear_Theme.wav");
+        }
     }
 }
 // Checks if the player is in a teleportation area
@@ -707,8 +705,8 @@ void Scene::FinishTransition()
     }
 }
 
-void Scene::StartNewGame() { 
-   
+void Scene::StartNewGame() {
+
     level = 1;
     player->SetPosition(Vector2D(30, 430));
     showMainMenu = false;
@@ -730,13 +728,13 @@ void Scene::StartNewGame() {
     saveNode.attribute("object").set_value(0);
     saveNode.attribute("Puntuation").set_value(0);
     saveNode.attribute("isSave").set_value(false);
-  
+
 
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("hitcount").set_value(0);
     SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("hitcount").set_value(0);
- 
+
     SaveFile.child("config").child("scene").child("entities").child("items").child("coin").attribute("isPicked").set_value(0);
 
     // Reiniciar enemigos
@@ -767,7 +765,7 @@ void Scene::LoadGame() {
     level = saveNode.attribute("level").as_int();
     int playerX = saveNode.attribute("playerX").as_int();
     int playerY = saveNode.attribute("playerY").as_int();
-    player->SetPosition(Vector2D(playerX, playerY)); 
+    player->SetPosition(Vector2D(playerX, playerY));
 
     //Cargar enemigos
     for (int i = 1; i <= 4; ++i) {
@@ -777,7 +775,7 @@ void Scene::LoadGame() {
         int posX = saveNode.attribute(enemyPosX.c_str()).as_int();
         int posY = saveNode.attribute(enemyPosY.c_str()).as_int();
 
-   
+
 
         if (i == 1) {
             Enemy* enemyKoopa = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa");
@@ -799,7 +797,7 @@ void Scene::LoadGame() {
                 }
             }
         }
-        
+
         //Koopa2
         else if (i == 2) {
             Enemy* enemyKoopa2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa2");
@@ -874,9 +872,9 @@ void Scene::LoadGame() {
     Engine::GetInstance().entityManager->objects = LoadFile.child("config").child("scene").child("SaveFile").attribute("object").as_int();
     Engine::GetInstance().entityManager->puntuation = LoadFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").as_int();
     elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
-    isFlaged= saveNode.attribute("checkpoint").as_bool();
+    isFlaged = saveNode.attribute("checkpoint").as_bool();
     showMainMenu = false;
-    LOG("Game loaded successfully."); 
+    LOG("Game loaded successfully.");
 }
 
 // Return the player position
@@ -891,14 +889,14 @@ void Scene::LoadState()
     if (result == NULL) {
         LOG("Error Loading config.xml: %s", result.description());
         return;
-    }  
+    }
     // read the player position from the XML
     Vector2D posPlayer;
     Vector2D posEnemy;
     elapsedTime = LoadFile.child("config").child("scene").child("SaveFile").attribute("time").as_float();
     Engine::GetInstance().entityManager->lives = LoadFile.child("config").child("scene").child("SaveFile").attribute("lives").as_int();
     Engine::GetInstance().entityManager->objects = LoadFile.child("config").child("scene").child("SaveFile").attribute("object").as_int();
-    Engine::GetInstance().entityManager->puntuation=LoadFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").as_int();
+    Engine::GetInstance().entityManager->puntuation = LoadFile.child("config").child("scene").child("SaveFile").attribute("Puntuation").as_int();
     posPlayer.setX(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerX").as_int());
     posPlayer.setY(LoadFile.child("config").child("scene").child("SaveFile").attribute("playerY").as_int());
     int savedLevel = LoadFile.child("config").child("scene").child("SaveFile").attribute("level").as_int();
@@ -1121,7 +1119,7 @@ void Scene::menu()
     }
 }
 
-void Scene::funcion_menu_pause() 
+void Scene::funcion_menu_pause()
 {
     active_menu = false;
     active_settings = false;
@@ -1134,8 +1132,8 @@ void Scene::funcion_menu_pause()
     Engine::GetInstance().render.get()->DrawTexture(menu_pause, -cameraX, -cameraY);
     Engine::GetInstance().render.get()->DrawText("Pause", 768, 195, 360, 60);
 
-    SDL_Rect ResumePosition = { 700, 340 - 30, 365-20, 60 };
-    SDL_Rect SettingsPosition = { 700, 440 - 30, 378-20, 60 };
+    SDL_Rect ResumePosition = { 700, 340 - 30, 365 - 20, 60 };
+    SDL_Rect SettingsPosition = { 700, 440 - 30, 378 - 20, 60 };
     SDL_Rect Back_tile = { 700, 540 - 30, 230, 60 };
     SDL_Rect Exit = { 700, 640 - 30, 200, 45 };
 
@@ -1222,7 +1220,7 @@ void Scene::Settings()
     if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
         FxButtonHeld = false;  // Activar el movimiento solo si estamos presionando el botón. Fx Volumen       
         musicButtonHeld = false;  // Si se suelta el botón, desactivar el movimiento. Music Volumen         
-    } 
+    }
 
     if (musicButtonHeld) {
 
@@ -1234,7 +1232,7 @@ void Scene::Settings()
         }
         else {
             musicPosX = mousePos.getX();
-        }       
+        }
     }
 
     if (FxButtonHeld) {
@@ -1255,10 +1253,10 @@ void Scene::Settings()
 
     SDL_Rect newFxPos = { FxPosX, 431, 15, 35 }; // Nueva posición. Music Volumen 
     guiBt->bounds = newFxPos;
-    
+
     //Subir bajar volumen de la música
-    float volume = (float)(musicPosX - 940) / (1350 - 940);  
-    volume = std::max(0.0f, std::min(1.0f, volume)); 
+    float volume = (float)(musicPosX - 940) / (1350 - 940);
+    volume = std::max(0.0f, std::min(1.0f, volume));
     sdlVolume = (int)(volume * MIX_MAX_VOLUME);
     Mix_VolumeMusic(sdlVolume);
 
@@ -1267,7 +1265,7 @@ void Scene::Settings()
     int sdlVolumeFx = (int)(volumeFx * MIX_MAX_VOLUME);
     Mix_Volume(-1, sdlVolumeFx);
 
-   //Rectángulo volumen musica
+    //Rectángulo volumen musica
     Engine::GetInstance().render.get()->DrawRectangle({ 940, 300 + 20, 400 + 20, 19 }, 64, 224, 208, 200, true, false);
     //Rectángulo Fx musica
     Engine::GetInstance().render.get()->DrawRectangle({ 940, 420 + 20, 400 + 20, 19 }, 64, 224, 208, 200, true, false);
@@ -1305,22 +1303,22 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             Engine::GetInstance().entityManager->puntuation = 0;
             Engine::GetInstance().entityManager->lives = 3;
             Engine::GetInstance().entityManager->objects = 0;
-            levelTime = 90000.0f;
+            levelTime = 150000.0f;
             timeUp = false;
 
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);
             Engine::GetInstance().audio.get()->PlayFx(marioTime);
             ShowTransitionScreen();
-        }   
+        }
         break;
     case 2: // Menu; Load Game
-        
+
         if (LoadFile.child("config").child("scene").child("SaveFile").attribute("isSave").as_bool() == true && active_menu) {
             LOG("Load Game button clicked");
             LoadGame();
             Engine::GetInstance().audio.get()->StopMusic();
             isLoading = true;
-            Engine::GetInstance().audio.get()->PlayFx(MenuStart);         
+            Engine::GetInstance().audio.get()->PlayFx(MenuStart);
 
         }
         break;
@@ -1418,7 +1416,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 wasClicked = true;
             }
         }
-        break; 
+        break;
 
     case 8:// Settings: Music Volume
         if (active_settings) {
@@ -1444,26 +1442,22 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         }
         break;
     case 12: //Menu pause: Resume
-        if (active_menu_pause){
+        if (active_menu_pause) {
 
-        showPauseMenu = true;
-        LOG("Calling player->ResumeMovement()");
+            showPauseMenu = true;
+            LOG("Calling player->ResumeMovement()");
 
-        player->ResumeMovement();
+            player->ResumeMovement();
 
-        for (Enemy* enemy : enemyList) {
-            enemy->visible = true; //Que la textura de los enemigos se vean por pantalla
-            enemy->ResumeMovement(); //Poner el cuerpo físico del enemigo que se pueda mover
-        }
-
-        for (Item* item : itemList) { //Ver items
-            item->apear = true;
-        }
-        showPauseMenu = false; // Cerrar el menú al presionar Backspace        
+            for (Enemy* enemy : enemyList) {
+                enemy->visible=true;
+                enemy->ResumeMovement();
+            }
+            showPauseMenu = false; // Cerrar el menú al presionar Backspace        
         }
         break;
     }
-    
+
     return true;
 }
 void Scene::GameOver() {
@@ -1477,19 +1471,19 @@ void Scene::DrawLives() {
 }
 void Scene::DrawObject() {
     char objectText[100];
-    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);  
-    Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);  
+    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);
+    Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);
 }
 void Scene::DrawPuntation() {
     char puntuationText[100];
-    sprintf_s(puntuationText, "Puntuation: %.1f", Engine::GetInstance().entityManager->puntuation);  
-    Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30); 
-    
+    sprintf_s(puntuationText, "Puntuation: %.1f", Engine::GetInstance().entityManager->puntuation);
+    Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30);
+
 }
 void Scene::DrawWorld() {
     char drawlevel[64];
-    sprintf_s(drawlevel, "World: 1-%d", level);  
-    Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);  
+    sprintf_s(drawlevel, "World: 1-%d", level);
+    Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);
 
 }
 

@@ -11,31 +11,31 @@ class Enemy : public Entity
 {
 public:
 
-	Enemy();
-	virtual ~Enemy();
+    Enemy();
+    virtual ~Enemy();
 
-	bool Awake();
+    bool Awake();
 
-	bool Start();
+    bool Start();
 
-	bool Update(float dt);
+    bool Update(float dt);
 
-	bool CleanUp();
+    bool CleanUp();
 
-	void SetParameters(pugi::xml_node parameters) {
-		this->parameters = parameters;
-	}
+    void SetParameters(pugi::xml_node parameters) {
+        this->parameters = parameters;
+    }
 
-	void SetPosition(Vector2D pos);
+    void SetPosition(Vector2D pos);
 
-	Vector2D GetPosition();
+    Vector2D GetPosition();
 
-	void ResetPath();
+    void ResetPath();
 
-	void UpdateColliderSize();
-	int GetHitCount();
+    void UpdateColliderSize();
+    int GetHitCount();
 
-	void ResetPosition();
+    void ResetPosition();
     //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
@@ -54,8 +54,7 @@ public:
     // Animaciones específicas de Bowser
     Animation idleBowserL;
     Animation idleBowserR;
-    Animation attackBowserL;
-    Animation attackBowserR;
+    Animation attackBowser;
     Animation deadBowserL;
     Animation deadBowserR;
     Animation walkingBowserL;
@@ -79,13 +78,15 @@ public:
     int hitCount = 0;
     int currentFrame = 0;
     int totalFrames = 3;
-    
-//BowserSoundEffects
+
+    //BowserSoundEffects
     int BowserStep = 1;
     int BowserDeath = 1;
     int BowserAttack = 1;
 
-    bool isAttacking = false;
+    b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); // Velocidad de ataque de Bowser
+
+    bool isAttacking = false; // Estado del ataque
     bool isEnemyDead = false;
     bool isDying = false;
     bool movingRight = true;
@@ -95,17 +96,19 @@ public:
 
     // Parámetros relacionados con tiempo y rango
     float deathTimer = 0.0f;
+    float targetX = 6300.0f;
+    float ReturnSpeed = 4.0f;
     float frameTime = 0;
     float frameDuration = 200.0f;
     float lastAttackTime = 0.0f;
     float minAttackInterval = 2000.0f;
-    float attackStartTime = 0.0f;
-    float attackDuration = 1500.0f;
+    float attackTimer = 0.0f;
+    float attackDuration = 6000.0f; // Duración del ataque en milisegundos (6 segundos)
     float detectionRange = 500.0f;
     float speed = 3.0f;
     float lastStepTime = 0.0f;
     float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
 
     bool visible = true;
- 
+
 };

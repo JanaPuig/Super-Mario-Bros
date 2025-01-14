@@ -80,12 +80,12 @@ public:
 
     void UpdateEnemyHitCount(std::string enemyName, int hitCount);
     void UpdateItem(std::string itemName, int isPicked);
-  
-    void Credits();   
+
+    void Credits();
     void menu();
     void ToggleFullscreen();
     void funcion_menu_pause();
-  
+
     // Public member variables
     bool bossFightActive = false;
     bool showWinScreen = false;
@@ -119,7 +119,7 @@ public:
     SDL_Texture* blur = NULL;
     SDL_Texture* Title = NULL; // Texture for the main menu
     SDL_Texture* gameOver = NULL;
-   
+
     float tolerance = 20.0f;         // Tolerance value for proximity checks
     float loadingScreenDuration = 3100.0f; // Duración de la pantalla de carga (en segundos)
     float loadingTimer = 0.0f;    // Temporizador para la pantalla de carga
@@ -129,7 +129,7 @@ public:
     float logoDuration = 3000.0f;      // Duración del logo en segundos
 
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
-    int CastleFxId = 0;   
+    int CastleFxId = 0;
     int SelectFxId = 0;
     int SelectFxId2 = 0;
     int marioTime = 0;
@@ -144,7 +144,7 @@ public:
 
     GuiControlButton* guiBt;
 
-    
+
 private:
 
     void ShowTransitionScreen();
@@ -162,7 +162,7 @@ private:
     //Private Lists
     std::vector<int> hitcountList;
     std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
-    std::vector<std::pair<std::string, int>> itemStateList; 
+    std::vector<std::pair<std::string, int>> itemStateList;
     std::vector<Item*> itemList;
     std::vector<Enemy*> enemyList;
 
@@ -174,10 +174,10 @@ private:
 
     float transitionDuration = 3100;      // Duration of the transition screen (in ms)
     float transitionTimer = 0.0f;         // Timer for tracking transition time
-    
+
     bool active_menu = false;
     bool active_settings = false;
-  
+
     bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
 
     //Private Textures
@@ -188,9 +188,9 @@ private:
     SDL_Texture* newGameButton = NULL;  // Textura para el botón Nuevo Juego
     SDL_Texture* loadGameButton = NULL; // Textura para el botón Cargar Juego
     SDL_Texture* leaveGameButton = NULL; // Textura para el botón Salir
-    SDL_Texture* newGameButtonSelected = NULL;  
-    SDL_Texture* loadGameButtonSelected = NULL; 
+    SDL_Texture* newGameButtonSelected = NULL;
+    SDL_Texture* loadGameButtonSelected = NULL;
     SDL_Texture* leaveGameButtonSelected = NULL;
- 
+
     Vector2D mousePos;
 };

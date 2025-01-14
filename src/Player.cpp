@@ -85,7 +85,7 @@ bool Player::Update(float dt) {
 	ManageStarPower(dt);
 	int cameraX = Engine::GetInstance().render.get()->camera.x;
 	int cameraY = Engine::GetInstance().render.get()->camera.y;
-	if (Engine::GetInstance().scene.get()->showMainMenu|| Engine::GetInstance().scene.get()->isLoading|| !isActive||!canMove|| Engine::GetInstance().scene->showWinScreen==true) {
+	if (Engine::GetInstance().scene.get()->showMainMenu || Engine::GetInstance().scene.get()->isLoading || !isActive || !canMove || Engine::GetInstance().scene->showWinScreen == true) {
 		return true; // Si estamos en el menú, no hacer nada más, ni dibujar al jugador
 	}
 
@@ -94,7 +94,7 @@ bool Player::Update(float dt) {
 		isDead = true;
 	}
 	//Actualize textures to be sure they are Drawn
-		Engine::GetInstance().render.get()->DrawTexture(texturePlayer,(int)position.getX(),(int)position.getY(),&currentAnimation->GetCurrentFrame());
+	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 
 	currentAnimation->Update();
 	b2Vec2 velocity = b2Vec2(0, pbody->body->GetLinearVelocity().y);
@@ -147,41 +147,48 @@ bool Player::Update(float dt) {
 				pbody->listener = this;
 				pbody->ctype = ColliderType::PLAYER;
 				isDead = false;
+				Engine::GetInstance().scene->bossFightActive = false;
 				deathSoundPlayed = false;
 				Engine::GetInstance().entityManager->isStarPower = false;
 				Engine::GetInstance().scene.get()->timeUp = false;
 
 				// Reiniciar enemigos
-				if (Engine::GetInstance().scene.get()->level == 1)	Engine::GetInstance().entityManager.get()->ResetEnemies();
 
 				// Reiniciar posición del jugador
 				if (Engine::GetInstance().scene.get()->level == 1 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3250, 430)); // Posición del banderín
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 1) {
 					SetPosition(Vector2D(30, 430)); // Inicio del nivel 1
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 2 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3300, 830)); // Posición del banderín
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/Wolrd2Theme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 2) {
 					SetPosition(Vector2D(200, 700)); // Inicio del nivel 2
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3 && Engine::GetInstance().scene->isFlaged) {
 					SetPosition(Vector2D(3500, 600)); // Posición del banderín
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
+
 				}
 				else if (Engine::GetInstance().scene.get()->level == 3) {
 					SetPosition(Vector2D(100, 580)); // Inicio del nivel 3
+					Engine::GetInstance().entityManager.get()->ResetEnemies();
 					Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
 					Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
 				}
@@ -191,7 +198,7 @@ bool Player::Update(float dt) {
 		return true;
 	}
 	//crouching animation
-	 if (iscrouching) {
+	if (iscrouching) {
 		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			currentAnimation = facingLeft ? &crouchStarLAnimation : &crouchStarRAnimation;
@@ -201,7 +208,7 @@ bool Player::Update(float dt) {
 		}
 	}
 	// Moving Animation
-	else if (isMoving&&!isJumping) {
+	else if (isMoving && !isJumping) {
 		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			currentAnimation = facingLeft ? &WalkingStarLAnimation : &WalkingStarRAnimation;
@@ -211,7 +218,7 @@ bool Player::Update(float dt) {
 		}
 	}
 	// Jumping Animation
-	else if (isJumping&&!iscrouching) {
+	else if (isJumping && !iscrouching) {
 		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			currentAnimation = facingLeft ? &JumpStarLAnimation : &JumpStarRAnimation;
@@ -248,81 +255,81 @@ bool Player::Update(float dt) {
 		Player::pbody->body->SetGravityScale(1);
 	}
 
-	
-		// PLAYER MOVEMENT CODE
+
+	// PLAYER MOVEMENT CODE
 	if (Engine::GetInstance().entityManager->isStarPower)
 	{
 		movementSpeed = 5.0f;
 	}
-	else{ 
+	else {
 		movementSpeed = 3.5f;  // walking speed
 	}
 
-		// Sprint
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) {
-			if (Engine::GetInstance().entityManager->isStarPower)
-			{
-				movementSpeed = 7.0f;
-			}
-			else {
-				movementSpeed = 5.5f;
-			}
-			isSprinting = true;
-			frameDuration = 80.0f;
+	// Sprint
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT && !isDead) {
+		if (Engine::GetInstance().entityManager->isStarPower)
+		{
+			movementSpeed = 7.0f;
 		}
 		else {
-			isSprinting = false; frameDuration = 130.0f;
+			movementSpeed = 5.5f;
 		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
-			iscrouching = true;
-		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
-			iscrouching = false;
-		}
-		// Left
-		if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
-			velocity.x = -movementSpeed;
-			isMoving = true;
-			facingLeft = true;
-		}
-		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) {
-			isMoving = false;
-		}
-		// Right movement
-		if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
-			velocity.x = movementSpeed;
-			isMoving = true;
-			facingLeft = false;
-		}
-		else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) {
-			isMoving = false;
-		}
-		// Jump
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
-			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-			animationTimer = 0.0f;
-			isJumping = true;
-			++jumpcount;
-			Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
-			// Play random sound
-			int randomSound = rand() % 8;
-			Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
-		}
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine::GetInstance().entityManager->isStarPower == true)
-		{
-			//CODIGO DE CREACION ATAQUE DE FUEGO MARIO
-		}
-		if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
-	
-		// Apply the velocity to the player
-		pbody->body->SetLinearVelocity(velocity);
+		isSprinting = true;
+		frameDuration = 80.0f;
+	}
+	else {
+		isSprinting = false; frameDuration = 130.0f;
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
+		iscrouching = true;
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
+		iscrouching = false;
+	}
+	// Left
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
+		velocity.x = -movementSpeed;
+		isMoving = true;
+		facingLeft = true;
+	}
+	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+		isMoving = false;
+	}
+	// Right movement
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
+		velocity.x = movementSpeed;
+		isMoving = true;
+		facingLeft = false;
+	}
+	else if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+		isMoving = false;
+	}
+	// Jump
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+		animationTimer = 0.0f;
+		isJumping = true;
+		++jumpcount;
+		Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
+		// Play random sound
+		int randomSound = rand() % 8;
+		Engine::GetInstance().audio.get()->PlayFx(jumpVoiceIds[randomSound]);
+	}
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F) == KEY_DOWN && Engine::GetInstance().entityManager->isStarPower == true)
+	{
+		//CODIGO DE CREACION ATAQUE DE FUEGO MARIO
+	}
+	if (isJumping) velocity.y = pbody->body->GetLinearVelocity().y;
 
-		b2Transform pbodyPos = pbody->body->GetTransform();
+	// Apply the velocity to the player
+	pbody->body->SetLinearVelocity(velocity);
 
-		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-	
+	b2Transform pbodyPos = pbody->body->GetTransform();
+
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
 	return true;
 }
 
@@ -365,37 +372,46 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
 			{
 				//muerte enemigo
-
+				b2Filter filter = enemy->pbody->body->GetFixtureList()->GetFilterData();
+				filter.maskBits = 0x0000;
+				enemy->pbody->body->GetFixtureList()->SetFilterData(filter);
 				if (enemy->name == "bowser") {
-					enemy->hitCount= enemy->hitCount+3;
+					enemy->hitCount = enemy->hitCount + 3;
 					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 				}
 				else {
-					if (enemy->name == "koopa"|| enemy->name == "koopa2") {
+					if (enemy->name == "koopa" || enemy->name == "koopa2") {
 						Engine::GetInstance().entityManager->puntuation += 650.50;
 					}
-					if (enemy->name == "goomba"|| enemy->name == "goomba2") {
+					if (enemy->name == "goomba" || enemy->name == "goomba2") {
 						Engine::GetInstance().entityManager->puntuation += 300.0;
 					}
 					enemy->isDying = true;
-					b2Vec2 bounceVelocity(0, -7.0f); // Rebote hacia arriba
+					b2Vec2 bounceVelocity(-5.0f, -7.0f); // Rebote hacia arriba
 					enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 				}
 				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 			}
 			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo
-			else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower==false) {
+			else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower == false) {
 				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
 
-				// Lógica específica para el enemigo (ejemplo con Bowser)
-				if (enemy->name == "bowser") {
+				if (enemy->name == "bowser" && enemy->isAttacking == false) {
 					Engine::GetInstance().audio.get()->StopFx();
-					Engine::GetInstance().audio.get()->PlayFx(BowserHit); 
+					Engine::GetInstance().audio.get()->PlayFx(BowserHit);
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+					enemy->hitCount++;
+					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
 				}
-				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-
-				enemy->hitCount++; 
-				Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+				else if (enemy->name == "bowser" && enemy->isAttacking == true)
+				{
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+				}
+				else {
+					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+					enemy->hitCount++;
+					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+				}
 			}
 			else {
 				LoseLife();
@@ -492,7 +508,6 @@ void Player::ResumeMovement() {
 void Player::ManageStarPower(float dt) {
 	if (Engine::GetInstance().entityManager->isStarPower) {
 		// Reproducir música de Star Power
-
 		if (StarMusicPlaying == false) {
 			Engine::GetInstance().audio->StopMusic();
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
