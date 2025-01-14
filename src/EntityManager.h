@@ -42,6 +42,8 @@ public:
 
 public:
 	bool isStarPower = false;
+	float starPowerDuration = 15.0f;
+	bool StarMusicPlaying = false;
 	int lives = 3;
 	int objects = 0;
 	float puntuation = 0.0f;

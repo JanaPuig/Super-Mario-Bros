@@ -11,7 +11,7 @@
 #include "EntityManager.h"
 #include "tracy/Tracy.hpp"
 
-Player::Player() : Entity(EntityType::PLAYER), starPowerDuration(15.0f)
+Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
 }
@@ -508,17 +508,17 @@ void Player::ResumeMovement() {
 void Player::ManageStarPower(float dt) {
 	if (Engine::GetInstance().entityManager->isStarPower) {
 		// Reproducir música de Star Power
-		if (StarMusicPlaying == false) {
+		if (Engine::GetInstance().entityManager->StarMusicPlaying == false) {
 			Engine::GetInstance().audio->StopMusic();
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
-			StarMusicPlaying = true;
+			Engine::GetInstance().entityManager->StarMusicPlaying = true;
 		}
-		starPowerDuration += dt;
+		Engine::GetInstance().entityManager->starPowerDuration += dt;
 
-		if (starPowerDuration >= 10000.0f) {
+		if (Engine::GetInstance().entityManager->starPowerDuration >= 10000.0f) {
 			Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder
 			Engine::GetInstance().entityManager->isStarPower = false; // Desactivar el poder de estrella
-			StarMusicPlaying = false;
+			Engine::GetInstance().entityManager->StarMusicPlaying = false;
 			Engine::GetInstance().audio->StopMusic();
 			if (Engine::GetInstance().scene->level == 1) {
 				Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/GroundTheme.wav");

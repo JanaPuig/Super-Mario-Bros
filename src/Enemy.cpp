@@ -11,8 +11,8 @@
 #include "EntityManager.h"
 #include "tracy/Tracy.hpp"
 
-Enemy::Enemy() : Entity(EntityType::ENEMY) {}
-
+Enemy::Enemy()
+    : Entity(EntityType::ENEMY),  hitCount(0), isAlive(true) {}
 Enemy::~Enemy() {
     delete pathfinding;
 }
@@ -299,7 +299,6 @@ bool Enemy::Update(float dt) {
 
         if (isEnemyDead) {
             toBeDestroyed = true;
-            Engine::GetInstance().scene.get()->SaveState();
             return true;
         }
         if (currentAnimation) {
@@ -500,3 +499,4 @@ void Enemy::ResumeMovement() {
     pbody->ctype = ColliderType::ENEMY;
 
 }
+

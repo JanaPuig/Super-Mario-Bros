@@ -60,7 +60,7 @@ public:
     float movementSpeed = 0.0f;
     float jumpForce = 2.8f;
     const float jumpFrameDuration = 120.0f;
-    float starPowerDuration = 3000000000000.0f;
+
     // Animation parameters
     int texW = 0, texH = 0;
     int frameWidth = 0, frameHeight = 0;
@@ -115,6 +115,5 @@ public:
 
     // Internal state
     bool isActive = true;
-    bool StarMusicPlaying = false;
 
 };

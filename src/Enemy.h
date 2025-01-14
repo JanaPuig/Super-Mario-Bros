@@ -93,7 +93,7 @@ public:
     bool movingLeft = false;
     bool showPath = false;
     bool isLookingRight = false;
-
+    bool isAlive;
     // Parámetros relacionados con tiempo y rango
     float deathTimer = 0.0f;
     float targetX = 6300.0f;
