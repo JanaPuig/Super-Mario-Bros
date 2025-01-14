@@ -96,6 +96,8 @@ public:
 
     // Parámetros relacionados con tiempo y rango
     float deathTimer = 0.0f;
+    float targetX = 6300.0f;
+    float ReturnSpeed = 4.0f;
     float frameTime = 0;
     float frameDuration = 200.0f;
     float lastAttackTime = 0.0f;

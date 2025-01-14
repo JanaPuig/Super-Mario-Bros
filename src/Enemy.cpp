@@ -136,24 +136,21 @@ bool Enemy::Update(float dt) {
     }
 
     if (canMove) {
-        // Detección del jugador
         Vector2D playerPosition = Engine::GetInstance().scene.get()->GetPlayerPosition();
         Vector2D playerTile = Engine::GetInstance().map.get()->WorldToMap(playerPosition.getX(), playerPosition.getY());
         Vector2D enemyPosition = GetPosition();
         Vector2D enemyPositionTiles = Engine::GetInstance().map.get()->WorldToMap(enemyPosition.getX(), enemyPosition.getY());
         float distanceToPlayer = (playerPosition - enemyPosition).magnitude();
-        // Obtener el tiempo actual
         float currentTime = SDL_GetTicks();
         frameTime += dt;
 
-        if (isDying)
-        {
+        if (isDying) {
             deathTimer += dt;
             b2Transform pbodyPos = pbody->body->GetTransform();
             position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
             position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
-            if (parameters.attribute("name").as_string() == std::string("bowser"))
-            {  
+
+            if (parameters.attribute("name").as_string() == std::string("bowser")) {
                 if (deathTimer >= 2000.0f) {
                     isEnemyDead = true;
                     toBeDestroyed = true;
@@ -177,7 +174,7 @@ bool Enemy::Update(float dt) {
 
             return true;
         }
-        //Goomba Animation
+
         if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
             if (hitCount >= 1) {
                 LOG("Goomba is Dead");
@@ -187,7 +184,7 @@ bool Enemy::Update(float dt) {
                 return true;
             }
         }
-        //Koopa Animation
+
         if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
             if (hitCount >= 1) {
                 LOG("Koopa is Dead");
@@ -205,30 +202,64 @@ bool Enemy::Update(float dt) {
                 currentAnimation = &flyingkoopaRight;
             }
         }
-        //Bowser Animation
         if (parameters.attribute("name").as_string() == std::string("bowser")) {
-            // Muerte
+             static bool isReturningToStart = false;
+
+            // Si Bowser está en proceso de regresar a 6300
+            if (position.getX() <= 4500 || isReturningToStart) {
+                isReturningToStart = true;
+                float currentX = position.getX();
+
+                if (currentX < targetX) {
+                    currentX += ReturnSpeed;
+                    if (currentX > targetX) {
+                        currentX = targetX;
+                    }
+                    if (isAttacking) {
+                        currentAnimation = &attackBowser;
+                    }
+                    else {
+                        currentAnimation = &walkingBowserR;
+                    }
+                    currentAnimation->Update();
+                    SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
+                    int drawY = (int)position.getY() + (isAttacking ? 23 : 0);
+                    Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX() - 35, drawY, &frameRect);
+                }
+
+                if (currentX >= targetX || playerPosition.getX() >= 5100) {
+                    isReturningToStart = false; // Deja de regresar
+                }
+                // Actualizar posición de Bowser
+                position.setX(currentX);
+                pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(currentX), pbody->body->GetTransform().p.y), 0);
+                pbody->body->SetLinearVelocity(b2Vec2(0, 0)); // Detener movimiento lineal
+
+                return true; // Termina la actualización de Bowser
+            }
+
             if (hitCount == 3) {
                 Engine::GetInstance().entityManager->puntuation += 100000;
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");
                 currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
                 isDying = true;
+                b2Filter filter =   pbody->body->GetFixtureList()->GetFilterData();
+                filter.maskBits = 0x0000;
+                pbody->body->GetFixtureList()->SetFilterData(filter);
                 deathTimer = 0.0f;
                 return true;
             }
-
             if (isAttacking) {
                 attackTimer += dt;
                 if (attackTimer >= attackDuration) {
-                    isAttacking = false; // Finaliza el ataque
+                    isAttacking = false;
                     attackTimer = 0.0f;
-                    UpdateColliderSize(); // Actualizar el tamaño del collider
+                    UpdateColliderSize();
                     currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
                 }
             }
             else {
-                // Si Bowser no está atacando, decide si debe atacar
                 if (distanceToPlayer <= detectionRange && currentTime - lastAttackTime >= minAttackInterval) {
                     if (rand() % 200 < 1) {
                         LOG("Bowser ATTACKS!");
@@ -239,12 +270,10 @@ bool Enemy::Update(float dt) {
                         Engine::GetInstance().audio.get()->PlayFx(BowserAttack);
                         minAttackInterval = 10000.0f + rand() % 10;
                         currentAnimation = &attackBowser;
-                        // Reiniciar la animación de ataque
                         currentAnimation->Reset();
                     }
                 }
                 else {
-                    // Movimiento y animación de caminar
                     if (velocity.x < 0 && distanceToPlayer <= detectionRange) {
                         currentAnimation = &walkingBowserL;
                         if (currentTime - lastStepTime > stepInterval) {
@@ -260,22 +289,20 @@ bool Enemy::Update(float dt) {
                         }
                     }
                     else {
-                        // Si no se está moviendo, usar la animación idle
                         currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
                     }
                 }
             }
-            // Aplicar la velocidad a Bowser (sólo si no está atacando)
             if (!isAttacking) {
                 pbody->body->SetLinearVelocity(velocity);
             }
         }
+
         if (isEnemyDead) {
             toBeDestroyed = true;
             Engine::GetInstance().scene.get()->SaveState();
             return true;
         }
-
         if (currentAnimation) {
             currentAnimation->Update();
             SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
@@ -284,17 +311,15 @@ bool Enemy::Update(float dt) {
             int drawY = (int)position.getY() + (isAttacking ? 23 : 0);
             Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), drawY, &frameRect);
         }
-        if (pbody != NULL)
-        {
+        if (pbody != NULL) {
             b2Transform pbodyPos = pbody->body->GetTransform();
             position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
             position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-            // Mostrar u ocultar path al presionar F9
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
                 showPath = !showPath;
             }
-            // Dibujar el path si está habilitado
+
             if (showPath) {
                 pathfinding->DrawPath();
             }
@@ -302,8 +327,8 @@ bool Enemy::Update(float dt) {
             if (distanceToPlayer <= detectionRange) {
                 ResetPath();
 
-                int steps = 0;  // Número de pasos máximo del pathfinding
-                int maxSteps = 100; // -> Ajustar según les parezca
+                int steps = 0;
+                int maxSteps = 100;
                 while (pathfinding->pathTiles.empty() && steps < maxSteps) {
                     pathfinding->PropagateAStar(SQUARED);
                     steps++;
@@ -318,7 +343,7 @@ bool Enemy::Update(float dt) {
                 }
 
                 if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
-                    velocity = b2Vec2(0, 0); // Resetear la velocidad en X
+                    velocity = b2Vec2(0, 0);
                     if (nextPos.getX() > enemyPositionTiles.getX()) {
                         velocity = b2Vec2(2, 0);
                     }
@@ -326,13 +351,13 @@ bool Enemy::Update(float dt) {
                         velocity = b2Vec2(-2, 0);
                     }
                     else if (nextPos.getY() > enemyPositionTiles.getY()) {
-                        velocity = b2Vec2(0, 2); // Movimiento solo en el eje Y
+                        velocity = b2Vec2(0, 2);
                     }
                     else if (nextPos.getY() < enemyPositionTiles.getY()) {
-                        velocity = b2Vec2(0, -2); // Movimiento solo en el eje Y
+                        velocity = b2Vec2(0, -2);
                     }
                 }
-                else if (parameters.attribute("name").as_string() == std::string("bowser")&&isAttacking ==true) {
+                else if (parameters.attribute("name").as_string() == std::string("bowser") && isAttacking == true) {
                     if (nextPos.getX() > enemyPositionTiles.getX()) {
                         velocity = b2Vec2(5.5, 0);
                     }
@@ -369,6 +394,12 @@ bool Enemy::Update(float dt) {
                     toBeDestroyed = true;
                 }
             }
+
+            if (pbody != NULL) {
+                b2Transform pbodyPos = pbody->body->GetTransform();
+                position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+                position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+            }
         }
     }
     return true;
@@ -399,7 +430,6 @@ Vector2D Enemy::GetPosition() {
         Start();
 
     }
- 
     if (pbody != nullptr) {
         b2Vec2 bodyPos = pbody->body->GetTransform().p;
         Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
