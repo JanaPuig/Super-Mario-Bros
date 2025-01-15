@@ -441,7 +441,6 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 		jumpcount = 1;
 		break;
 	case ColliderType::ENEMY:
-
 		break;
 	default:
 		break;

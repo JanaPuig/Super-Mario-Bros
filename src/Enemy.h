@@ -22,11 +22,18 @@ public:
 
     bool CleanUp();
 
-    void SetParameters(pugi::xml_node parameters) {
-        this->parameters = parameters;
+    void SetParameters(const pugi::xml_node& params, bool useXMLPosition = true) {
+        parameters = params;
+
+        if (useXMLPosition) {
+            position.setX(parameters.attribute("x").as_float());
+            position.setY(parameters.attribute("y").as_float());
+        }
     }
 
-    void SetPosition(Vector2D pos);
+    void SetPosition(const Vector2D& pos) {
+        position = pos;
+    }
 
     Vector2D GetPosition();
 

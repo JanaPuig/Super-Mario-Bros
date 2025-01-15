@@ -26,7 +26,7 @@ public:
 
     // Creates items specific to Level 1
     void InitialItems();
-    void InitialEnemies();
+    void InitialEnemies(bool useXMLPosition);
 
     void CreateLevelItems(int level);
     void CreateEnemies(int level);

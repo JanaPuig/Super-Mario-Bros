@@ -41,8 +41,10 @@ bool Enemy::Start() {
     name = parameters.attribute("name").as_string();
 
     // Configuración inicial
-    position.setX(parameters.attribute("x").as_int());
-    position.setY(parameters.attribute("y").as_int());
+    if (position.getX() == 0 && position.getY() == 0) {
+        position.setX(parameters.attribute("x").as_float());
+        position.setY(parameters.attribute("y").as_float());
+    }
     texW = parameters.attribute("w").as_int();
     texH = parameters.attribute("h").as_int();
     hitCount = parameters.attribute("hitcount").as_int();
@@ -413,14 +415,6 @@ bool Enemy::CleanUp() {
     return true;
 }
 
-void Enemy::SetPosition(Vector2D pos) {
-    pos.setX(pos.getX() + texW / 2);
-    pos.setY(pos.getY() + texH / 2);
-    b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
-    if (pbody != nullptr) {
-        pbody->body->SetTransform(bodyPos, 0);
-    }
-}
 
 Vector2D Enemy::GetPosition() {
     if (pbody == nullptr) {
