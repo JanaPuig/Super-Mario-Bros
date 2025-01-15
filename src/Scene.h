@@ -139,7 +139,6 @@ public:
     int sdlVolume;
     int musicPosX = 1350;
     int FxPosX = 1350;
-    bool active_menu_pause = false;
 
 
 
@@ -173,8 +172,6 @@ private:
     float transitionDuration = 3100;      // Duration of the transition screen (in ms)
     float transitionTimer = 0.0f;         // Timer for tracking transition time
 
-    bool active_menu = false;
-    bool active_settings = false;
 
     bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
 

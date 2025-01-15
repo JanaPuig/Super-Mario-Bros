@@ -920,10 +920,6 @@ void Scene::menu()
 {
     Engine::GetInstance().guiManager->CleanUp();
 
-    active_menu = true;
-    active_settings = false;
-    active_menu_pause = false;
-
     SDL_Rect buttonPositions[] = {
    {150, 350, 250, 120},
    {150, 485, 250, 120},
@@ -940,11 +936,7 @@ void Scene::menu()
 
 void Scene::funcion_menu_pause()
 {
-    active_menu = false;
-    active_settings = false;
-    active_menu_pause = true;
-
-    Engine::GetInstance().guiManager->CleanUp();
+     Engine::GetInstance().guiManager->CleanUp();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
@@ -965,28 +957,21 @@ void Scene::funcion_menu_pause()
 
 void Scene::Credits()
 {
-    active_menu = false;
-    active_settings = false;
-    active_menu_pause = false;
-    if (!active_settings && !active_menu_pause) {
-        Engine::GetInstance().guiManager->CleanUp();
+   
+    Engine::GetInstance().guiManager->CleanUp();
 
-        int cameraX = Engine::GetInstance().render.get()->camera.x;
-        int cameraY = Engine::GetInstance().render.get()->camera.y;
+    int cameraX = Engine::GetInstance().render.get()->camera.x;
+    int cameraY = Engine::GetInstance().render.get()->camera.y;
 
-        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
-        Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
-        Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
-        Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
-    }
+    Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
+    Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
+    Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
+    Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
+    
 }
 
 void Scene::Settings()
 {
-    active_menu = false;
-    active_settings = true;
-    active_menu_pause = false;
-
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;
