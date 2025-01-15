@@ -4,7 +4,7 @@
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
  <tileset firstgid="10121" source="MapMetadata.tsx"/>
- <layer id="1" name="Capa de patrones 1" width="212" height="30">
+ <layer id="1" name="Capa de patrones 1" width="212" height="30" visible="0">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
@@ -6372,7 +6372,7 @@
    <tile gid="931"/>
   </data>
  </layer>
- <layer id="2" name="Navigation" width="212" height="30" visible="0">
+ <layer id="2" name="Navigation" width="212" height="30">
   <properties>
    <property name="Draw" type="bool" value="false"/>
    <property name="Navigation" type="bool" value="true"/>
@@ -10001,15 +10001,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10028,6 +10022,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10038,6 +10035,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10195,15 +10195,6 @@
    <tile/>
    <tile/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -10222,6 +10213,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10240,6 +10234,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10250,6 +10247,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile/>
    <tile/>
    <tile/>
@@ -10425,9 +10425,6 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
@@ -10446,9 +10443,6 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
@@ -10459,9 +10453,15 @@
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
+   <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>

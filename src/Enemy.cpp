@@ -82,10 +82,10 @@ bool Enemy::Start() {
         pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
-        pbody->body->SetGravityScale(0); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
     }
     else if (enemyName == "goomba2") {
-        pbody->body->SetGravityScale(0); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
     }
     else if (enemyName == "bowser") {
         pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
@@ -387,8 +387,14 @@ bool Enemy::Update(float dt) {
                 pbody->body->SetLinearVelocity(b2Vec2(0, 0));
             }
 
-            if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
+            if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2"))&&Engine::GetInstance().scene->level==1) {
                 if (GetPosition().getY() > 490) {
+                    isEnemyDead = true;
+                    toBeDestroyed = true;
+                }
+            }
+            else if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) && Engine::GetInstance().scene->level == 3) {
+                if (GetPosition().getY() > 790) {
                     isEnemyDead = true;
                     toBeDestroyed = true;
                 }
@@ -471,7 +477,7 @@ void Enemy::ResetPosition() {
         pbody->body->SetGravityScale(0);
     }
     else if (enemyName == "goomba" || enemyName == "goomba2") {
-        pbody->body->SetGravityScale(0);
+        pbody->body->SetGravityScale(10);
     }
     else if (enemyName == "bowser") {
         pbody->body->SetGravityScale(5); // Gravedad normal para Bowser

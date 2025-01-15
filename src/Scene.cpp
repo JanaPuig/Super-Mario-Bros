@@ -272,40 +272,50 @@ void Scene::CreateEnemies(int level) {
         enemyList.push_back(koopa2);
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba1->SetPosition(Vector2D(1500, 300));
+        goomba1->SetPosition(Vector2D(2000, 416));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"),false);
         enemyList.push_back(goomba1);
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba2->SetPosition(Vector2D(4500, 300));
+        goomba2->SetPosition(Vector2D(5500, 416));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"),false);
         enemyList.push_back(goomba2);
     }
     else if (level == 2) {
         // Crear Koopas para el nivel 2
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa1->SetPosition(Vector2D(2500, 150)); // Nueva posición
+        koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa2->SetPosition(Vector2D(3000, 150)); // Nueva posición
+        koopa2->SetPosition(Vector2D(3500, 150)); // Nueva posición
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa2);
 
     }
     else if (level == 3) {
         // Crear Koopas para el nivel 3
+
+        Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        goomba1->SetPosition(Vector2D(2000, 430));
+        goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
+        enemyList.push_back(goomba1);
+
+        Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+        goomba2->SetPosition(Vector2D(1100, 430));
+        goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
+        enemyList.push_back(goomba2);
+
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetPosition(Vector2D(2600, 100));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa2->SetPosition(Vector2D(3500, 100));
+        koopa2->SetPosition(Vector2D(3800, 100));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
-
 
         // Crear Bowser para nivel 3
         Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
