@@ -397,7 +397,6 @@ bool Scene::Update(float dt)
         }
         menu();
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
-        Engine::GetInstance().guiManager->Draw();
         if (showCredits) {
             Credits(); // Si showCredits es true, dibuja la pantalla de cr�ditos
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
@@ -410,7 +409,6 @@ bool Scene::Update(float dt)
 
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
-            Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showSettings = false;
             }
@@ -499,14 +497,13 @@ bool Scene::Update(float dt)
     // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
     if (showPauseMenu) {
         funcion_menu_pause();
-        Engine::GetInstance().guiManager->Draw();
 
         if (manage_showSettings) {
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
 
-            Engine::GetInstance().guiManager->Draw();
+            //Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 manage_showSettings = false;
             }
@@ -1113,29 +1110,29 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     // L15: DONE 5: Implement the OnGuiMouseClickEvent method
     switch (control->id) {
     case 1: // Menu; New Game
-        if (active_menu) {
-            CreateLevelItems(1);
-            LOG("New Game button clicked");
+        CreateLevelItems(1);
+        LOG("New Game button clicked");
 
-            Engine::GetInstance().entityManager.get()->ResetItems();
+        Engine::GetInstance().entityManager.get()->ResetItems();
 
-            StartNewGame();
-            player->isDead = false;
-            player->canMove = true;
-            Engine::GetInstance().entityManager->puntuation = 0;
-            Engine::GetInstance().entityManager->lives = 3;
-            Engine::GetInstance().entityManager->objects = 0;
-            levelTime = 150000.0f;
-            timeUp = false;
+        StartNewGame();
+        player->isDead = false;
+        player->canMove = true;
+        Engine::GetInstance().entityManager->puntuation = 0;
+        Engine::GetInstance().entityManager->lives = 3;
+        Engine::GetInstance().entityManager->objects = 0;
+        levelTime = 150000.0f;
+        timeUp = false;
 
-            Engine::GetInstance().audio.get()->PlayFx(MenuStart);
-            Engine::GetInstance().audio.get()->PlayFx(marioTime);
-            ShowTransitionScreen();
-        }
+        Engine::GetInstance().audio.get()->PlayFx(MenuStart);
+        Engine::GetInstance().audio.get()->PlayFx(marioTime);
+        ShowTransitionScreen();
+        
         break;
+
     case 2: // Menu; Load Game
 
-        if (LoadFile.child("config").child("scene").child("SaveFile").attribute("isSave").as_bool() == true && active_menu) {
+        if (LoadFile.child("config").child("scene").child("SaveFile").attribute("isSave").as_bool() == true) {
             LOG("Load Game button clicked");
             LoadGame();
             Engine::GetInstance().audio.get()->StopMusic();
@@ -1146,137 +1143,136 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break;
 
     case 3: //Menu: Setings Gamme
-        if (active_menu) {
-            showSettings = true;
-        }
+
+         showSettings = true;
+
         break;
+
     case 4:// Menu: Credits Game
-        if (active_menu) {
-            showCredits = true;
-        }
+
+        showCredits = true;
+
         break;
+
     case 5:// Menu and Menu pause: Leave Game
-        if (active_menu || menu_pause) {
-            LOG("Leave button clicked");
-            Engine::GetInstance().CleanUp();
-            exit(0);
-        }
+
+        LOG("Leave button clicked");
+        Engine::GetInstance().CleanUp();
+        exit(0);
+
         break;
+
     case 6:// Settings: Full screen window
-        if (active_settings) {
-            LOG("Leave button clicked");
-            fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
+        LOG("Leave button clicked");
+        fullscreenNode = SaveFile.child("config").child("window").child("fullscreen_window");
 
-            if (fullscreen_window == false)
-            {
-                if (fullscreenNode) {
-                    fullscreenNode.attribute("value").set_value("true");
-                }
-                else {
-                    LOG("Error: fullscreen_window node not found.");
-                    return false;
-                }
-
-                // Guardar el archivo XML
-                if (SaveFile.save_file("config.xml")) {
-                    LOG("XML file saved successfully");
-                }
-                else {
-                    LOG("Error saving XML file");
-                    return false;
-                }
-
-                // Leer el valor modificado de fullscreen_window
-                fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
-
-                LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
+        if (fullscreen_window == false)
+        {
+            if (fullscreenNode) {
+                fullscreenNode.attribute("value").set_value("true");
+            }
+            else {
+                LOG("Error: fullscreen_window node not found.");
+                return false;
             }
 
-            else if (fullscreen_window == true) {
-                if (fullscreenNode) {
-                    fullscreenNode.attribute("value").set_value("false");
-                }
-                else {
-                    LOG("Error: fullscreen_window node not found.");
-                    return false;
-                }
-
-                // Guardar el archivo XML
-                if (SaveFile.save_file("config.xml")) {
-                    LOG("XML file saved successfully");
-                }
-                else {
-                    LOG("Error saving XML file");
-                    return false;
-                }
-
-                // Leer el valor modificado de fullscreen_window
-                fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
-
-                LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
+            // Guardar el archivo XML
+            if (SaveFile.save_file("config.xml")) {
+                LOG("XML file saved successfully");
             }
+            else {
+                LOG("Error saving XML file");
+                return false;
+            }
+
+            // Leer el valor modificado de fullscreen_window
+            fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
+
+            LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
         }
+
+        else if (fullscreen_window == true) {
+            if (fullscreenNode) {
+                fullscreenNode.attribute("value").set_value("false");
+            }
+            else {
+                LOG("Error: fullscreen_window node not found.");
+                return false;
+            }
+
+            // Guardar el archivo XML
+            if (SaveFile.save_file("config.xml")) {
+                LOG("XML file saved successfully");
+            }
+            else {
+                LOG("Error saving XML file");
+                return false;
+            }
+
+            // Leer el valor modificado de fullscreen_window
+            fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
+
+            LOG("Fullscreen Window: %s", fullscreen_window ? "true" : "false");
+             }
         break;
 
     case 7:// Settings: FPS Toggle
-        if (active_settings) {
 
+         if (wasClicked) {
+            // Alternar limitFPS
+            Engine::GetInstance().limitFPS = !Engine::GetInstance().limitFPS;
+            Engine::GetInstance().maxFrameDuration = Engine::GetInstance().limitFPS ? 34 : 16;
 
-            if (wasClicked) {
-                // Alternar limitFPS
-                Engine::GetInstance().limitFPS = !Engine::GetInstance().limitFPS;
-                Engine::GetInstance().maxFrameDuration = Engine::GetInstance().limitFPS ? 34 : 16;
+            std::cout << "FPS Limit toggled: " << (Engine::GetInstance().limitFPS ? "Enabled" : "Disabled") << std::endl;
 
-                std::cout << "FPS Limit toggled: " << (Engine::GetInstance().limitFPS ? "Enabled" : "Disabled") << std::endl;
+            activatebotton7 = Engine::GetInstance().limitFPS;
 
-                activatebotton7 = Engine::GetInstance().limitFPS;
+            wasClicked = false;
+         }
 
-                wasClicked = false;
-            }
-
-            else if (activatebotton7 || !activatebotton7) {
-                wasClicked = true;
-            }
+        else if (activatebotton7 || !activatebotton7) {
+            wasClicked = true;
         }
+            
         break;
 
     case 8:// Settings: Music Volume
-        if (active_settings) {
+
             musicButtonHeld = true;
-        }
+
         break;
+
     case 9:// Settings: Fx Volume
-        if (active_settings) {
+
             FxButtonHeld = true;
-        }
+
         break;
+
     case 10: //Menu pause: Back to tile
-        if (active_menu_pause) {
+
             showMainMenu = true;
 
-        }
         break;
+
     case 11: //Menu pause: Settings
-        if (active_menu_pause) {
-            Engine::GetInstance().entityManager->ResetEnemies();
 
             manage_showSettings = true;
-        }
+
         break;
+
     case 12: //Menu pause: Resume
-        if (active_menu_pause) {
 
-            showPauseMenu = true;
-            LOG("Calling player->ResumeMovement()");
+        showPauseMenu = true;
+        LOG("Calling player->ResumeMovement()");
 
-            player->ResumeMovement();
+        player->ResumeMovement();
 
-            for (Enemy* enemy : enemyList) {
-                enemy->visible=true;
-                enemy->ResumeMovement();
-            }
-            showPauseMenu = false; // Cerrar el menú al presionar Backspace        
+        for (Enemy* enemy : enemyList) {
+            enemy->visible=true;
+            enemy->ResumeMovement();
         }
+        showPauseMenu = false; // Cerrar el menú al presionar Backspace        
+
         break;
     }
 

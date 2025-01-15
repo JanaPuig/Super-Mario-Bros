@@ -24,7 +24,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void Draw();
+	//void Draw();
 
 
 	// Additional methods

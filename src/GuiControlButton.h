@@ -13,9 +13,11 @@ public:
 
 	// Called each loop iteration
 	bool Update(float dt);
-	void Draw();
+	//void Draw();
 
 private:
+	bool soundPlayed = false;
+	float soundTimer = 0.0f;
 
 	int SelectUp = 0;
 	bool canClick = true;

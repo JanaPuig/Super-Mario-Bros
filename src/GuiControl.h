@@ -72,7 +72,6 @@ public:
 		observer->OnGuiMouseClickEvent(this);
 	}
 
-	virtual void Draw() = 0;
 
 	GuiControlState GetState() const { return state; }
 

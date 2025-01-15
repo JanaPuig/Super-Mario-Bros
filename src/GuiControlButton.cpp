@@ -37,12 +37,29 @@ bool GuiControlButton::Update(float dt)
 		if (state != GuiControlState::FOCUSED)
 		{
 			state = GuiControlState::FOCUSED;
-
+			
+			
 		}
 
 		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
 		{
 			state = GuiControlState::PRESSED;
+
+			if (!soundPlayed) {
+				soundTimer += dt;
+				float soundDurationInSeconds = 1.0f;
+				if (soundTimer >= soundDurationInSeconds)
+				{
+					Engine::GetInstance().audio->PlayFx(SelectUp);
+
+					soundPlayed = true;  // El sonido terminó, ya no se reproduce
+				}
+
+			}
+			else {
+				Engine::GetInstance().audio->StopFx();
+
+			}
 		}
 
 		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
@@ -56,18 +73,14 @@ bool GuiControlButton::Update(float dt)
 		{
 
 			state = GuiControlState::NORMAL;
+			soundTimer = 0.0f;
+			soundPlayed = false;
 		}
 	}
 
-	return true;
-}
-
-void GuiControlButton::Draw()
-{
-	//L16: TODO 4: Draw the button according the GuiControl State
 	if (state == GuiControlState::DISABLED)
 	{
-		return; // No hacer nada si el botón está deshabilitado
+		return false; // No hacer nada si el botón está deshabilitado
 	}
 
 	if (id == 6 || id == 7) {
@@ -121,7 +134,7 @@ void GuiControlButton::Draw()
 			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false);
 			break;
 		case GuiControlState::FOCUSED:
-		
+
 			Engine::GetInstance().render->DrawRectangle(bounds, 0, 180, 255, 100, true, false);
 			break;
 		case GuiControlState::PRESSED:
@@ -132,4 +145,5 @@ void GuiControlButton::Draw()
 
 	// Dibujar el texto del botón
 	Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);
+	return false;
 }

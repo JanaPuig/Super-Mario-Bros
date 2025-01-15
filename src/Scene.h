@@ -141,7 +141,6 @@ public:
     int FxPosX = 1350;
     bool active_menu_pause = false;
 
-    GuiControlButton* guiBt;
 
 
 private:
@@ -192,4 +191,7 @@ private:
     SDL_Texture* leaveGameButtonSelected = NULL;
 
     Vector2D mousePos;
+
+    GuiControlButton* guiBt;
+
 };
