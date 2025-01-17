@@ -306,26 +306,26 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 3
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba1->SetPosition(Vector2D(2000, 430));
+        goomba1->SetPosition(Vector2D(2000, 470));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
         enemyList.push_back(goomba1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
 
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba2->SetPosition(Vector2D(1100, 430));
+        goomba2->SetPosition(Vector2D(1100, 470));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
         enemyList.push_back(goomba2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
 
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa1->SetPosition(Vector2D(2600, 100));
+        koopa1->SetPosition(Vector2D(2600, 150));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        koopa2->SetPosition(Vector2D(3800, 100));
+        koopa2->SetPosition(Vector2D(3800, 150));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
@@ -355,6 +355,7 @@ bool Scene::Start()
     SelectFxId2 = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SelectUp.wav");
     marioTime = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/mariotime.wav");
     hereWeGo = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/MarioVoices/Start.wav");
+    EndGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/EndGame.wav");
     BowserLaugh = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserLaugh.wav");
 
     // Load textures for menus and transitions
@@ -395,15 +396,14 @@ bool Scene::Update(float dt)
     {
         logoTimer += dt;
         Engine::GetInstance().render.get()->DrawTexture(GroupLogo, -cameraX, -cameraY);
-        // Si el temporizador supera la duración del logo, ocultarlo
         if (logoTimer >= logoDuration)
         {
             showGroupLogo = false;
             showMainMenu = true;  // Mostrar el menú principal
         }
-        return true;  // Evitar que se ejecute el resto del código mientras el logo está activo
+        return true;  
     }
-    // Si estamos en el menú principal, no se procesan otras lógicas
+
     if (showMainMenu) {
         // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
@@ -411,17 +411,19 @@ bool Scene::Update(float dt)
             isGameIntroPlaying = true;
         }
         menu();
-        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY); // Dibujar el fondo del menú principal
+        Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY);
         if (showCredits) {
-            Credits(); // Si showCredits es true, dibuja la pantalla de cr�ditos
+            isGameIntroPlaying = false;
+            Credits(); 
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showCredits = false; // Vuelve al menu si se presiona backspace
+          
             }
             return true;
         }
         if (showSettings) {
             Settings();
-
+            isGameIntroPlaying = false;
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
@@ -444,8 +446,8 @@ bool Scene::Update(float dt)
         Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
 
         // Dibuja el texto "YOU WIN!"
-        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 750, 400, 400, 250);
-        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 750, 800, 400, 75);
+        Engine::GetInstance().render.get()->DrawText("YOU WIN!", 725, 400, 400, 250);
+        Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 700, 800, 450, 75);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
             showWinScreen = false;
@@ -617,8 +619,12 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         }
         else if (IsInTeleportArea(playerPos, 6630, 415, tolerance) || IsInTeleportArea(playerPos, 6630, 375, tolerance))
         {
-            EndGameScreen();
-            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/WorldClear_Theme.wav");
+            showWinScreen = true;
+            Engine::GetInstance().audio->StopMusic();
+            if (!hasPlayedWinMusic) {
+                Engine::GetInstance().audio.get()->PlayFx(EndGame);
+                hasPlayedWinMusic = true; // Marcar que la música ha sido reproducida
+            }
         }
     }
 }
@@ -627,9 +633,6 @@ bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float 
 {
     return playerPos.getX() >= x - tolerance && playerPos.getX() <= x + tolerance &&
         playerPos.getY() >= y - tolerance && playerPos.getY() <= y + tolerance;
-}
-void Scene::EndGameScreen() {
-    showWinScreen = true; // Activa la pantalla de victoria
 }
 // Post-update logic
 bool Scene::PostUpdate()
@@ -742,6 +745,8 @@ void Scene::FinishTransition()
 }
 
 void Scene::StartNewGame() {
+    hasPlayedWinMusic = false;
+    isGameIntroPlaying = false;
     // Cargar el archivo de configuración original
     pugi::xml_document originalConfig;
     pugi::xml_parse_result result = originalConfig.load_file("config.xml");
@@ -793,6 +798,7 @@ void Scene::StartNewGame() {
 }
 
 void Scene::LoadGame() {
+    Engine::GetInstance().audio->StopMusic();
     pugi::xml_document LoadFile;
     pugi::xml_parse_result result = LoadFile.load_file("config.xml");
 

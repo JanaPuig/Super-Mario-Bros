@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="143">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="212" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="144">
  <tileset firstgid="1" name="MarioSprites" tilewidth="32" tileheight="32" tilecount="10120" columns="184">
   <image source="MarioSprites.png" width="5906" height="1772"/>
  </tileset>
  <tileset firstgid="10121" source="MapMetadata.tsx"/>
- <layer id="1" name="Capa de patrones 1" width="212" height="30" visible="0">
+ <layer id="1" name="Capa de patrones 1" width="212" height="30">
   <properties>
    <property name="Draw" type="bool" value="true"/>
    <property name="Navigation" type="bool" value="false"/>
@@ -12872,5 +12872,6 @@
   <object id="133" x="4128" y="512" width="32" height="32"/>
   <object id="134" x="4160" y="608" width="32" height="32"/>
   <object id="135" x="4192" y="736" width="32" height="32"/>
+  <object id="143" x="3904" y="768" width="32" height="32"/>
  </objectgroup>
 </map>

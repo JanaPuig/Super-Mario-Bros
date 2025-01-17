@@ -90,9 +90,9 @@ public:
     int BowserStep = 1;
     int BowserDeath = 1;
     int BowserAttack = 1;
-
+    int drawY = 0;
     b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); // Velocidad de ataque de Bowser
-
+    bool isReturningToStart = false;
     bool isAttacking = false; // Estado del ataque
     bool isEnemyDead = false;
     bool isDying = false;
@@ -102,6 +102,7 @@ public:
     bool isLookingRight = false;
     bool isAlive;
     // Parámetros relacionados con tiempo y rango
+    float currentX=0;
     float deathTimer = 0.0f;
     float targetX = 6300.0f;
     float ReturnSpeed = 4.0f;

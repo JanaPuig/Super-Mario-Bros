@@ -46,8 +46,6 @@ public:
     // Checks if the player is within a teleportation area
     bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
 
-    void EndGameScreen();
-
     // Called after all updates
     bool PostUpdate();
 
@@ -102,6 +100,7 @@ public:
     bool showSettings = false;
     bool manage_showSettings = false;
     bool showPauseMenu = false;
+    bool  hasPlayedWinMusic ;
     bool fullscreen_window = false;
     bool activatebotton7 = false;
     bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
@@ -139,7 +138,7 @@ public:
     int sdlVolume;
     int musicPosX = 1350;
     int FxPosX = 1350;
-
+    int EndGame = 0;
     
 
 private:

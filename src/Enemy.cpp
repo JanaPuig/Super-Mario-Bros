@@ -132,7 +132,7 @@ void Enemy::UpdateColliderSize() {
 bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu ||
         Engine::GetInstance().scene.get()->showingTransition ||
-        Engine::GetInstance().scene.get()->isLoading || !visible) {
+        Engine::GetInstance().scene.get()->isLoading || !visible|| Engine::GetInstance().scene.get()->showWinScreen) {
         return true;
     }
 
@@ -204,12 +204,12 @@ bool Enemy::Update(float dt) {
             }
         }
         if (parameters.attribute("name").as_string() == std::string("bowser")) {
-            static bool isReturningToStart = false;
+            isReturningToStart = false;
 
             // Si Bowser está en proceso de regresar a 6300
             if (position.getX() <= 4500 || isReturningToStart) {
                 isReturningToStart = true;
-                float currentX = position.getX();
+                currentX = position.getX();
 
                 if (currentX < targetX) {
                     currentX += ReturnSpeed;
@@ -224,7 +224,7 @@ bool Enemy::Update(float dt) {
                     }
                     currentAnimation->Update();
                     SDL_Rect frameRect = currentAnimation->GetCurrentFrame();
-                    int drawY = (int)position.getY() + (isAttacking ? 23 : 0);
+                    drawY = (int)position.getY() + (isAttacking ? 23 : 0);
                     Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX() - 35, drawY, &frameRect);
                 }
 
@@ -240,14 +240,16 @@ bool Enemy::Update(float dt) {
             }
             if (hitCount >= 3) {
                 Engine::GetInstance().entityManager->puntuation += 100000;
-                Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
-                LOG("Bowser is dead");
                 currentAnimation = velocity.x > 0 ? &deadBowserR : &deadBowserL;
                 isDying = true;
                 b2Filter filter = pbody->body->GetFixtureList()->GetFilterData();
                 filter.maskBits = 0x0000;
                 pbody->body->GetFixtureList()->SetFilterData(filter);
                 deathTimer = 0.0f;
+                Engine::GetInstance().audio->StopMusic(1.0F);
+                Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
+                Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 3.0F);
+                LOG("Bowser is dead");
                 return true;
             }
             if (isAttacking) {
@@ -273,23 +275,22 @@ bool Enemy::Update(float dt) {
                         currentAnimation->Reset();
                     }
                 }
-                else {
+                if(!isAttacking) {
                     if (velocity.x < 0 && distanceToPlayer <= detectionRange) {
                         currentAnimation = &walkingBowserL;
-                        if (currentTime - lastStepTime > stepInterval) {
-                            Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
-                            lastStepTime = currentTime;
-                        }
                     }
                     else if (velocity.x > 0 && distanceToPlayer <= detectionRange) {
                         currentAnimation = &walkingBowserR;
+                    }
+                    else {
+                        currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
+                    }
+                    if ((velocity.x != 0 || velocity.y != 0) && currentAnimation == &walkingBowserR || currentAnimation == &walkingBowserL) {
+
                         if (currentTime - lastStepTime > stepInterval) {
                             Engine::GetInstance().audio.get()->PlayFx(BowserStep, 0);
                             lastStepTime = currentTime;
                         }
-                    }
-                    else {
-                        currentAnimation = velocity.x > 0 ? &idleBowserR : &idleBowserL;
                     }
                 }
             }

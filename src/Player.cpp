@@ -397,7 +397,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
 
 				if (enemy->name == "bowser" && enemy->isAttacking == false) {
-					Engine::GetInstance().audio.get()->StopFx();
 					Engine::GetInstance().audio.get()->PlayFx(BowserHit);
 					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 					enemy->hitCount++;
