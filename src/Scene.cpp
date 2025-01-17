@@ -257,6 +257,7 @@ void Scene::CreateEnemies(int level) {
 
     // Limpiar enemigos existentes
     enemyList.clear();
+    enemyStateList.clear();
     Engine::GetInstance().entityManager->RemoveAllEnemies();
 
     if (level == 1) {
@@ -265,21 +266,26 @@ void Scene::CreateEnemies(int level) {
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         koopa1->SetPosition(Vector2D(1500, 100));
         enemyList.push_back(koopa1);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(4500, 100));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"),false);
         enemyList.push_back(koopa2);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba1->SetPosition(Vector2D(2000, 416));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"),false);
         enemyList.push_back(goomba1);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba2->SetPosition(Vector2D(5500, 416));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"),false);
         enemyList.push_back(goomba2);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
+
     }
     else if (level == 2) {
         // Crear Koopas para el nivel 2
@@ -287,11 +293,13 @@ void Scene::CreateEnemies(int level) {
         koopa1->SetPosition(Vector2D(2000, 150)); // Nueva posición
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(3500, 150)); // Nueva posición
-        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
+        koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
 
     }
     else if (level == 3) {
@@ -301,27 +309,34 @@ void Scene::CreateEnemies(int level) {
         goomba1->SetPosition(Vector2D(2000, 430));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
         enemyList.push_back(goomba1);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
+
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba2->SetPosition(Vector2D(1100, 430));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
         enemyList.push_back(goomba2);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
 
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetPosition(Vector2D(2600, 100));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(3800, 100));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
 
         // Crear Bowser para nivel 3
         Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         bowser->SetPosition(Vector2D(6200, 330)); // Posición de Bowser
         bowser->SetParameters(configParameters.child("entities").child("enemies").child("enemy_bowser"), false);
         enemyList.push_back(bowser);
+        enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
+
 
         LOG("Bowser created for level 3 at position (6200, 330)");
     }
@@ -800,7 +815,107 @@ void Scene::LoadGame() {
     elapsedTime = saveNode.attribute("time").as_float();
     isFlaged = saveNode.attribute("checkpoint").as_bool();
 
-    // Cargar el estado de los enemigos
+    //for (int i = 1; i <= 4; ++i) {
+    //    std::string enemyPosX = "enemy" + std::to_string(i) + "X";
+    //    std::string enemyPosY = "enemy" + std::to_string(i) + "Y";
+
+    //    int posX = saveNode.attribute(enemyPosX.c_str()).as_int();
+    //    int posY = saveNode.attribute(enemyPosY.c_str()).as_int();
+
+
+
+    //    if (i == 1) {
+    //        Enemy* enemyKoopa = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa");
+    //        pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy_koopa");
+
+    //        if (enemyKoopa != nullptr) {
+    //            enemyKoopa->SetPosition(Vector2D(posX, posY));
+
+    //        }
+    //        else if(enemyKoopa == nullptr && enemyNode.attribute("hitcount").as_int() == 0) {
+    //            Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+    //            if (enemyNode) {
+    //                std::string enemyName = enemyNode.attribute("name").as_string();
+
+    //                newEnemy->SetParameters(enemyNode);
+    //                newEnemy->SetPosition(Vector2D(posX, posY));
+
+    //                enemyStateList.push_back(std::make_pair(enemyName, 0));
+    //                enemyList.push_back(enemy);
+    //            }
+    //        }
+    //    }
+
+    //    //Koopa2
+    //    else if (i == 2) {
+    //        Enemy* enemyKoopa2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("koopa2");
+
+    //        if (enemyKoopa2 != nullptr) {
+    //            enemyKoopa2->SetPosition(Vector2D(posX, posY));
+
+    //        }
+    //        else {
+    //            Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+    //            pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy_koopa2");
+    //            if (enemyNode) {
+    //                std::string enemyName = enemyNode.attribute("name").as_string();
+
+    //                newEnemy->SetParameters(enemyNode);
+    //                newEnemy->SetPosition(Vector2D(posX, posY));
+
+    //                enemyStateList.push_back(std::make_pair(enemyName, 0));
+    //                enemyList.push_back(enemy);
+    //            }
+    //        }
+    //    }
+    //    //Goomba
+    //    else if (i == 3) {
+    //        Enemy* enemyGoomba = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba");
+    //        if (enemyGoomba != nullptr) {
+    //            enemyGoomba->SetPosition(Vector2D(posX, posY));
+
+    //        }
+    //        else {
+    //            Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+    //            pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy");
+    //            if (enemyNode) {
+    //                std::string enemyName = enemyNode.attribute("name").as_string();
+
+    //                newEnemy->SetParameters(enemyNode);
+    //                newEnemy->SetPosition(Vector2D(posX, posY));
+
+    //                enemyStateList.push_back(std::make_pair(enemyName, 0));
+    //                enemyList.push_back(enemy);
+    //            }
+    //        }
+    //    }
+    //    //Goomba2
+    //    else if (i == 4) {
+    //        Enemy* enemyGoomba2 = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName("goomba2");
+
+    //        if (enemyGoomba2 != nullptr) {
+    //            enemyGoomba2->SetPosition(Vector2D(posX, posY));
+
+    //        }
+    //        else {
+    //            Enemy* newEnemy = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
+    //            pugi::xml_node enemyNode = configParameters.child("entities").child("enemies").child("enemy2");
+    //            if (enemyNode) {
+    //                std::string enemyName = enemyNode.attribute("name").as_string();
+
+    //                newEnemy->SetParameters(enemyNode);
+    //                newEnemy->SetPosition(Vector2D(posX, posY));
+
+    //                enemyStateList.push_back(std::make_pair(enemyName, 0));
+    //                enemyList.push_back(enemy);
+    //            }
+    //        }
+
+    //    }
+
+    //}
+    
+     //Cargar el estado de los enemigos
     pugi::xml_node enemiesNode = LoadFile.child("config").child("scene").child("entities").child("enemies");
     for (pugi::xml_node enemyNode = enemiesNode.first_child(); enemyNode; enemyNode = enemyNode.next_sibling()) {
         std::string enemyName = enemyNode.attribute("name").as_string();
@@ -812,6 +927,8 @@ void Scene::LoadGame() {
             enemyEntity->SetPosition(Vector2D(enemyNode.attribute("x").as_int(), enemyNode.attribute("y").as_int()));
         }
     }
+
+
 
     pugi::xml_node itemsNode = LoadFile.child("config").child("scene").child("entities").child("items");
 
@@ -889,6 +1006,7 @@ void Scene::SaveState()
     SaveFile.child("config").child("scene").child("SaveFile").attribute("time").set_value(elapsedTime);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("IsPowerUp").set_value(Engine::GetInstance().entityManager->isStarPower);
     SaveFile.child("config").child("scene").child("SaveFile").attribute("PowerUpTime").set_value(Engine::GetInstance().entityManager->starPowerDuration);
+    SaveFile.child("config").child("scene").child("SaveFile").attribute("isSave").set_value(true);
 
     // Enemigos
     pugi::xml_node enemiesNode = SaveFile.child("config").child("scene").child("entities").child("enemies");

@@ -15,7 +15,7 @@
 		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="15" lives="3" object="0" Puntuation="0" time="10654.1348" isSave="false" />
+		<SaveFile level="1" playerX="1174" playerY="335" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="950" time="17616.5352" isSave="true" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -46,7 +46,7 @@
 						</idle>
 					</animations>
 				</OneUp>
-				<PowerUp name="PowerUp" x="500" y="200" w="32" h="32" isPowerUp="true" isPicked="0" PowerUpTexture="Assets/Textures/PowerUp.png" gravity="true">
+				<PowerUp name="PowerUp" x="500" y="200" w="32" h="32" isPowerUp="true" isPicked="1" PowerUpTexture="Assets/Textures/PowerUp.png" gravity="true">
 					<animations>
 						<PowerUpIdle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
@@ -83,14 +83,14 @@
 						</idle_flagpole>
 					</animations>
 				</flagpole>
-				<finish_flagpole name="finish_flagpole" x="200" y="384" w="16" h="326" isPicked="" texture_finish_flagpole="Assets/Textures/finish_flagpole.png" gravity="false">
+				<finish_flagpole name="finish_flagpole" x="200" y="384" w="16" h="326" isPicked="0" texture_finish_flagpole="Assets/Textures/finish_flagpole.png" gravity="false">
 					<animations>
 						<idle_finish_flagpole loop="true" speed="1">
 							<frame x="0" y="0" w="16" h="326" />
 						</idle_finish_flagpole>
 					</animations>
 				</finish_flagpole>
-				<finish_flag name="finish_flag" x="500" y="200" w="55" h="30" isFinishFlag="true" isPicked="" texture_finish_flag="Assets/Textures/finish flag.png" gravity="false">
+				<finish_flag name="finish_flag" x="500" y="200" w="55" h="30" isFinishFlag="true" isPicked="0" texture_finish_flag="Assets/Textures/finish flag.png" gravity="false">
 					<animations>
 						<idle_finish_flag loop="true" speed="1">
 							<frame x="90" y="0" w="55" h="30" />
