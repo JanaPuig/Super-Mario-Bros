@@ -204,7 +204,7 @@ bool Enemy::Update(float dt) {
             }
         }
         if (parameters.attribute("name").as_string() == std::string("bowser")) {
-            isReturningToStart = false;
+            static bool isReturningToStart = false;
 
             // Si Bowser está en proceso de regresar a 6300
             if (position.getX() <= 4500 || isReturningToStart) {
@@ -248,7 +248,6 @@ bool Enemy::Update(float dt) {
                 deathTimer = 0.0f;
                 Engine::GetInstance().audio->StopMusic(1.0F);
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
-                Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 3.0F);
                 LOG("Bowser is dead");
                 return true;
             }
@@ -345,16 +344,16 @@ bool Enemy::Update(float dt) {
                 if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
                     velocity = b2Vec2(0, 0);
                     if (nextPos.getX() > enemyPositionTiles.getX()) {
-                        velocity = b2Vec2(2, 0);
+                        velocity = b2Vec2(2.5, 0);
                     }
                     else if (nextPos.getX() < enemyPositionTiles.getX()) {
-                        velocity = b2Vec2(-2, 0);
+                        velocity = b2Vec2(-2.5, 0);
                     }
                     else if (nextPos.getY() > enemyPositionTiles.getY()) {
-                        velocity = b2Vec2(0, 2);
+                        velocity = b2Vec2(0, 2.5);
                     }
                     else if (nextPos.getY() < enemyPositionTiles.getY()) {
-                        velocity = b2Vec2(0, -2);
+                        velocity = b2Vec2(0, -2.5);
                     }
                 }
                 else if (parameters.attribute("name").as_string() == std::string("bowser") && isAttacking == true) {
@@ -447,17 +446,6 @@ void Enemy::ResetPosition() {
     }
     else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
         currentAnimation = &idleGoomba;
-    }
-    if (parameters.attribute("name").as_string() != std::string("goomba2"))
-    {
-        // Restablece la posición
-        position.setX(parameters.attribute("x").as_int() + 32);
-        position.setY(parameters.attribute("y").as_int() + 32);
-    }
-    else {
-        // Restablece la posición
-        position.setX(parameters.attribute("x").as_int() + 16);
-        position.setY(parameters.attribute("y").as_int() + 32);
     }
     // Restablecer otras variables
     isDying = false;

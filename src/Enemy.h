@@ -96,8 +96,9 @@ public:
     int BowserDeath = 1;
     int BowserAttack = 1;
     int drawY = 0;
+
     b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); // Velocidad de ataque de Bowser
-    bool isReturningToStart = false;
+
     bool isAttacking = false; // Estado del ataque
     bool isEnemyDead = false;
     bool isDying = false;
@@ -120,7 +121,7 @@ public:
     float detectionRange = 500.0f;
     float speed = 3.0f;
     float lastStepTime = 0.0f;
-    float stepInterval = 900.0f; // 0.3 segundos entre sonidos de paso
+    float stepInterval = 600.0f; // 0. segundos entre sonidos de paso
 
     bool visible = true;
 
