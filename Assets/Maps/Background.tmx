@@ -6,7 +6,7 @@
  <tileset firstgid="10121" source="MapMetadata.tsx"/>
  <tileset firstgid="10123" source="../../../../../Downloads/Super-Mario-Bros-main flag/Super-Mario-Bros-main/Assets/Maps/flagpole base.tsx"/>
  <objectgroup id="2" name="Collisions">
-  <object id="3" x="0" y="448" width="2688" height="42.303"/>
+  <object id="3" x="0" y="448" width="2785.5" height="42.303"/>
   <object id="5" x="2784" y="448" width="2080" height="64"/>
   <object id="6" x="4928" y="448" width="1856" height="64"/>
   <object id="8" name="lucky" x="448" y="319.98" width="32" height="6.5"/>
@@ -3181,9 +3181,9 @@
    <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
+   <tile gid="4"/>
+   <tile gid="4"/>
+   <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
@@ -3393,9 +3393,9 @@
    <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
-   <tile gid="374"/>
+   <tile gid="4"/>
+   <tile gid="4"/>
+   <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
    <tile gid="4"/>
@@ -8913,9 +8913,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -8964,6 +8962,8 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile/>
+   <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile/>
@@ -9125,9 +9125,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -9337,9 +9337,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -9386,6 +9385,7 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile/>
    <tile gid="10121"/>
    <tile/>
    <tile/>
@@ -9760,11 +9760,8 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -9828,6 +9825,9 @@
    <tile/>
    <tile/>
    <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile gid="10121"/>
    <tile gid="10121"/>
    <tile gid="10121"/>
@@ -9973,9 +9973,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
-   <tile gid="10121"/>
+   <tile/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
