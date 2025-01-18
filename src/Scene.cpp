@@ -1048,61 +1048,49 @@ void Scene::SaveState()
 
     // Enemigos
     pugi::xml_node enemiesNode = SaveFile.child("config").child("scene").child("entities").child("enemies");
-    for (const auto& enemies : enemyStateList) {
-       
-        Enemy* enemyEntity = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName(enemies.first);
-        if (enemyEntity != nullptr) {
-            SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("hitcount").set_value(enemyEntity->hitCount);
-            SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("isAlive").set_value(enemyEntity->isAlive ? 1 : 0);
-            SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("x").set_value(enemyEntity->GetPosition().getX());
-            SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("y").set_value(enemyEntity->GetPosition().getY());
-            
-            if (enemies.first == "koopa") {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").as_int();
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").as_int();
+    for (std::pair<std::string, int> enemies : enemyStateList)
+    {
+        for (pugi::xml_node node : enemiesNode.children())
+        {
+            Enemy* enemyEntity = (Enemy*)Engine::GetInstance().entityManager->GetEntityByName(enemies.first);
+            if (enemyEntity != nullptr) {
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("hitcount").set_value(enemyEntity->hitCount);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("isAlive").set_value(enemyEntity->isAlive ? 1 : 0);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("x").set_value(enemyEntity->GetPosition().getX());
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("y").set_value(enemyEntity->GetPosition().getY());
 
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1X").set_value(enemyEntity->GetPosition().getX());
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy1Y").set_value(enemyEntity->GetPosition().getY());
+                if (enemies.first == "koopa") {
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").set_value(enemyEntity->GetPosition().getX() - 44);
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").set_value(enemyEntity->GetPosition().getX() - 44);
+                }
+                if (enemies.first == "koopa2") {
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 44);
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").set_value(enemyEntity->GetPosition().getX() - 44);
+                }
+                if (enemies.first == "goomba") {
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+
+                }
+                if (enemies.first == "goomba2") {
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+
+                }
+                if (enemies.first == "bowser" && level == 3) {
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
+                    SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+
+                }
             }
-            if (enemies.first == "koopa2") {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").as_int();
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").as_int();
-
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2X").set_value(enemyEntity->GetPosition().getX() - 44);
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy2Y").set_value(enemyEntity->GetPosition().getY() - 44);
-            }
-            if (enemies.first == "goomba") {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").as_int();
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").as_int();
-
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3X").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy3Y").set_value(enemyEntity->GetPosition().getY() - 44);
-
-            }
-            if (enemies.first == "goomba2") {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").as_int();
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").as_int();
-
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4X").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy4Y").set_value(enemyEntity->GetPosition().getY() - 44);
-
-            }
-            if (enemies.first == "bowser" && level==3) {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").as_int();
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").as_int();
-
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy5X").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("SaveFile").attribute("enemy5Y").set_value(enemyEntity->GetPosition().getY() - 44);
+            else if (enemyEntity == nullptr) {
+                if (enemies.first == "koopa") enemy->save_hitCount_koopa = 1;
+                if (enemies.first == "koopa2") enemy->save_hitCount_koopa2 = 1;
+                if (enemies.first == "goomba") enemy->save_hitCount_goomba = 1;
+                if (enemies.first == "goomba2") enemy->save_hitCount_goomba2 = 1;
+                if (enemies.first == "bowser")    enemy->save_hitCount_bowser = 3;
 
             }
-        }
-        else if (enemyEntity == nullptr) {
-            if (enemies.first == "koopa") enemy->save_hitCount_koopa = 1;
-            if (enemies.first == "koopa2") enemy->save_hitCount_koopa2 = 1;
-            if (enemies.first == "goomba") enemy->save_hitCount_goomba = 1;
-            if(enemies.first == "goomba2") enemy->save_hitCount_goomba2= 1;
-            if(enemies.first=="bowser")    enemy->save_hitCount_bowser = 3;
-
         }
     }
 
