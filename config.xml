@@ -15,7 +15,7 @@
 		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="171" playerY="431" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="0" time="1146.45093" isSave="1" />
+		<SaveFile level="1" playerX="754" playerY="431" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="true" PowerUpTime="1025.29773" lives="3" object="0" Puntuation="300" time="5086.19092" isSave="1" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -32,28 +32,28 @@
 		</textures>
 		<entities>
 			<items>
-				<coin name="coin" x="1600" y="768" w="32" h="32" isCoin="true" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="1690" y="720" w="32" h="32" isCoin="true" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
 						</idle>
 					</animations>
 				</coin>
-				<OneUp name="OneUp" x="500" y="200" w="16" h="16" isOneUp="true" isPicked="0" OneUpTexture="Assets/Textures/OneUp.png" gravity="true">
+				<OneUp name="OneUp" x="1690" y="543" w="16" h="16" isOneUp="true" isPicked="0" OneUpTexture="Assets/Textures/OneUp.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
 						</idle>
 					</animations>
 				</OneUp>
-				<PowerUp name="PowerUp" x="500" y="200" w="32" h="32" isPowerUp="true" isPicked="0" PowerUpTexture="Assets/Textures/PowerUp.png" gravity="true">
+				<PowerUp name="PowerUp" x="640" y="285" w="32" h="32" isPowerUp="true" isPicked="1" PowerUpTexture="Assets/Textures/PowerUp.png" gravity="true">
 					<animations>
 						<PowerUpIdle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
 						</PowerUpIdle>
 					</animations>
 				</PowerUp>
-				<BigCoin name="BigCoin" x="500" y="200" w="64" h="64" isBigCoin="true" isPicked="0" BigCoinTexture="Assets/Textures/BigCoin.png" gravity="true">
+				<BigCoin name="BigCoin" x="633" y="120" w="64" h="64" isBigCoin="true" isPicked="0" BigCoinTexture="Assets/Textures/BigCoin.png" gravity="true">
 					<animations>
 						<idleBigCoin loop="true" speed="0.3">
 							<frame x="0" y="0" w="64" h="64" />
@@ -83,14 +83,14 @@
 						</idle_flagpole>
 					</animations>
 				</flagpole>
-				<finish_flagpole name="finish_flagpole" x="200" y="384" w="16" h="326" isPicked="0" texture_finish_flagpole="Assets/Textures/finish_flagpole.png" gravity="false">
+				<finish_flagpole name="finish_flagpole" x="6343" y="90" w="16" h="326" isPicked="0" texture_finish_flagpole="Assets/Textures/finish_flagpole.png" gravity="false">
 					<animations>
 						<idle_finish_flagpole loop="true" speed="1">
 							<frame x="0" y="0" w="16" h="326" />
 						</idle_finish_flagpole>
 					</animations>
 				</finish_flagpole>
-				<finish_flag name="finish_flag" x="500" y="200" w="55" h="30" isFinishFlag="true" isPicked="0" texture_finish_flag="Assets/Textures/finish flag.png" gravity="false">
+				<finish_flag name="finish_flag" x="6299" y="110" w="55" h="30" isFinishFlag="true" isPicked="0" texture_finish_flag="Assets/Textures/finish flag.png" gravity="false">
 					<animations>
 						<idle_finish_flag loop="true" speed="1">
 							<frame x="90" y="0" w="55" h="30" />

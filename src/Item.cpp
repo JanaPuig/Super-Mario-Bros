@@ -261,4 +261,11 @@ void Item::ResetPosition()
     currentAnimation_flag = &flag;
     currentAnimation_finish_flag = &finish_flag;
 }
+void Item::SetPosition(const Vector2D& newPosition) {
+    position = newPosition; // Asigna la nueva posición
+}
+
+Vector2D Item::GetPosition() const {
+    return position; // Devuelve la posición actual
+}
 

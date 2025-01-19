@@ -34,6 +34,10 @@ public:
 
     void ResetPosition();
 
+    void SetPosition(const Vector2D& newPosition);
+
+    Vector2D GetPosition() const;
+
 
 public:
     // Audio Fx

@@ -942,14 +942,13 @@ void Scene::LoadGame() {
 
     }
     
-
     pugi::xml_node itemsNode = LoadFile.child("config").child("scene").child("entities").child("items");
-
     for (pugi::xml_node itemNode = itemsNode.first_child(); itemNode; itemNode = itemNode.next_sibling()) {
         std::string itemName = itemNode.attribute("name").as_string();
         Item* itemEntity = (Item*)Engine::GetInstance().entityManager->GetEntityByName(itemName);
         if (itemEntity != nullptr) {
             itemEntity->SetIsPicked(itemNode.attribute("isPicked").as_int());
+            itemEntity->SetPosition(Vector2D(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float()));
         }
     }
 
@@ -969,7 +968,6 @@ void Scene::LoadGame() {
         showMainMenu = false;
     }
     LOG("Game loaded successfully.");
-
 
 }
 
@@ -1079,6 +1077,8 @@ void Scene::SaveState()
         Item* itemEntity = (Item*)Engine::GetInstance().entityManager->GetEntityByName(item.first);
         if (itemEntity != nullptr) {
             itemsNode.child(item.first.c_str()).attribute("isPicked").set_value(itemEntity->GetisPicked());
+            itemsNode.child(item.first.c_str()).attribute("x").set_value(itemEntity->GetPosition().getX());
+            itemsNode.child(item.first.c_str()).attribute("y").set_value(itemEntity->GetPosition().getY());
         }
     }
 
