@@ -479,11 +479,12 @@ bool Scene::Update(float dt)
     //Handle Loading Screen
     if (isLoading) {
         loadingTimer += dt;
-        Engine::GetInstance().render.get()->DrawTexture(loadingScreen, -cameraX, -cameraY);   // Renderiza la pantalla de carga
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);   // Renderiza la pantalla de carga
+        Engine::GetInstance().render->DrawText("LOADING...", 730, 450, 475, 150);
+        Engine::GetInstance().audio.get()->StopMusic();
         if (loadingTimer >= loadingScreenDuration) {     // Si el tiempo de espera ha terminado, carga el estado del juego
             isLoading = false; // Desactiva la pantalla de carga
             Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
-            Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GroundTheme.wav", 0.f);
             LoadGame(); // Load Game State
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
@@ -953,13 +954,16 @@ void Scene::LoadGame() {
     }
 
     // Reproducir la música del nivel correspondiente
-    if (Savedlevel == 1) {
+    if (Engine::GetInstance().entityManager->isStarPower == true) {
+        Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
+    }
+    else if (Savedlevel == 1 && Engine::GetInstance().entityManager->isStarPower==false) {
         Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/GroundTheme.wav");
     }
-    else if (Savedlevel == 2) {
+    else if (Savedlevel == 2&&Engine::GetInstance().entityManager->isStarPower == false) {
         Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/World2Theme.wav");
     }
-    else if (Savedlevel == 3) {
+    else if (Savedlevel == 3&& Engine::GetInstance().entityManager->isStarPower == false) {
         Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav");
     }
     // Cambiar al nivel cargado
