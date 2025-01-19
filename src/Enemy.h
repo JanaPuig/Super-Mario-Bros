@@ -35,6 +35,8 @@ public:
         position = pos;
     }
 
+    void Load_SetPosition(Vector2D pos);
+
     Vector2D GetPosition();
 
     void ResetPath();

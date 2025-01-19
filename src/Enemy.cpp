@@ -421,6 +421,12 @@ bool Enemy::CleanUp() {
     return true;
 }
 
+void Enemy::Load_SetPosition(Vector2D pos) {
+    pos.setX(pos.getX() + texW / 2);
+    pos.setY(pos.getY() + texH / 2);
+    b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+    pbody->body->SetTransform(bodyPos, 0);
+}
 
 Vector2D Enemy::GetPosition() {
     if (pbody == nullptr) {

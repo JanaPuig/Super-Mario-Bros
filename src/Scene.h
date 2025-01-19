@@ -189,5 +189,5 @@ private:
     Vector2D mousePos;
 
     GuiControlButton* guiBt;
-
+    int isSave = 0;
 };
