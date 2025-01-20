@@ -3,7 +3,7 @@
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
 #include "Animation.h"
-
+#include <vector>
 // Forward declaration
 struct SDL_Texture;
 
@@ -116,4 +116,7 @@ public:
     // Internal state
     bool isActive = true;
 
+
+    std::vector<Vector2D> checkpoints;
+    int currentCheckpointIndex = 0;
 };

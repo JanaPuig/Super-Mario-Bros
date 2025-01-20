@@ -78,6 +78,15 @@ bool Player::Start() {
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
 	pbody->body->SetTransform(bodyPos, 0);
 
+	// Definir los check points para después poder recorrelos
+	checkpoints.push_back(Vector2D(0, 430));
+	checkpoints.push_back(Vector2D(3250, 430));
+	checkpoints.push_back(Vector2D(30, 430));
+	checkpoints.push_back(Vector2D(3316, 830));
+	checkpoints.push_back(Vector2D(200, 700));
+	checkpoints.push_back(Vector2D(3500, 600));
+	checkpoints.push_back(Vector2D(100, 580));
+
 	return true;
 }
 
@@ -93,6 +102,21 @@ bool Player::Update(float dt) {
 	if (Engine::GetInstance().scene.get()->timeUp) {
 		isDead = true;
 	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+		// Mover al siguiente punto de control
+		if (currentCheckpointIndex == 6) currentCheckpointIndex = 0;
+		currentCheckpointIndex = (currentCheckpointIndex + 1);
+		Vector2D nextCheckpoint = checkpoints[currentCheckpointIndex];
+		if (currentCheckpointIndex == 2) Engine::GetInstance().scene.get()->ChangeLevel(2);
+		if (currentCheckpointIndex == 4) Engine::GetInstance().scene.get()->ChangeLevel(3);
+		if (currentCheckpointIndex == 6) Engine::GetInstance().scene.get()->ChangeLevel(1);
+		SetPosition(nextCheckpoint);
+
+		// Opcional: Registro de información
+		LOG("Player moved to checkpoint %d: (%f, %f)", currentCheckpointIndex, nextCheckpoint.getX(), nextCheckpoint.getY());
+	}
+
 	//Actualize textures to be sure they are Drawn
 	Engine::GetInstance().render.get()->DrawTexture(texturePlayer, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 
