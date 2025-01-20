@@ -109,9 +109,33 @@ For now, only level 1 has been implemented, but the levels include different typ
     * F3: Reset current level
     * F4: Switch to level 4
 * GUI 
-  * 
-* Optimitzation
-  * 
+  * State buttons: (display, normal, press and focus)
+  * Intro screen
+  * Screen HUD
+    * Elements:
+      * Player lives
+      * Coins
+      * Timer
+      * Score   
+  * Menus:
+    * Main menu
+      * Buttons:
+         * Play
+         * Load Game
+         * Settings
+         * Credits
+         * Exit
+    * Pause Menu
+      * Buttons:
+         * Resmue
+         * Settings
+         * Back to title
+         * Exit
+
+* Optimitzation (optimization techniques)
+  * Frustrum culling
+  * Lazy updates
+  * Pathfinding search (Navegation mersh: A*)
 * Advanced Options
   * F7: Teleport to Next checkpoint
   * F8: Show/Hide buttons boundaries
@@ -126,6 +150,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * One Up Fx
   * Big Coin Fx
   * You Win Music
+  * Sound buttons
 
 ## Team Members
 ### Jana Puig & Toni Llovera
