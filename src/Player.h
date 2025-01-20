@@ -118,7 +118,4 @@ public:
     // Internal state
     bool isActive = true;
 
-
-    std::vector<Vector2D> checkpoints;
-    int currentCheckpointIndex = 0;
 };

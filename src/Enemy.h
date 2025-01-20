@@ -87,7 +87,8 @@ public:
     int hitCount = 0;
     int currentFrame = 0;
     int totalFrames = 3;
-
+    int newWidth = 0;
+    int newHeight = 0;
 
     //BowserSoundEffects
     int BowserStep = 1;

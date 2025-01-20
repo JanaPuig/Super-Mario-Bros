@@ -185,4 +185,9 @@ private:
     int save_hitCount_goomba = 0;
     int save_hitCount_goomba2 = 0;
     int save_hitCount_bowser = 0;
+
+
+
+    std::vector<Vector2D> checkpoints;
+    int currentCheckpointIndex = 0;
 };

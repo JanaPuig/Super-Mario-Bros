@@ -20,6 +20,15 @@ Scene::Scene()
     : Module(), level(1), showHelpMenu(false), showMainMenu(true), ToggleHelpMenu(false)
 {
     name = "scene";
+
+    // Definir los check points para después poder recorrelos
+    checkpoints.push_back(Vector2D(0, 430));
+    checkpoints.push_back(Vector2D(3250, 430));
+    checkpoints.push_back(Vector2D(30, 430));
+    checkpoints.push_back(Vector2D(3316, 830));
+    checkpoints.push_back(Vector2D(200, 700));
+    checkpoints.push_back(Vector2D(3500, 600));
+    checkpoints.push_back(Vector2D(100, 580));
 }
 // Destructor
 Scene::~Scene() {}
@@ -27,7 +36,6 @@ Scene::~Scene() {}
 bool Scene::Awake()
 {
     LOG("Loading Scene");
-
     player = static_cast<Player*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER));
     player->SetParameters(configParameters.child("entities").child("player"));
     InitialItems();
@@ -312,14 +320,14 @@ void Scene::CreateEnemies(int level) {
         // Crear Koopas para el nivel 3
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba1->SetPosition(Vector2D(2000, 470));
+        goomba1->SetPosition(Vector2D(2000, 550));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
         enemyList.push_back(goomba1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
         save_hitCount_goomba = 0;
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba2->SetPosition(Vector2D(1100, 470));
+        goomba2->SetPosition(Vector2D(1100, 550));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
         enemyList.push_back(goomba2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
@@ -346,7 +354,6 @@ void Scene::CreateEnemies(int level) {
         enemyList.push_back(bowser);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
         save_hitCount_bowser = 0;
-
         LOG("Bowser created for level 3 at position (6200, 330)");
     }
 }
@@ -378,11 +385,9 @@ bool Scene::Start()
     tick = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("tick").attribute("path").as_string());
     menu_pause = Engine::GetInstance().textures.get()->Load(configParameters.child("textures").child("menu_pause").attribute("path").as_string());
 
-
     showGroupLogo = true;
     logoTimer = 0.0f;
     return true;
-
 }
 // Called before each frame update
 bool Scene::PreUpdate()
@@ -512,8 +517,6 @@ bool Scene::Update(float dt)
             Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
         else {
-            LOG("Calling player->ResumeMovement()");
-
             player->ResumeMovement(); //Renundar movimineto del player
 
             for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
@@ -659,24 +662,33 @@ bool Scene::PostUpdate()
 {
     // Debug controls for level changes
     if (showingTransition == false && isLoading == false) {
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-            LOG("F2 presionado");
-            ChangeLevel(2);
-        }
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
             ChangeLevel(1);
         }
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-            ChangeLevel(3);
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+            ChangeLevel(2);
         }
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
             ShowTransitionScreen();
         }
-        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-            LoadGame();
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+            ChangeLevel(3);
         }
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
             SaveState();
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+            LoadGame();
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+            // Mover al siguiente punto de control
+            if (currentCheckpointIndex == 6) currentCheckpointIndex = 0;
+            currentCheckpointIndex = (currentCheckpointIndex + 1);
+            Vector2D nextCheckpoint = checkpoints[currentCheckpointIndex];
+            if (currentCheckpointIndex == 2) ChangeLevel(2);
+            if (currentCheckpointIndex == 4) ChangeLevel(3);
+            if (currentCheckpointIndex == 6) ChangeLevel(1);
+            player->SetPosition(nextCheckpoint);
         }
         if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {
             
@@ -686,7 +698,6 @@ bool Scene::PostUpdate()
             else {
                 Engine::GetInstance().guiManager.get()->activeDebug = true;
             }
-
         }
     }
     return true;
@@ -713,7 +724,7 @@ bool Scene::CleanUp()
 void Scene::ToggleMenu()
 {
     showHelpMenu = !showHelpMenu;
-    LOG(showHelpMenu ? "SHOWING MENU" : "UNSHOWING MENU");
+    LOG(showHelpMenu ? "SHOWING HELP MENU" : "UNSHOWING HELP MENU");
 }
 // Changes the current level
 void Scene::ChangeLevel(int newLevel)
@@ -738,7 +749,6 @@ void Scene::ShowTransitionScreen()
     }
     Engine::GetInstance().audio.get()->StopMusic();
 }
-
 // Finishes the transition and loads the next level
 void Scene::FinishTransition()
 {
@@ -786,7 +796,6 @@ void Scene::StartNewGame() {
         LOG("Error loading config.xml: %s", result.description());
         return;
     }
-
     // Restablecer el estado inicial en el archivo XML
     pugi::xml_node saveNode = originalConfig.child("config").child("scene").child("SaveFile");
     saveNode.attribute("level").set_value(1);
@@ -1149,7 +1158,6 @@ void Scene::MenuPause()
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 11, "Settings", SettingsPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 10, "Return", Back_tile, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Exit", Exit, this));
-
 }
 
 void Scene::Credits()
