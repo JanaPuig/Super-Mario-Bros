@@ -411,7 +411,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 							Engine::GetInstance().entityManager->puntuation += 300.0;
 						}
 						enemy->isDying = true;
-						b2Vec2 bounceVelocity(-3.0f, -5.0f); // Rebote hacia arriba
+						b2Vec2 bounceVelocity(0.0f, -6.0f); // Rebote hacia arriba
 						enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 					}
 					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
@@ -536,7 +536,12 @@ void Player::ManageStarPower(float dt) {
 			Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/StarPower.wav");
 			Engine::GetInstance().entityManager->StarMusicPlaying = true;
 		}
-		Engine::GetInstance().entityManager->starPowerDuration += dt;
+		if (Engine::GetInstance().scene->showPauseMenu == true) {
+			Engine::GetInstance().audio->PauseMusic();
+		}
+		else {
+			Engine::GetInstance().entityManager->starPowerDuration += dt;
+		}
 
 		if (Engine::GetInstance().entityManager->starPowerDuration >= 10000.0f) {
 			Engine::GetInstance().audio->PlayFx(PowerDown); // Sonido de perder poder

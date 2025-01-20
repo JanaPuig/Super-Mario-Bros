@@ -1447,7 +1447,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         showPauseMenu = true;
         LOG("Calling player->ResumeMovement()");
-
+        Engine::GetInstance().audio->ResumeMusic();
         player->ResumeMovement();
 
         for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
