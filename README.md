@@ -132,8 +132,10 @@ For now, only level 1 has been implemented, but the levels include different typ
          * Back to title
          * Exit
 
-* Optimitzation
-  * 
+* Optimitzation (optimization techniques)
+  * Frustrum culling
+  * Lazy updates
+  * Pathfinding search (Navegation mersh: A*)
 * Advanced Options
   * F7: Teleport to Next checkpoint
   * F8: Show/Hide buttons boundaries
