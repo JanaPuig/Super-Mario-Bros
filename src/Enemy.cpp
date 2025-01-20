@@ -76,16 +76,16 @@ bool Enemy::Start() {
     pbody->ctype = ColliderType::ENEMY;
     std::string enemyName = parameters.attribute("name").as_string();
     if (enemyName == "koopa") {
-        pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+        pbody->body->SetGravityScale(1); // Sin gravedad para Koopa
     }
     else if (enemyName == "koopa2") {
-        pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+        pbody->body->SetGravityScale(1); // Sin gravedad para Koopa
     }
     else if (enemyName == "goomba") {
-        pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
     }
     else if (enemyName == "goomba2") {
-        pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+        pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
     }
     else if (enemyName == "bowser") {
         pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
@@ -124,7 +124,6 @@ void Enemy::UpdateColliderSize() {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
         }
     }
-
     // Asigna el nuevo listener y tipo de colisión
     pbody->listener = this;
     pbody->ctype = ColliderType::ENEMY;
@@ -195,6 +194,12 @@ bool Enemy::Update(float dt) {
                 currentAnimation = &deadkoopa;
                 isDying = true;
                 return true;
+            }
+            if (distanceToPlayer > detectionRange) {
+                pbody->body->SetGravityScale(0);
+            }
+            else {
+                pbody->body->SetGravityScale(1);
             }
             if (velocity.x < 0) {
                 currentAnimation = &flyingkoopaLeft;
@@ -380,7 +385,6 @@ bool Enemy::Update(float dt) {
                         velocity = b2Vec2(-2, 0);
                     }
                 }
-
                 pbody->body->SetLinearVelocity(velocity);
             }
             else {
@@ -468,13 +472,13 @@ void Enemy::ResetPosition() {
     //Gravedad de los enemigos
     std::string enemyName = parameters.attribute("name").as_string();
     if (enemyName == "koopa" || enemyName == "koopa2") {
-        pbody->body->SetGravityScale(0);
+        pbody->body->SetGravityScale(1);
     }
     else if (enemyName == "goomba" || enemyName == "goomba2") {
-        pbody->body->SetGravityScale(10);
+        pbody->body->SetGravityScale(1);
     }
     else if (enemyName == "bowser") {
-        pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
+        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
     }
 }
 
@@ -496,16 +500,16 @@ void Enemy::ResumeMovement() {
       
         std::string enemyName = parameters.attribute("name").as_string();
         if (enemyName == "koopa") {
-            pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+            pbody->body->SetGravityScale(1); // Sin gravedad para Koopa
         }
         else if (enemyName == "koopa2") {
-            pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+            pbody->body->SetGravityScale(1); // Sin gravedad para Koopa
         }
         else if (enemyName == "goomba") {
-            pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+            pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
         }
         else if (enemyName == "goomba2") {
-            pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+            pbody->body->SetGravityScale(1); // Gravedad normal para Goomba
         }
         else if (enemyName == "bowser") {
             pbody->body->SetGravityScale(5); // Gravedad normal para Bowser

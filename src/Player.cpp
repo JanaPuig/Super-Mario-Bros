@@ -72,7 +72,7 @@ bool Player::Start() {
 	pbody->ctype = ColliderType::PLAYER;
 
 	if (!parameters.attribute("gravity").as_bool()) {
-		pbody->body->SetGravityScale(0);
+		pbody->body->SetGravityScale(1);
 	}
 
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY()));
@@ -272,11 +272,7 @@ bool Player::Update(float dt) {
 		godModeToggle = false;
 	}
 	if (godMode) {
-		Player::pbody->body->SetGravityScale(0);
 		Player::PlayerFlight(dt);
-	}
-	else {
-		Player::pbody->body->SetGravityScale(1);
 	}
 
 
