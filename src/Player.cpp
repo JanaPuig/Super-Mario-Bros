@@ -389,11 +389,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 			Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
 			if (enemy != nullptr) {
-				float playerBottom = this->position.getY() + this->texH; // Usamos todo el alto del jugador
-				float playerVelocityY = pbody->body->GetLinearVelocity().y; // Velocidad en Y del jugador
-				float enemyTop = enemy->GetPosition().getY(); // Parte superior del enemigo
+				float playerBottom = this->position.getY() + this->texH;
+				float playerVelocityY = pbody->body->GetLinearVelocity().y; 
+				float enemyTop = enemy->GetPosition().getY(); 
 
-				if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
+				if (Engine::GetInstance().entityManager->isStarPower == true)
 				{
 					//muerte enemigo
 					b2Filter filter = enemy->pbody->body->GetFixtureList()->GetFilterData();
@@ -411,7 +411,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 							Engine::GetInstance().entityManager->puntuation += 300.0;
 						}
 						enemy->isDying = true;
-						b2Vec2 bounceVelocity(-5.0f, -7.0f); // Rebote hacia arriba
+						b2Vec2 bounceVelocity(-3.0f, -5.0f); // Rebote hacia arriba
 						enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 					}
 					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);

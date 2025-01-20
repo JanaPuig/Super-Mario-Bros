@@ -108,23 +108,23 @@ public:
     bool mouseOverMusicControl = false;
     bool mouseOverFxControl = false;
 
-    SDL_Texture* loadingScreen = NULL; //texture for the loading screen
-    SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
+    SDL_Texture* loadingScreen = NULL; 
+    SDL_Texture* helpMenuTexture = NULL; 
     SDL_Texture* menu_pause = NULL;
     SDL_Texture* tick = NULL;
     SDL_Texture* settings = NULL;
     SDL_Texture* black = NULL;
     SDL_Texture* blur = NULL;
-    SDL_Texture* Title = NULL; // Texture for the main menu
+    SDL_Texture* Title = NULL; 
     SDL_Texture* gameOver = NULL;
 
-    float tolerance = 20.0f;         // Tolerance value for proximity checks
-    float loadingScreenDuration = 3100.0f; // Duración de la pantalla de carga (en segundos)
-    float loadingTimer = 0.0f;    // Temporizador para la pantalla de carga
-    float levelTime = 90000.0f;    // Tiempo total para completar el nivel (en segundos)
-    float elapsedTime = 0.0f;    // Tiempo acumulado desde el inicio del nivel
-    float logoTimer = 0;                // Temporizador para el logo
-    float logoDuration = 3000.0f;      // Duración del logo en segundos
+    float tolerance = 20.0f;       
+    float loadingScreenDuration = 3100.0f; 
+    float loadingTimer = 0.0f;    
+    float levelTime = 90000.0f;  
+    float elapsedTime = 0.0f;    
+    float logoTimer = 0;               
+    float logoDuration = 3000.0f;     
 
     int pipeFxId = 0;                // Sound effect ID for pipe interaction
     int CastleFxId = 0;
