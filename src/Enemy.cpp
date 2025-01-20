@@ -493,6 +493,23 @@ void Enemy::ResumeMovement() {
         pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
         pbody->listener = this;
         pbody->ctype = ColliderType::ENEMY;
+      
+        std::string enemyName = parameters.attribute("name").as_string();
+        if (enemyName == "koopa") {
+            pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+        }
+        else if (enemyName == "koopa2") {
+            pbody->body->SetGravityScale(0); // Sin gravedad para Koopa
+        }
+        else if (enemyName == "goomba") {
+            pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+        }
+        else if (enemyName == "goomba2") {
+            pbody->body->SetGravityScale(10); // Gravedad normal para Goomba
+        }
+        else if (enemyName == "bowser") {
+            pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
+        }
     }
 }
 
