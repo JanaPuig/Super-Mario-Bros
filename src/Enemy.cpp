@@ -438,7 +438,6 @@ Vector2D Enemy::GetPosition() {
         Vector2D pos = Vector2D(METERS_TO_PIXELS(bodyPos.x), METERS_TO_PIXELS(bodyPos.y));
         return pos;
     }
-
 }
 void Enemy::ResetPath() {
     Vector2D pos = GetPosition();
@@ -477,7 +476,6 @@ void Enemy::ResetPosition() {
     else if (enemyName == "bowser") {
         pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
     }
-
 }
 
 void Enemy::StopMovement() {
@@ -487,7 +485,6 @@ void Enemy::StopMovement() {
         pbody->listener = this;
         pbody->ctype = ColliderType::ENEMY;
     }
- 
 }
 void Enemy::ResumeMovement() {
     if (pbody != nullptr) {

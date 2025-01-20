@@ -491,8 +491,8 @@ bool Scene::Update(float dt)
     }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-        showPauseMenu = !showPauseMenu; // Alternar el estado del menú
-
+        showPauseMenu = !showPauseMenu;
+        Engine::GetInstance().audio->ResumeMusic();
         if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
             player->StopMovement(); //Parar movimineto del player
             for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
@@ -524,7 +524,6 @@ bool Scene::Update(float dt)
                 else { 
                     continue;
                 }
-              
             }
             for (Item* item : itemList) { //Ver items
                 item->apear = true;
@@ -534,16 +533,16 @@ bool Scene::Update(float dt)
     }
     // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
     if (showPauseMenu) {
-        funcion_menu_pause();
+        MenuPause();
 
-        if (manage_showSettings) {
+        if (manageShowSettings) {
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
 
             //Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
-                manage_showSettings = false;
+                manageShowSettings = false;
             }
 
         }
@@ -1132,7 +1131,7 @@ void Scene::menu()
     }
 }
 
-void Scene::funcion_menu_pause()
+void Scene::MenuPause()
 {
      Engine::GetInstance().guiManager->CleanUp();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
@@ -1439,7 +1438,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
     case 11: //Menu pause: Settings
 
-            manage_showSettings = true;
+            manageShowSettings = true;
 
         break;
 
@@ -1449,7 +1448,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         LOG("Calling player->ResumeMovement()");
         Engine::GetInstance().audio->ResumeMusic();
         player->ResumeMovement();
-
         for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
             if (enemy != nullptr) {
                 enemy->visible = true;
@@ -1481,7 +1479,7 @@ void Scene::DrawLives() {
 }
 void Scene::DrawObject() {
     char objectText[100];
-    sprintf_s(objectText, "Objects: %d", Engine::GetInstance().entityManager->objects);
+    sprintf_s(objectText, "Coins: %d", Engine::GetInstance().entityManager->objects);
     Engine::GetInstance().render.get()->DrawText(objectText, 850, 20, 90, 35);
 }
 void Scene::DrawPuntation() {

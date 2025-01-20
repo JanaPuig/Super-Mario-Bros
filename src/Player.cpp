@@ -414,6 +414,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 						b2Vec2 bounceVelocity(0.0f, -6.0f); // Rebote hacia arriba
 						enemy->pbody->body->SetLinearVelocity(bounceVelocity);
 					}
+
 					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
 				}
 				// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo

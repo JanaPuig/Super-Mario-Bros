@@ -81,7 +81,7 @@ public:
     void Credits();
     void menu();
     void ToggleFullscreen();
-    void funcion_menu_pause();
+    void MenuPause();
 
     // Public member variables
     bool bossFightActive = false;
@@ -98,7 +98,7 @@ public:
     bool showGroupLogo = false;
     bool timeUp = false;// Controla si se muestra el logo
     bool showSettings = false;
-    bool manage_showSettings = false;
+    bool manageShowSettings = false;
     bool showPauseMenu = false;
     bool hasPlayedWinMusic;
     bool fullscreen_window = false;
