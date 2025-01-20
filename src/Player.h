@@ -67,6 +67,7 @@ public:
     int currentFrame = 0;
     float animationTimer = 0.0f;
     float frameDuration = 130.0f;
+
     // Physics body
     PhysBody* pbody = nullptr;
 
@@ -101,6 +102,7 @@ public:
     int ohNoId = 0;
     int EnemyDeathSound = 0;
     int BowserHit = 0;
+
     // Player state
     bool isStarPowerActive = false;
     bool isMoving = false;

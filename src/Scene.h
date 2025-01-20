@@ -139,7 +139,6 @@ public:
     int musicPosX = 1350;
     int FxPosX = 1350;
     int EndGame = 0;
-    
 
 private:
 
@@ -157,41 +156,29 @@ private:
 
     //Private Lists
     std::vector<int> hitcountList;
-    std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
+    std::vector<std::pair<std::string, int>> enemyStateList; 
     std::vector<std::pair<std::string, int>> itemStateList;
     std::vector<Item*> itemList;
     std::vector<Enemy*> enemyList;
 
+    int gameIntroMusicId = 0; 
+    int menuMusicId = 0; 
+    int selectedOption = 0; 
+
+    float transitionDuration = 3100;     
+    float transitionTimer = 0.0f;        
 
 
-    int gameIntroMusicId = 0; // Identificador de la música GameIntro
-    int menuMusicId = 0; // Identificador de la música MenuMusic
-    int selectedOption = 0; // Opción seleccionada
-
-    float transitionDuration = 3100;      // Duration of the transition screen (in ms)
-    float transitionTimer = 0.0f;         // Timer for tracking transition time
-
-
-    bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
+    bool isGameIntroPlaying = false; 
 
     //Private Textures
-    SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
-    SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
     SDL_Texture* GroupLogo = NULL;
     SDL_Texture* mainMenu = NULL;
-    SDL_Texture* newGameButton = NULL;  // Textura para el botón Nuevo Juego
-    SDL_Texture* loadGameButton = NULL; // Textura para el botón Cargar Juego
-    SDL_Texture* leaveGameButton = NULL; // Textura para el botón Salir
-    SDL_Texture* newGameButtonSelected = NULL;
-    SDL_Texture* loadGameButtonSelected = NULL;
-    SDL_Texture* leaveGameButtonSelected = NULL;
 
     Vector2D mousePos;
 
     GuiControlButton* guiBt;
     int isSave = 0;
-
-
 
     int save_hitCount_koopa = 0; //Saber el hitcount de los enemigos cuando se hace un save
     int save_hitCount_koopa2 = 0;

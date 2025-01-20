@@ -322,13 +322,11 @@ bool Physics::PostUpdate()
 			}
 		}
 	}
-
 	// Process bodies to delete after the world step
 	for (PhysBody* physBody : bodiesToDelete) {
 		if (physBody != nullptr) {
 			if (physBody->body != nullptr) {
 				world->DestroyBody(physBody->body);
-				
 			}
 			
 		}
