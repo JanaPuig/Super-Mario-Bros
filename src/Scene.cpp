@@ -277,14 +277,14 @@ void Scene::CreateEnemies(int level) {
         save_hitCount_koopa2 = 0;
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba1->SetPosition(Vector2D(2000, 416));
+        goomba1->SetPosition(Vector2D(2000, 415));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"),false);
         enemyList.push_back(goomba1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
         save_hitCount_goomba = 0;
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-        goomba2->SetPosition(Vector2D(5500, 416));
+        goomba2->SetPosition(Vector2D(5500, 415));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"),false);
         enemyList.push_back(goomba2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
@@ -1052,26 +1052,26 @@ void Scene::SaveState()
             if (enemies.first == "koopa") {
                 LOG("posx:%f, posY:%f", enemyEntity->GetPosition().getX(), enemyEntity->GetPosition().getY());
 
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").set_value(enemyEntity->GetPosition().getX());
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").set_value(enemyEntity->GetPosition().getY());
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").set_value(enemyEntity->GetPosition().getX()-40);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").set_value(enemyEntity->GetPosition().getY()- 42);
             }
             if (enemies.first == "koopa2") {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 44);
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("x").set_value(enemyEntity->GetPosition().getX()-40);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa2").attribute("y").set_value(enemyEntity->GetPosition().getY()- 42);
             }
             if (enemies.first == "goomba") {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").set_value(enemyEntity->GetPosition().getY() - 16);
 
             }
             if (enemies.first == "goomba2") {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 16);
 
             }
             if (enemies.first == "bowser" && level == 3) {
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
-                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").set_value(enemyEntity->GetPosition().getY() - 44);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").set_value(enemyEntity->GetPosition().getX()-72);
+                SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").set_value(enemyEntity->GetPosition().getY()-64);
 
             }
         }
