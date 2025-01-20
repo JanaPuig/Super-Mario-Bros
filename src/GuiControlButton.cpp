@@ -13,7 +13,6 @@ GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : 
 
 	canClick = true;
 	drawBasic = false;
-
 }
 
 GuiControlButton::~GuiControlButton()
@@ -83,8 +82,26 @@ bool GuiControlButton::Update(float dt)
 		return false; // No hacer nada si el botón está deshabilitado
 	}
 
+	
+
+	if (Engine::GetInstance().guiManager.get()->activeDebug) {
+		switch (state) {
+
+		case GuiControlState::NORMAL:
+			Engine::GetInstance().render->DrawRectangle(bounds, 130, 130, 130, 255, false, false);
+			break;
+		case GuiControlState::FOCUSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 178, 178, 178, 255, false, false);
+			break;
+		case GuiControlState::PRESSED:
+			Engine::GetInstance().render->DrawRectangle(bounds, 71, 75, 78, 255, false, false);
+			break;
+		}
+	}
+	
 	if (id == 6 || id == 7) {
 		// Hacer que este botón no tenga transparencia (alfa = 255)
+
 		switch (state)
 		{
 		case GuiControlState::NORMAL:
@@ -96,25 +113,28 @@ bool GuiControlButton::Update(float dt)
 		case GuiControlState::PRESSED:
 			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 100, true, false); // Alfa = 255 (sin transparencia)
 			break;
+
 		}
 	}
 
 	else if (id == 8 || id == 9) {
+
 		// Hacer que este botón no tenga transparencia (alfa = 255)
 		switch (state)
 		{
 		case GuiControlState::NORMAL:
-			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 242, 240, 235, 200, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::FOCUSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 255, 252, 240, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 255, 252, 240, 200, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		case GuiControlState::PRESSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 250, 251, 253, 255, true, false); // Alfa = 255 (sin transparencia)
+			Engine::GetInstance().render->DrawRectangle(bounds, 250, 251, 253, 200, true, false); // Alfa = 255 (sin transparencia)
 			break;
 		}
 	}
 	else {
+
 		switch (state)
 		{
 		case GuiControlState::NORMAL:
@@ -128,6 +148,7 @@ bool GuiControlButton::Update(float dt)
 			Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 150, 100, true, false);
 			break;
 		}
+
 	}
 
 	// Dibujar el texto del botón

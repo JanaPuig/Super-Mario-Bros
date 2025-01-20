@@ -679,6 +679,16 @@ bool Scene::PostUpdate()
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
             SaveState();
         }
+        if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {
+            
+            if (Engine::GetInstance().guiManager.get()->activeDebug == true) {
+                Engine::GetInstance().guiManager.get()->activeDebug = false;
+            }
+            else {
+                Engine::GetInstance().guiManager.get()->activeDebug = true;
+            }
+
+        }
     }
     return true;
 }

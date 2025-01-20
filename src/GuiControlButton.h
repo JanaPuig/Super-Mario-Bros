@@ -13,7 +13,6 @@ public:
 
 	// Called each loop iteration
 	bool Update(float dt);
-	//void Draw();
 
 private:
 	bool soundPlayed = false;
