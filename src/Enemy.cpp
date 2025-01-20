@@ -191,6 +191,9 @@ bool Enemy::Update(float dt) {
                 Engine::GetInstance().entityManager->puntuation += 650.50;
                 UpdateColliderSize();
                 pbody->body->SetGravityScale(1);
+                b2Filter filter = pbody->body->GetFixtureList()->GetFilterData();
+                filter.maskBits = 0x0000;
+                pbody->body->GetFixtureList()->SetFilterData(filter);
                 currentAnimation = &deadkoopa;
                 isDying = true;
                 return true;
