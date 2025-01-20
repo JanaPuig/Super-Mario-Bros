@@ -659,24 +659,26 @@ bool Scene::IsInTeleportArea(const Vector2D& playerPos, float x, float y, float 
 bool Scene::PostUpdate()
 {
     // Debug controls for level changes
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-        LOG("F2 presionado");
-        ChangeLevel(2);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-        ChangeLevel(1);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
-        ChangeLevel(3);
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
-        ShowTransitionScreen();
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-        LoadGame();
-    }
-    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
-        SaveState();
+    if (showingTransition == false && isLoading == false) {
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+            LOG("F2 presionado");
+            ChangeLevel(2);
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+            ChangeLevel(1);
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F4) == KEY_DOWN) {
+            ChangeLevel(3);
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+            ShowTransitionScreen();
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+            LoadGame();
+        }
+        if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {
+            SaveState();
+        }
     }
     return true;
 }

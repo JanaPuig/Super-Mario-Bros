@@ -100,7 +100,7 @@ public:
     bool showSettings = false;
     bool manage_showSettings = false;
     bool showPauseMenu = false;
-    bool  hasPlayedWinMusic ;
+    bool hasPlayedWinMusic;
     bool fullscreen_window = false;
     bool activatebotton7 = false;
     bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
