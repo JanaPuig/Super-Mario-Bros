@@ -22,6 +22,8 @@ For now, only level 1 has been implemented, but the levels include different typ
 * F1/F2 Change to Level 1 & 2
 * F3 Restart the level
 * F5/F6 Save & Load the game
+* F7 Travel across checkpoints
+* F8 Show/Hide Buttons Boundaries
 * F9 Visualize the colliders / logic / paths
 * F10 God Mode (fly around, cannot be killed)
 * F11 Enable/Disable FPS cap to 30
@@ -87,6 +89,43 @@ For now, only level 1 has been implemented, but the levels include different typ
   * F5: Save state (even across levels)
   * F6: Load the previous state (even across levels)
 
+## List of Features Implemented Assignment 3 
+* Enemies
+  * Bowser Movement & Animations
+  * Enemies on each level
+* Items
+  * Big Coin
+  * One Up 
+  * Star
+* Save & Load
+  * Player position & state
+  * Enemy position & state
+  * Items position & state
+* Levels
+  * Level 3 Implementation
+  * Shortcuts to switch levels:
+    * F1: Switch to level 1
+    * F2: Switch to level 2
+    * F3: Reset current level
+    * F4: Switch to level 4
+* GUI 
+  * 
+* Optimitzation
+  * 
+* Advanced Options
+  * F7: Teleport to Next checkpoint
+  * F8: Show/Hide buttons boundaries
+* Music & Sound Fx
+  * Level 3 Music
+  * Boss Fight Music
+  * Star Power Music
+  * Power Up Fx
+  * Power Down Fx
+  * Bowser dies Fx
+  * Bowser Laught Fx
+  * One Up Fx
+  * Big Coin Fx
+  * You Win Music
 
 ## Team Members
 ### Jana Puig & Toni Llovera
