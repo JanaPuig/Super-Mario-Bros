@@ -3,86 +3,93 @@
 #include "Entity.h"
 #include "SDL2/SDL.h"
 #include "Animation.h"
-#include <vector>
+#include <vector> 
 
-// Forward declaration
 struct SDL_Texture;
 
 class Item : public Entity
 {
 public:
+
     Item();
     virtual ~Item();
 
-    // Lifecycle methods
     bool Awake();
+
     bool Start();
+
     bool Update(float dt);
+
     bool CleanUp();
 
-    // Item parameters
     void SetParameters(pugi::xml_node parameters) {
         this->parameters = parameters;
     }
-
-    // Item state management
-    void SetIsPicked(bool picked) { isPicked = picked; }
-    void SavePickedStateToFile();
+   
     int GetisPicked();
+
+    void SetIsPicked(bool picked) { isPicked = picked; }
+
+    void SavePickedStateToFile();
+
     void ResetPosition();
+
     void SetPosition(const Vector2D& newPosition);
+
     Vector2D GetPosition() const;
 
+
 public:
-    // Audio FX
-    int pickCoinFxId = 0;
-    int checkPointFxId = 0;
+    // Audio Fx
+    int pickCoinFxId= 0;
+    int CheckPoint= 0;
     int oneUpFxId = 0;
-    int bigCoinFxId = 0;
-    int powerUpFxId = -1;
+    int BigCoinFxId = 0;
+    int PowerUpFxId = -1;
+    int isPicked;    // Indica si el ítem ha sido recogido
 
-    // Item type flags
-    bool isPicked = false;    
-    bool isCoin = false;     
-    bool isOneUp = false;
-    bool isBigCoin = false;   
-    bool isPowerUp = false;    
-    bool isFinishFlag = false;   
-    bool appear = true;         
+    bool isCoin = false;     // Indica si el ítem es una MONEDA
+    bool isOneUp = false;    // Indica si el ítem es una VIDA
+    bool isBigCoin = false;
+    bool isPowerUp = false;// Indica si el ítem es una MONEDA GRANDE
+    bool isFinishFlag = false;
+    std::vector<Item*> items;
 
-    std::vector<Item*> items;   // Collection of items
+    bool apear=true;
 
 private:
-    // Textures
-    SDL_Texture* coinTexture = nullptr;
-    SDL_Texture* bigCoinTexture = nullptr;
-    SDL_Texture* OneUpTexture = nullptr;
-    SDL_Texture* flagTexture = nullptr;
-    SDL_Texture* flagpoleTexture = nullptr;
-    SDL_Texture* powerUpTexture = nullptr;
-    SDL_Texture* finishFlagTexture = nullptr;
-    SDL_Texture* finishFlagpoleTexture = nullptr;
 
-    const char* texturePath = nullptr;
-    int texW = 0, texH = 0;
+    SDL_Texture* coinTexture =  NULL;
+    SDL_Texture* BigCoinTexture = NULL;
+    SDL_Texture* OneUpTexture = NULL;
+    SDL_Texture* flagTexture = NULL;
+    SDL_Texture* flagpoleTexture = NULL;
+    SDL_Texture* PowerUpTexture = NULL;
+    SDL_Texture* finish_flagTexture = NULL;
+    SDL_Texture* finish_flagpoleTexture = NULL;
 
-    // Animation parameters
+    const char* texturePath;
+    int texW= 0, texH = 0;
+
     pugi::xml_node parameters;
     Animation* currentAnimation = &idle;
     Animation idle;
 
-    Animation* currentAnimationFlag = &flag;
+    Animation* currentAnimation_flag = &flag;
     Animation flag;
-    Animation lowerFlag;
-    Animation lowerLowerFlag;
-    Animation bigCoin;
-    Animation updateFinishFlag;
+    Animation lower_flag;
+    Animation lower_lower_flag;
+    Animation BigCoin;
+    Animation update_finish_flag;
 
-    Animation* currentAnimationFlagpole = &flagpole;
+    Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;
 
-    Animation* currentAnimationFinishFlag = &finishFlag;
-    Animation finishFlag;
-    Animation* currentAnimationFinishFlagpole = &finishFlagpole;
-    Animation finishFlagpole;
+
+    Animation* currentAnimation_finish_flag = &finish_flag;
+    Animation finish_flag;
+    Animation* currentAnimation_finish_flagpole = &finish_flagpole;
+    Animation finish_flagpole;
+
+
 };

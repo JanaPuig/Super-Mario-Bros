@@ -222,7 +222,7 @@ bool Player::Update(float dt) {
 		return true;
 	}
 	//crouching animation
-	if (isCrouching) {
+	if (iscrouching) {
 		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			currentAnimation = facingLeft ? &crouchStarLAnimation : &crouchStarRAnimation;
@@ -242,7 +242,7 @@ bool Player::Update(float dt) {
 		}
 	}
 	// Jumping Animation
-	else if (isJumping && !isCrouching) {
+	else if (isJumping && !iscrouching) {
 		if (Engine::GetInstance().entityManager->isStarPower == true)
 		{
 			currentAnimation = facingLeft ? &JumpStarLAnimation : &JumpStarRAnimation;
@@ -305,13 +305,13 @@ bool Player::Update(float dt) {
 		isSprinting = false; frameDuration = 130.0f;
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && !isDead) {
-		isCrouching = true;
+		iscrouching = true;
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_UP && !isDead) {
-		isCrouching = false;
+		iscrouching = false;
 	}
 	// Left
-	if (!isCrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && !isDead) {
 		velocity.x = -movementSpeed;
 		isMoving = true;
 		facingLeft = true;
@@ -320,7 +320,7 @@ bool Player::Update(float dt) {
 		isMoving = false;
 	}
 	// Right movement
-	if (!isCrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
+	if (!iscrouching && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && !isDead) {
 		velocity.x = movementSpeed;
 		isMoving = true;
 		facingLeft = false;
@@ -329,12 +329,12 @@ bool Player::Update(float dt) {
 		isMoving = false;
 	}
 	// Jump
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpCount < 2) {
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && jumpcount < 2) {
 		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
 		animationTimer = 0.0f;
 		isJumping = true;
-		++jumpCount;
+		++jumpcount;
 		Engine::GetInstance().audio.get()->PlayFx(jumpFxId);
 		// Play random sound
 		int randomSound = rand() % 8;
@@ -371,7 +371,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
 			isJumping = false;	//reset the jump flag when touching the ground
-			jumpCount = 0;
+			jumpcount = 0;
 			break;
 		case ColliderType::ITEM:
 			LOG("Collision ITEM");
@@ -382,7 +382,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			break;
 		case ColliderType::WALL:
 			LOG("Player collision with WALL...");
-			jumpCount = 1;
+			jumpcount = 1;
 			break;
 		case ColliderType::ENEMY: {
 			LOG("Collision with ENEMY");
@@ -452,7 +452,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype) {
 	case ColliderType::PLATFORM:
 		LOG("End Collision PLATFORM");
-		jumpCount = 1;
+		jumpcount = 1;
 		break;
 	case ColliderType::ITEM:
 		LOG("End Collision ITEM");
@@ -462,7 +462,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::WALL:
 		LOG("Player hit a death zone, resetting position...");
-		jumpCount = 1;
+		jumpcount = 1;
 		break;
 	case ColliderType::ENEMY:
 		break;

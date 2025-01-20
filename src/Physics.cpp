@@ -330,6 +330,7 @@ bool Physics::PostUpdate()
 				world->DestroyBody(physBody->body);
 				
 			}
+			
 		}
 		else {
 			LOG("Tried to destroy a nullptr body");

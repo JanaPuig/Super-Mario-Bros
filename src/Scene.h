@@ -15,163 +15,185 @@ struct SDL_Texture;
 class Scene : public Module
 {
 public:
-    Scene();                     
-    virtual ~Scene();          
+    // Constructor
+    Scene();
 
-    // Module lifecycle methods
-    bool Awake();                
-    bool Start();               
-    bool PreUpdate();            
-    bool Update(float dt);       
-    bool PostUpdate();           
-    bool CleanUp();             
+    // Destructor
+    virtual ~Scene();
 
-    // Gameplay methods
+    // Called before render is available
+    bool Awake();
+
+    // Creates items specific to Level 1
     void InitialItems();
     void InitialEnemies(bool useXMLPosition);
+
     void CreateLevelItems(int level);
     void CreateEnemies(int level);
+
+    // Called before the first frame
+    bool Start();
+
+    // Called before all updates
+    bool PreUpdate();
+
+    // Called each loop iteration
+    bool Update(float dt);
+
+    // Handles teleportation logic
     void HandleTeleport(const Vector2D& playerPos);
+
+    // Checks if the player is within a teleportation area
     bool IsInTeleportArea(const Vector2D& playerPos, float x, float y, float tolerance);
+
+    // Called after all updates
+    bool PostUpdate();
+
+    // Called before quitting
+    bool CleanUp();
+
+    // Return the player position
     Vector2D GetPlayerPosition();
+
+    // Guardar Escena
     void SaveState();
 
-    // UI and rendering methods
+    bool OnGuiMouseClickEvent(GuiControl* control);
     void Settings();
     void DrawLives();
     void DrawObject();
     void DrawWorld();
     void DrawPuntation();
     void GameOver();
+
+    // Returns the player instance
+    Player* GetPlayer() const { return player; }
+
+    // Changes the current level
+    void ChangeLevel(int newLevel);
+
+    // Toggles the help menu
+    void ToggleMenu();
+
+    void UpdateEnemyHitCount(std::string enemyName, int hitCount);
+    void UpdateItem(std::string itemName, int isPicked);
+
     void Credits();
     void menu();
     void ToggleFullscreen();
     void funcion_menu_pause();
 
-    // Interaction and state management
-    bool OnGuiMouseClickEvent(GuiControl* control);
-    void UpdateEnemyHitCount(std::string enemyName, int hitCount);
-    void UpdateItem(std::string itemName, int isPicked);
-    void ChangeLevel(int newLevel);
-    void ToggleMenu();
-
-    // Getters
-    Player* GetPlayer() const { return player; }
-
-    // Flags
+    // Public member variables
     bool bossFightActive = false;
     bool showWinScreen = false;
-    bool isLoading = false;
+    bool isLoading = false; // Bandera para mostrar pantalla de carga
     bool limitFPS = false;
-    bool showRemainingTime = true;
+    bool showRemainingTime = true;  // Mostrar tiempo restante o acumulado (true = restante, false = acumulado)
     bool showCredits = false;
-    bool showHelpMenu = false;
-    bool ToggleHelpMenu = false;
-    bool showingTransition = false;
+    bool showHelpMenu = false;       // Whether the help menu is visible
+    bool ToggleHelpMenu = false;     // Toggle flag for the help menu
+    bool showingTransition = false;       // Whether the transition screen is visible
     bool isFlaged = false;
-    bool showMainMenu = true;
+    bool showMainMenu = true;        // Whether the main menu is visible
     bool showGroupLogo = false;
-    bool timeUp = false;
+    bool timeUp = false;// Controla si se muestra el logo
     bool showSettings = false;
     bool manage_showSettings = false;
     bool showPauseMenu = false;
-    bool hasPlayedWinMusic = false;
+    bool hasPlayedWinMusic;
     bool fullscreen_window = false;
     bool activatebotton7 = false;
-    bool musicButtonHeld = false;
-    bool FxButtonHeld = false;
+    bool musicButtonHeld = false; // Detecta si el clic está siendo mantenido
+    bool FxButtonHeld = false; // Detecta si el clic está siendo mantenido
     bool mouseOverMusicControl = false;
     bool mouseOverFxControl = false;
-    bool isGameIntroPlaying = false; 
 
-    // Textures
-    SDL_Texture* loadingScreen = nullptr;
-    SDL_Texture* helpMenuTexture = nullptr;
-    SDL_Texture* menu_pause = nullptr;
-    SDL_Texture* tick = nullptr;
-    SDL_Texture* settings = nullptr;
-    SDL_Texture* black = nullptr;
-    SDL_Texture* blur = nullptr;
-    SDL_Texture* Title = nullptr;
-    SDL_Texture* gameOver = nullptr;
+    SDL_Texture* loadingScreen = NULL; //texture for the loading screen
+    SDL_Texture* helpMenuTexture = NULL; // Texture for the help menu
+    SDL_Texture* menu_pause = NULL;
+    SDL_Texture* tick = NULL;
+    SDL_Texture* settings = NULL;
+    SDL_Texture* black = NULL;
+    SDL_Texture* blur = NULL;
+    SDL_Texture* Title = NULL; // Texture for the main menu
+    SDL_Texture* gameOver = NULL;
 
-    // Timers and durations
-    float tolerance = 20.0f;
-    float loadingScreenDuration = 3100.0f;
-    float loadingTimer = 0.0f;
-    float levelTime = 90000.0f;
-    float elapsedTime = 0.0f;
-    float logoTimer = 0.0f;
-    float logoDuration = 3000.0f;
-    float transitionDuration = 3100.0f;
-    float transitionTimer = 0.0f;
-    float currentTime = 0;
-    const float tolerance = 20.0f;
+    float tolerance = 20.0f;         // Tolerance value for proximity checks
+    float loadingScreenDuration = 3100.0f; // Duración de la pantalla de carga (en segundos)
+    float loadingTimer = 0.0f;    // Temporizador para la pantalla de carga
+    float levelTime = 90000.0f;    // Tiempo total para completar el nivel (en segundos)
+    float elapsedTime = 0.0f;    // Tiempo acumulado desde el inicio del nivel
+    float logoTimer = 0;                // Temporizador para el logo
+    float logoDuration = 3000.0f;      // Duración del logo en segundos
 
-    //Texts
-    char timerText[64];
-
-    // Sound effects
-    int pipeFxId = 0;
+    int pipeFxId = 0;                // Sound effect ID for pipe interaction
     int CastleFxId = 0;
     int SelectFxId = 0;
     int SelectFxId2 = 0;
     int marioTime = 0;
     int hereWeGo = 0;
-    int MenuStart = 0;
+    int MenuStart = 0;// Sound effect ID for castle interaction
+    int level = 0;                   // Current map level
     int BowserLaugh = 0;
-    int EndGame = 0;
-    int gameIntroMusicId = 0;
-    int menuMusicId = 0;
-    int selectedOption = 0;
-
-    // Audio settings
-    int sdlVolume = 0;
+    int sdlVolume;
     int musicPosX = 1350;
     int FxPosX = 1350;
+    int EndGame = 0;
+    
 
-    // Level state
-    int level = 0;                  
-
-    // Private methods
 private:
+
     void ShowTransitionScreen();
     void FinishTransition();
     void StartNewGame();
     void LoadGame();
 
-    // Player and game objects
-    Player* player = nullptr;
-    Enemy* enemy = nullptr;
-    Item* item = nullptr;
+    // Player instance
+    Player* player;
 
-    // Game state lists
+    Enemy* enemy;
+    //Item Instance
+    Item* item;
+
+    //Private Lists
     std::vector<int> hitcountList;
-    std::vector<std::pair<std::string, int>> enemyStateList;
+    std::vector<std::pair<std::string, int>> enemyStateList; //-> usar esta lista para almacenar el estado de los enemigos
     std::vector<std::pair<std::string, int>> itemStateList;
     std::vector<Item*> itemList;
     std::vector<Enemy*> enemyList;
 
-    // Private textures
-    SDL_Texture* level1Transition = nullptr;
-    SDL_Texture* level2Transition = nullptr;
-    SDL_Texture* GroupLogo = nullptr;
-    SDL_Texture* mainMenu = nullptr;
-    SDL_Texture* newGameButton = nullptr;
-    SDL_Texture* loadGameButton = nullptr;
-    SDL_Texture* leaveGameButton = nullptr;
-    SDL_Texture* newGameButtonSelected = nullptr;
-    SDL_Texture* loadGameButtonSelected = nullptr;
-    SDL_Texture* leaveGameButtonSelected = nullptr;
+
+
+    int gameIntroMusicId = 0; // Identificador de la música GameIntro
+    int menuMusicId = 0; // Identificador de la música MenuMusic
+    int selectedOption = 0; // Opción seleccionada
+
+    float transitionDuration = 3100;      // Duration of the transition screen (in ms)
+    float transitionTimer = 0.0f;         // Timer for tracking transition time
+
+
+    bool isGameIntroPlaying = false; // Bandera para verificar si GameIntro está sonando
+
+    //Private Textures
+    SDL_Texture* level1Transition = NULL; // Texture for Level 1 transition
+    SDL_Texture* level2Transition = NULL; // Texture for Level 2 transition
+    SDL_Texture* GroupLogo = NULL;
+    SDL_Texture* mainMenu = NULL;
+    SDL_Texture* newGameButton = NULL;  // Textura para el botón Nuevo Juego
+    SDL_Texture* loadGameButton = NULL; // Textura para el botón Cargar Juego
+    SDL_Texture* leaveGameButton = NULL; // Textura para el botón Salir
+    SDL_Texture* newGameButtonSelected = NULL;
+    SDL_Texture* loadGameButtonSelected = NULL;
+    SDL_Texture* leaveGameButtonSelected = NULL;
 
     Vector2D mousePos;
 
-    // GUI controls
-    GuiControlButton* guiBt = nullptr;
+    GuiControlButton* guiBt;
     int isSave = 0;
 
-    // Saved enemy hit counts
-    int save_hitCount_koopa = 0;
+
+
+    int save_hitCount_koopa = 0; //Saber el hitcount de los enemigos cuando se hace un save
     int save_hitCount_koopa2 = 0;
     int save_hitCount_goomba = 0;
     int save_hitCount_goomba2 = 0;

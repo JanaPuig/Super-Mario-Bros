@@ -1,11 +1,9 @@
 #pragma once
-
 #include "Entity.h"
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
 #include "Animation.h"
 #include <vector>
-
 // Forward declaration
 struct SDL_Texture;
 
@@ -25,39 +23,40 @@ public:
     void OnCollision(PhysBody* physA, PhysBody* physB) override;
     void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
 
-    // Player position management
     void SetPosition(const Vector2D& newPosition);
-    Vector2D GetPosition();
 
-    // Player state management
+
+    // Player-specific functionality
+    Vector2D GetPosition() const { return position; }
+    void ToggleGodMode();
+    void PlayerFlight(float dt);
+
+    // State management
     void SetActive(bool active) { isActive = active; }
     bool IsActive() const { return isActive; }
 
-    void ToggleGodMode();
-    void LoseLife();  // Function to lose a life
+    void SetParameters(pugi::xml_node parameters) {
+        this->parameters = parameters;
+    }
 
-    // Movement control
+    Vector2D GetPosition();
+    void LoseLife();  // Función para perder una vida
+
+    //Pausar movimiento
     void StopMovement();
     void ResumeMovement();
-    void PlayerFlight(float dt);
     void ManageStarPower(float dt);
-
-    // Player parameters
-    void SetParameters(pugi::xml_node parameters) { this->parameters = parameters; }
-
-    // Flags
     bool canMove = true;
+   
     bool isDead = false;
 
 public:
-    // Player texture and parameters
+
     SDL_Texture* texturePlayer;
     pugi::xml_node parameters;
-
-    // Animation
     Animation* currentAnimation = nullptr;
 
-    // Player movement parameters
+    // Player parameters
     float movementSpeed = 0.0f;
     float jumpForce = 2.8f;
     const float jumpFrameDuration = 120.0f;
@@ -68,7 +67,6 @@ public:
     int currentFrame = 0;
     float animationTimer = 0.0f;
     float frameDuration = 130.0f;
-
     // Physics body
     PhysBody* pbody = nullptr;
 
@@ -94,7 +92,7 @@ public:
     Animation winAnimation;
 
     // Audio FX
-    int pickCoinFxId = 0;
+    int pickCoinFxId= 0;
     int PowerDown = 0;
     int jumpFxId = 0;
     int jumpVoiceIds[8] = { 0 };
@@ -103,7 +101,6 @@ public:
     int ohNoId = 0;
     int EnemyDeathSound = 0;
     int BowserHit = 0;
-
     // Player state
     bool isStarPowerActive = false;
     bool isMoving = false;
@@ -113,13 +110,13 @@ public:
     bool facingLeft = false;
     bool godMode = false;
     bool godModeToggle = false;
-    bool isCrouching = false;
-    int jumpCount = 0;
+    bool iscrouching = false;
+    int jumpcount = 0;
 
     // Internal state
     bool isActive = true;
 
-    // Checkpoints
+
     std::vector<Vector2D> checkpoints;
     int currentCheckpointIndex = 0;
 };

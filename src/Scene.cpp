@@ -479,23 +479,23 @@ bool Scene::Update(float dt)
     //Handle Loading Screen
     if (isLoading) {
         loadingTimer += dt;
-        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);   
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);   // Renderiza la pantalla de carga
         Engine::GetInstance().render->DrawText("LOADING...", 730, 450, 475, 150);
         Engine::GetInstance().audio.get()->StopMusic();
-        if (loadingTimer >= loadingScreenDuration) {    
+        if (loadingTimer >= loadingScreenDuration) {     // Si el tiempo de espera ha terminado, carga el estado del juego
             isLoading = false; // Desactiva la pantalla de carga
             Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
-            LoadGame(); 
+            LoadGame(); // Load Game State
         }
         return true; // Detenemos el resto de la lógica mientras está la pantalla de carga
     }
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-        showPauseMenu = !showPauseMenu; 
+        showPauseMenu = !showPauseMenu; // Alternar el estado del menú
 
-        if (showPauseMenu) {   
-            player->StopMovement(); 
-            for (Enemy* enemy : enemyList) { 
+        if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
+            player->StopMovement(); //Parar movimineto del player
+            for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
                 if (enemy != nullptr) {
                     enemy->visible = false;
                     enemy->StopMovement();
@@ -505,7 +505,7 @@ bool Scene::Update(float dt)
                 }
             }
             for (Item* item : itemList) { //Dejar de ver items
-                item->appear = false;
+                item->apear = false;
             }
 
             Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
@@ -524,9 +524,10 @@ bool Scene::Update(float dt)
                 else { 
                     continue;
                 }
+              
             }
             for (Item* item : itemList) { //Ver items
-                item->appear = true;
+                item->apear = true;
             }
             showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
@@ -544,6 +545,7 @@ bool Scene::Update(float dt)
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 manage_showSettings = false;
             }
+
         }
         return true;
     }
@@ -569,14 +571,14 @@ bool Scene::Update(float dt)
     float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
-
     // Handle teleportation in Level 1
     if (level == 1 || level == 2 || level == 3) {
         HandleTeleport(playerPos);
     }
+
     // Temporizador del nivel
     elapsedTime += dt;  // Aumenta el tiempo acumulado
-    currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
+    float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
 
     // Lógica si se acaba el tiempo
     if ((currentTime / 1000) <= 0.0f)
@@ -586,6 +588,7 @@ bool Scene::Update(float dt)
     }
 
     // Renderizar el tiempo en pantalla
+    char timerText[64];
     if (showRemainingTime)
         sprintf_s(timerText, "%0.f", currentTime / 1000);
     if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1620, 20, 30, 30); }
@@ -597,7 +600,7 @@ bool Scene::Update(float dt)
 // Handles teleportation logic
 void Scene::HandleTeleport(const Vector2D& playerPos)
 {
-
+    const float tolerance = 20.0f;
     if (level == 1) {
         if (IsInTeleportArea(playerPos, 1440, 290, tolerance) ||
             IsInTeleportArea(playerPos, 1472, 288, tolerance))
@@ -684,6 +687,7 @@ bool Scene::PostUpdate()
             else {
                 Engine::GetInstance().guiManager.get()->activeDebug = true;
             }
+
         }
     }
     return true;
@@ -935,6 +939,7 @@ void Scene::LoadGame() {
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
                 save_hitCount_goomba2 = 0;
             }
+
         }
 
         else if (i == 5 && level==3) {
@@ -955,7 +960,10 @@ void Scene::LoadGame() {
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
                 save_hitCount_bowser = 0;
             }
+
         }
+        
+
     }
     
     pugi::xml_node itemsNode = LoadFile.child("config").child("scene").child("entities").child("items");
@@ -987,6 +995,7 @@ void Scene::LoadGame() {
         showMainMenu = false;
     }
     LOG("Game loaded successfully.");
+
 }
 
 // Return the player position
@@ -994,7 +1003,6 @@ Vector2D Scene::GetPlayerPosition()
 {
     return player->GetPosition();
 }
-
 void Scene::UpdateEnemyHitCount(std::string enemyName, int hitCount) {
     int i = 0;
     for (std::pair<std::string, int> enemy : enemyStateList)
@@ -1007,7 +1015,6 @@ void Scene::UpdateEnemyHitCount(std::string enemyName, int hitCount) {
         i++;
     }
 }
-
 void Scene::UpdateItem(std::string itemName, int isPicked) {
     int i = 0;
     for (std::pair<std::string, int> item : itemStateList)
@@ -1021,7 +1028,6 @@ void Scene::UpdateItem(std::string itemName, int isPicked) {
         i++;
     }
 }
-
 void Scene::SaveState()
 {
     pugi::xml_document SaveFile;
@@ -1057,6 +1063,7 @@ void Scene::SaveState()
               
             if (enemies.first == "koopa") {
                 LOG("posx:%f, posY:%f", enemyEntity->GetPosition().getX(), enemyEntity->GetPosition().getY());
+
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").set_value(enemyEntity->GetPosition().getX()-40);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").set_value(enemyEntity->GetPosition().getY()- 42);
             }
@@ -1067,14 +1074,17 @@ void Scene::SaveState()
             if (enemies.first == "goomba") {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy").attribute("y").set_value(enemyEntity->GetPosition().getY() - 16);
+
             }
             if (enemies.first == "goomba2") {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 16);
+
             }
             if (enemies.first == "bowser" && level == 3) {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").set_value(enemyEntity->GetPosition().getX()-72);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").set_value(enemyEntity->GetPosition().getY()-64);
+
             }
         }
         else if (enemyEntity == nullptr) {
@@ -1083,8 +1093,11 @@ void Scene::SaveState()
             if (enemies.first == "goomba") save_hitCount_goomba = 1;
             if (enemies.first == "goomba2") save_hitCount_goomba2 = 1;
             if (enemies.first == "bowser")  save_hitCount_bowser = 3;
+
         }
+        
     }
+
     // Guardar el estado de los ítems
     pugi::xml_node itemsNode = SaveFile.child("config").child("scene").child("entities").child("items");
     for (const auto& item : itemStateList) {
@@ -1095,6 +1108,7 @@ void Scene::SaveState()
             itemsNode.child(item.first.c_str()).attribute("y").set_value(itemEntity->GetPosition().getY());
         }
     }
+
     // Guardar el archivo XML
     SaveFile.save_file("config.xml");
     LOG("Game state saved successfully.");
@@ -1120,7 +1134,7 @@ void Scene::menu()
 
 void Scene::funcion_menu_pause()
 {
-    Engine::GetInstance().guiManager->CleanUp();
+     Engine::GetInstance().guiManager->CleanUp();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
@@ -1136,10 +1150,12 @@ void Scene::funcion_menu_pause()
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 11, "Settings", SettingsPosition, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 10, "Return", Back_tile, this));
     guiBt = static_cast<GuiControlButton*>(Engine::GetInstance().guiManager->CreateGuiControl(GuiControlType::BUTTON, 5, "Exit", Exit, this));
+
 }
 
 void Scene::Credits()
 {
+   
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;
@@ -1149,6 +1165,7 @@ void Scene::Credits()
     Engine::GetInstance().render.get()->DrawText("Credits", 780, 250, 352, 128);
     Engine::GetInstance().render.get()->DrawText("Toni Llovera Roca", 780, 500, 378, 64);
     Engine::GetInstance().render.get()->DrawText("Jana Puig Sola", 780, 650, 378, 64);
+    
 }
 
 void Scene::Settings()
@@ -1184,6 +1201,7 @@ void Scene::Settings()
     else {
         mouseOverMusicControl = false; // El ratón no está sobre el control de música
     }
+
     // Comprobar si el mouse está sobre el control de FX
     if (mousePos.getX() >= 940 && mousePos.getX() <= 1350 && mousePos.getY() >= 420 && mousePos.getY() <= 460) {
         mouseOverFxControl = true;  // El ratón está sobre el control de volumen de FX
@@ -1191,6 +1209,7 @@ void Scene::Settings()
     else {
         mouseOverFxControl = false; // El ratón no está sobre el control de FX
     }
+
     if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
         if (mouseOverMusicControl) {
             musicButtonHeld = true;  // Activar movimiento solo si estamos sobre el botón de música
@@ -1199,10 +1218,12 @@ void Scene::Settings()
             FxButtonHeld = true;  // Activar movimiento solo si estamos sobre el botón de FX
         }
     }
+
     if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
         FxButtonHeld = false;  // Activar el movimiento solo si estamos presionando el botón. Fx Volumen       
         musicButtonHeld = false;  // Si se suelta el botón, desactivar el movimiento. Music Volumen         
     }
+
     if (musicButtonHeld) {
 
         if (mousePos.getX() < 940) {
@@ -1215,6 +1236,7 @@ void Scene::Settings()
             musicPosX = mousePos.getX();
         }
     }
+
     if (FxButtonHeld) {
 
         if (mousePos.getX() < 940) {
@@ -1227,6 +1249,7 @@ void Scene::Settings()
             FxPosX = mousePos.getX();
         }
     }
+
     SDL_Rect newMusicPos = { musicPosX, 311, 15, 35 }; // Nueva posición. Music Volumen 
     guiBt->bounds = newMusicPos;
 
@@ -1255,6 +1278,7 @@ void Scene::Settings()
         LOG("Drawing tick because limitFPS is enabled.");
         Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick". Vsync
     }
+
 }
 bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 {
@@ -1273,6 +1297,8 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         CreateLevelItems(1);
         LOG("New Game button clicked");
 
+        //Engine::GetInstance().entityManager.get()->ResetItems();
+
         StartNewGame();
         player->isDead = false;
         player->canMove = true;
@@ -1285,6 +1311,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         Engine::GetInstance().audio.get()->PlayFx(marioTime);
         ShowTransitionScreen();
+        
         break;
 
     case 2: // Menu; Load Game
@@ -1295,20 +1322,27 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             isLoading = true;
             Engine::GetInstance().audio.get()->PlayFx(MenuStart);
         }
+
         break;
 
     case 3: //Menu: Setings Gamme
-        showSettings = true;
+
+         showSettings = true;
+
         break;
 
     case 4:// Menu: Credits Game
+
         showCredits = true;
+
         break;
 
     case 5:// Menu and Menu pause: Leave Game
+
         LOG("Leave button clicked");
         Engine::GetInstance().CleanUp();
         exit(0);
+
         break;
 
     case 6:// Settings: Full screen window
@@ -1324,6 +1358,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 LOG("Error: fullscreen_window node not found.");
                 return false;
             }
+
             // Guardar el archivo XML
             if (SaveFile.save_file("config.xml")) {
                 LOG("XML file saved successfully");
@@ -1332,6 +1367,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 LOG("Error saving XML file");
                 return false;
             }
+
             // Leer el valor modificado de fullscreen_window
             fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
 
@@ -1346,6 +1382,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 LOG("Error: fullscreen_window node not found.");
                 return false;
             }
+
             // Guardar el archivo XML
             if (SaveFile.save_file("config.xml")) {
                 LOG("XML file saved successfully");
@@ -1354,6 +1391,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
                 LOG("Error saving XML file");
                 return false;
             }
+
             // Leer el valor modificado de fullscreen_window
             fullscreen_window = SaveFile.child("config").child("window").child("fullscreen_window").attribute("value").as_bool();
 
@@ -1362,6 +1400,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         break;
 
     case 7:// Settings: FPS Toggle
+
          if (wasClicked) {
             // Alternar limitFPS
             Engine::GetInstance().limitFPS = !Engine::GetInstance().limitFPS;
@@ -1376,28 +1415,39 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         else if (activatebotton7 || !activatebotton7) {
             wasClicked = true;
-        }   
+        }
+            
         break;
 
     case 8:// Settings: Music Volume
-        musicButtonHeld = true;
+
+            musicButtonHeld = true;
+
         break;
 
     case 9:// Settings: Fx Volume
-        FxButtonHeld = true;
+
+            FxButtonHeld = true;
+
         break;
 
     case 10: //Menu pause: Back to tile
-        showMainMenu = true;
+
+            showMainMenu = true;
+
         break;
 
     case 11: //Menu pause: Settings
-        manage_showSettings = true;
+
+            manage_showSettings = true;
+
         break;
 
     case 12: //Menu pause: Resume
+
         showPauseMenu = true;
         LOG("Calling player->ResumeMovement()");
+
         player->ResumeMovement();
 
         for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
@@ -1408,13 +1458,16 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
             else {
                 continue;
             }
+
         }
         for (Item* item : itemList) { //Ver items
-            item->appear = true;
+            item->apear = true;
         }
         showPauseMenu = false; // Cerrar el menú al presionar Backspace        
+
         break;
     }
+
     return true;
 }
 void Scene::GameOver() {
@@ -1435,11 +1488,13 @@ void Scene::DrawPuntation() {
     char puntuationText[100];
     sprintf_s(puntuationText, "Puntuation: %.1f", Engine::GetInstance().entityManager->puntuation);
     Engine::GetInstance().render.get()->DrawText(puntuationText, 200, 20, 230, 30);
+
 }
 void Scene::DrawWorld() {
     char drawlevel[64];
     sprintf_s(drawlevel, "World: 1-%d", level);
     Engine::GetInstance().render.get()->DrawText(drawlevel, 1125, 20, 90, 35);
+
 }
 
 void Scene::ToggleFullscreen()
