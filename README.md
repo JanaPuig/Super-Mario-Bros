@@ -109,7 +109,29 @@ For now, only level 1 has been implemented, but the levels include different typ
     * F3: Reset current level
     * F4: Switch to level 4
 * GUI 
-  * 
+  * State buttons: (display, normal, press and focus)
+  * Intro screen
+  * Screen HUD
+    * Elements:
+      * Player lives
+      * Coins
+      * Timer
+      * Score   
+  * Menus:
+    * Main menu
+      * Buttons:
+         * Play
+         * Load Game
+         * Settings
+         * Credits
+         * Exit
+    * Pause Menu
+      * Buttons:
+         * Resmue
+         * Settings
+         * Back to title
+         * Exit
+
 * Optimitzation
   * 
 * Advanced Options
@@ -126,6 +148,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * One Up Fx
   * Big Coin Fx
   * You Win Music
+  * Sound buttons
 
 ## Team Members
 ### Jana Puig & Toni Llovera
