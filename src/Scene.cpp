@@ -1438,9 +1438,18 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         player->ResumeMovement();
 
-        for (Enemy* enemy : enemyList) {
-            enemy->visible=true;
-            enemy->ResumeMovement();
+        for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
+            if (enemy != nullptr) {
+                enemy->visible = true;
+                enemy->ResumeMovement();
+            }
+            else {
+                continue;
+            }
+
+        }
+        for (Item* item : itemList) { //Ver items
+            item->apear = true;
         }
         showPauseMenu = false; // Cerrar el menú al presionar Backspace        
 

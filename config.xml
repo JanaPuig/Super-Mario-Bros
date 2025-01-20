@@ -15,7 +15,7 @@
 		<fullscreen_window value="false" />
 	</window>
 	<scene>
-		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="0" time="6712.06836" isSave="false" />
+		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="0" time="5571.5127" isSave="false" />
 		<map path="Assets/Maps/" name="Background.tmx" />
 		<map2 path="Assets/Maps/" name="Map2.tmx" />
 		<map3 path="Assets/Maps/" name="Map3.tmx" />
@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<coin name="coin" x="1690" y="720" w="32" h="32" isCoin="true" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="1690" y="720" w="32" h="32" isCoin="true" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
@@ -174,7 +174,7 @@
 				</animations>
 			</player>
 			<enemies>
-				<enemy_koopa name="koopa" x="1542" y="142" w="80" h="85" hitcount="0" isAlive="" levels="1,2,3" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
+				<enemy_koopa name="koopa" x="1548" y="161" w="80" h="85" hitcount="0" isAlive="" levels="1,2,3" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
@@ -204,7 +204,7 @@
 						</deadkoopa>
 					</animations>
 				</enemy_koopa>
-				<enemy_koopa2 name="koopa2" x="4498" y="98" w="80" h="85" hitcount="0" isAlive="" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false" levels="1,2,3">
+				<enemy_koopa2 name="koopa2" x="4504" y="117" w="80" h="85" hitcount="0" isAlive="" texture_koopa="Assets/Textures/koopaSprites.png" gravity="false" levels="1,2,3">
 					<animations>
 						<idlekoopaL loop="true" speed="0.25">
 							<frame x="240" y="334" w="72" h="72" />
