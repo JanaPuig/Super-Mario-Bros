@@ -97,6 +97,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * Big Coin
   * One Up 
   * Star
+  * Finish flag
 * Save & Load
   * Player position & state
   * Enemy position & state
