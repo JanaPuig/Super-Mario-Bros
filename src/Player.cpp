@@ -342,7 +342,7 @@ bool Player::CleanUp()
 
 // L08 TODO 6: Define OnCollision function for the player. 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
-	if (physB!= nullptr) {
+	if (physA!= nullptr || physB!= nullptr) {
 		switch (physB->ctype) {
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");

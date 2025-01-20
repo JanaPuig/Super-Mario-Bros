@@ -328,11 +328,9 @@ bool Physics::PostUpdate()
 		if (physBody != nullptr) {
 			if (physBody->body != nullptr) {
 				world->DestroyBody(physBody->body);
-				physBody->body = nullptr;
+				
 			}
-			else {
-				continue;
-			}
+			
 		}
 		else {
 			LOG("Tried to destroy a nullptr body");
@@ -362,9 +360,6 @@ void Physics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
 
-	if (physA == nullptr || physB == nullptr) return;
-	if (Engine::GetInstance().scene.get()->showMainMenu) return;
-
 	if (physA && physA->listener != NULL) {
 		if (physB) // Ensure physB is also valid
 		{
@@ -378,10 +373,6 @@ void Physics::BeginContact(b2Contact* contact)
 		}
 	}
 	
-	
-	
-
-
 	
 }
 

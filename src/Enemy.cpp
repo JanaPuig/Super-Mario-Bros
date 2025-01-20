@@ -481,16 +481,21 @@ void Enemy::ResetPosition() {
 }
 
 void Enemy::StopMovement() {
-    Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
-    pbody->listener = this;
-    pbody->ctype = ColliderType::ENEMY;
+    if (pbody != nullptr) {
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
+        pbody->listener = this;
+        pbody->ctype = ColliderType::ENEMY;
+    }
+ 
 }
 void Enemy::ResumeMovement() {
-    Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-    pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-    pbody->listener = this;
-    pbody->ctype = ColliderType::ENEMY;
+    if (pbody != nullptr) {
 
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+        pbody->listener = this;
+        pbody->ctype = ColliderType::ENEMY;
+    }
 }
 
