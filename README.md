@@ -97,6 +97,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * Big Coin
   * One Up 
   * Star
+  * Finish flag
 * Save & Load
   * Player position & state
   * Enemy position & state
@@ -114,7 +115,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * Screen HUD
     * Elements:
       * Player lives
-      * Coins
+      * Items
       * Timer
       * Score   
   * Menus:
@@ -131,7 +132,7 @@ For now, only level 1 has been implemented, but the levels include different typ
          * Settings
          * Back to title
          * Exit
-
+* You Win Screen
 * Optimitzation (optimization techniques)
   * Frustrum culling
   * Lazy updates
@@ -150,8 +151,8 @@ For now, only level 1 has been implemented, but the levels include different typ
   * One Up Fx
   * Big Coin Fx
   * You Win Music
-  * Sound buttons
-
+  * Buttons Fx
+  * Flag Fx
 ## Team Members
 ### Jana Puig & Toni Llovera
 ## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
