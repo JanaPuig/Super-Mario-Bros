@@ -267,28 +267,28 @@ void Scene::CreateEnemies(int level) {
         koopa1->SetPosition(Vector2D(1500, 100));
         enemyList.push_back(koopa1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
-        koopa1->save_hitCount_koopa = 0;
+        save_hitCount_koopa = 0;
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(4500, 100));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"),false);
         enemyList.push_back(koopa2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
-        koopa2->save_hitCount_koopa2 = 0;
+        save_hitCount_koopa2 = 0;
 
         Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba1->SetPosition(Vector2D(2000, 416));
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"),false);
         enemyList.push_back(goomba1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
-        goomba1->save_hitCount_goomba = 0;
+        save_hitCount_goomba = 0;
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba2->SetPosition(Vector2D(5500, 416));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"),false);
         enemyList.push_back(goomba2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
-        goomba2->save_hitCount_goomba2 = 0;
+        save_hitCount_goomba2 = 0;
 
     }
     else if (level == 2) {
@@ -298,14 +298,14 @@ void Scene::CreateEnemies(int level) {
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
-        koopa1->save_hitCount_koopa = 0;
+        save_hitCount_koopa = 0;
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(3500, 150)); // Nueva posición
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
-        koopa2->save_hitCount_koopa2 = 0;
+        save_hitCount_koopa2 = 0;
 
     }
     else if (level == 3) {
@@ -316,28 +316,28 @@ void Scene::CreateEnemies(int level) {
         goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
         enemyList.push_back(goomba1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
-        goomba1->save_hitCount_goomba = 0;
+        save_hitCount_goomba = 0;
 
         Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         goomba2->SetPosition(Vector2D(1100, 470));
         goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
         enemyList.push_back(goomba2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
-        goomba2->save_hitCount_goomba2 = 0;
+        save_hitCount_goomba2 = 0;
 
         Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa1->SetPosition(Vector2D(2600, 150));
         koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
         enemyList.push_back(koopa1);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
-        koopa1->save_hitCount_koopa = 0;
+        save_hitCount_koopa = 0;
 
         Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
         koopa2->SetPosition(Vector2D(3800, 150));
         koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
         enemyList.push_back(koopa2);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
-        koopa2->save_hitCount_koopa2 = 0;
+        save_hitCount_koopa2 = 0;
 
         // Crear Bowser para nivel 3
         Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
@@ -345,7 +345,7 @@ void Scene::CreateEnemies(int level) {
         bowser->SetParameters(configParameters.child("entities").child("enemies").child("enemy_bowser"), false);
         enemyList.push_back(bowser);
         enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
-        bowser->save_hitCount_bowser = 0;
+        save_hitCount_bowser = 0;
 
         LOG("Bowser created for level 3 at position (6200, 330)");
     }
@@ -496,8 +496,13 @@ bool Scene::Update(float dt)
         if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
             player->StopMovement(); //Parar movimineto del player
             for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
-                enemy->visible = false;
-                enemy->StopMovement();
+                if (enemy != nullptr) {
+                    enemy->visible = false;
+                    enemy->StopMovement();
+                }
+                else {
+                    continue;
+                }
             }
             for (Item* item : itemList) { //Dejar de ver items
                 item->apear = false;
@@ -512,8 +517,14 @@ bool Scene::Update(float dt)
             player->ResumeMovement(); //Renundar movimineto del player
 
             for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
-                enemy->visible = true;
-                enemy->ResumeMovement();
+                if (enemy != nullptr) {
+                    enemy->visible = true;
+                    enemy->ResumeMovement();
+                }
+                else { 
+                    continue;
+                }
+              
             }
             for (Item* item : itemList) { //Ver items
                 item->apear = true;
@@ -845,14 +856,14 @@ void Scene::LoadGame() {
                 enemyKoopa->Load_SetPosition(Vector2D(posX, posY));
 
             }
-            else if(enemyKoopa == nullptr && enemy->save_hitCount_koopa == 0) {
+            else if(enemyKoopa == nullptr && save_hitCount_koopa == 0) {
 
                 Enemy* koopa1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
                 koopa1->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa"), false);
                 koopa1->SetPosition(Vector2D(posX, posY));
                 enemyList.push_back(koopa1);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa")).attribute("name").as_string()), 0));
-                koopa1->save_hitCount_koopa = 0;
+                save_hitCount_koopa = 0;
             }
         }
 
@@ -865,16 +876,16 @@ void Scene::LoadGame() {
             int posY = enemyNode.attribute("y").as_int();
            
             if (enemyKoopa2 != nullptr) {
-                enemyKoopa2->SetPosition(Vector2D(posX, posY));
+                enemyKoopa2->Load_SetPosition(Vector2D(posX, posY));
 
             }
-            else if (enemyKoopa2 == nullptr && enemy->save_hitCount_koopa2 == 0) {
+            else if (enemyKoopa2 == nullptr && save_hitCount_koopa2 == 0) {
                 Enemy* koopa2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                koopa2->SetPosition(Vector2D(posX, posY));
                 koopa2->SetParameters(configParameters.child("entities").child("enemies").child("enemy_koopa2"), false);
+                koopa2->SetPosition(Vector2D(posX, posY));
                 enemyList.push_back(koopa2);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_koopa2")).attribute("name").as_string()), 0));
-                koopa2->save_hitCount_koopa2 = 0;
+                save_hitCount_koopa2 = 0;
             }
         }
         //Goomba
@@ -885,16 +896,16 @@ void Scene::LoadGame() {
             int posX = enemyNode.attribute("x").as_int();
             int posY = enemyNode.attribute("y").as_int();
             if (enemyGoomba != nullptr) {
-                enemyGoomba->SetPosition(Vector2D(posX, posY));
+                enemyGoomba->Load_SetPosition(Vector2D(posX, posY));
 
             }
-            else if (enemyGoomba == nullptr && enemy->save_hitCount_goomba == 0) {
+            else if (enemyGoomba == nullptr && save_hitCount_goomba == 0) {
                 Enemy* goomba1 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                goomba1->SetPosition(Vector2D(posX, posY));
                 goomba1->SetParameters(configParameters.child("entities").child("enemies").child("enemy"), false);
+                goomba1->SetPosition(Vector2D(posX, posY));
                 enemyList.push_back(goomba1);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy")).attribute("name").as_string()), 0));
-                goomba1->save_hitCount_goomba = 0;
+                save_hitCount_goomba = 0;
             }
         }
         //Goomba2
@@ -905,16 +916,16 @@ void Scene::LoadGame() {
             int posX = enemyNode.attribute("x").as_int();
             int posY = enemyNode.attribute("y").as_int();
             if (enemyGoomba2 != nullptr) {
-                enemyGoomba2->SetPosition(Vector2D(posX, posY));
+                enemyGoomba2->Load_SetPosition(Vector2D(posX, posY));
 
             }
-            else if (enemyGoomba2 == nullptr && enemy->save_hitCount_goomba2 == 0) {
+            else if (enemyGoomba2 == nullptr && save_hitCount_goomba2 == 0) {
                 Enemy* goomba2 = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                goomba2->SetPosition(Vector2D(posX, posY));
                 goomba2->SetParameters(configParameters.child("entities").child("enemies").child("enemy2"), false);
+                goomba2->SetPosition(Vector2D(posX, posY));
                 enemyList.push_back(goomba2);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy2")).attribute("name").as_string()), 0));
-                goomba2->save_hitCount_goomba2 = 0;
+                save_hitCount_goomba2 = 0;
             }
 
         }
@@ -926,16 +937,16 @@ void Scene::LoadGame() {
             int posX = enemyNode.attribute("x").as_int();
             int posY = enemyNode.attribute("y").as_int();
             if (enemyBowser != nullptr) {
-                enemyBowser->SetPosition(Vector2D(posX, posY));
+                enemyBowser->Load_SetPosition(Vector2D(posX, posY));
 
             }
-            else if (enemyBowser == nullptr && enemy->save_hitCount_goomba2 !=3) {
+            else if (enemyBowser == nullptr && save_hitCount_goomba2 !=3) {
                 Enemy* bowser = static_cast<Enemy*>(Engine::GetInstance().entityManager->CreateEntity(EntityType::ENEMY));
-                bowser->SetPosition(Vector2D(posX, posY)); // Posición de Bowser
                 bowser->SetParameters(configParameters.child("entities").child("enemies").child("enemy_bowser"), false);
+                bowser->SetPosition(Vector2D(posX, posY)); // Posición de Bowser
                 enemyList.push_back(bowser);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
-                bowser->save_hitCount_bowser = 0;
+                save_hitCount_bowser = 0;
             }
 
         }
@@ -1065,11 +1076,11 @@ void Scene::SaveState()
             }
         }
         else if (enemyEntity == nullptr) {
-            if (enemies.first == "koopa") enemy->save_hitCount_koopa = 1;
-            if (enemies.first == "koopa2") enemy->save_hitCount_koopa2 = 1;
-            if (enemies.first == "goomba") enemy->save_hitCount_goomba = 1;
-            if (enemies.first == "goomba2") enemy->save_hitCount_goomba2 = 1;
-            if (enemies.first == "bowser")    enemy->save_hitCount_bowser = 3;
+            if (enemies.first == "koopa") save_hitCount_koopa = 1;
+            if (enemies.first == "koopa2") save_hitCount_koopa2 = 1;
+            if (enemies.first == "goomba") save_hitCount_goomba = 1;
+            if (enemies.first == "goomba2") save_hitCount_goomba2 = 1;
+            if (enemies.first == "bowser")  save_hitCount_bowser = 3;
 
         }
         

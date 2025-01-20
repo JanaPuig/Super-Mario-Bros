@@ -342,84 +342,85 @@ bool Player::CleanUp()
 
 // L08 TODO 6: Define OnCollision function for the player. 
 void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
+	if (physB!= nullptr) {
+		switch (physB->ctype) {
+		case ColliderType::PLATFORM:
+			LOG("Collision PLATFORM");
+			isJumping = false;	//reset the jump flag when touching the ground
+			jumpcount = 0;
+			break;
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			break;
+		case ColliderType::DEATH:
+			LOG("Player hit a death zone, resetting position...");
+			LoseLife();
+			break;
+		case ColliderType::WALL:
+			LOG("Player collision with WALL...");
+			jumpcount = 1;
+			break;
+		case ColliderType::ENEMY: {
+			LOG("Collision with ENEMY");
 
-	switch (physB->ctype) {
-	case ColliderType::PLATFORM:
-		LOG("Collision PLATFORM");
-		isJumping = false;	//reset the jump flag when touching the ground
-		jumpcount = 0;
-		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
-		break;
-	case ColliderType::DEATH:
-		LOG("Player hit a death zone, resetting position...");
-		LoseLife();
-		break;
-	case ColliderType::WALL:
-		LOG("Player collision with WALL...");
-		jumpcount = 1;
-		break;
-	case ColliderType::ENEMY: {
-		LOG("Collision with ENEMY");
+			Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
+			if (enemy != nullptr) {
+				float playerBottom = this->position.getY() + this->texH; // Usamos todo el alto del jugador
+				float playerVelocityY = pbody->body->GetLinearVelocity().y; // Velocidad en Y del jugador
+				float enemyTop = enemy->GetPosition().getY(); // Parte superior del enemigo
 
-		Enemy* enemy = dynamic_cast<Enemy*>(physB->listener);
-		if (enemy != nullptr) {
-			float playerBottom = this->position.getY() + this->texH; // Usamos todo el alto del jugador
-			float playerVelocityY = pbody->body->GetLinearVelocity().y; // Velocidad en Y del jugador
-			float enemyTop = enemy->GetPosition().getY(); // Parte superior del enemigo
-
-			if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
-			{
-				//muerte enemigo
-				b2Filter filter = enemy->pbody->body->GetFixtureList()->GetFilterData();
-				filter.maskBits = 0x0000;
-				enemy->pbody->body->GetFixtureList()->SetFilterData(filter);
-				if (enemy->name == "bowser") {
-					enemy->hitCount = enemy->hitCount + 3;
-					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
-				}
-				else {
-					if (enemy->name == "koopa" || enemy->name == "koopa2") {
-						Engine::GetInstance().entityManager->puntuation += 650.50;
-					}
-					if (enemy->name == "goomba" || enemy->name == "goomba2") {
-						Engine::GetInstance().entityManager->puntuation += 300.0;
-					}
-					enemy->isDying = true;
-					b2Vec2 bounceVelocity(-5.0f, -7.0f); // Rebote hacia arriba
-					enemy->pbody->body->SetLinearVelocity(bounceVelocity);
-				}
-				Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-			}
-			// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo
-			else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower == false) {
-				pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
-
-				if (enemy->name == "bowser" && enemy->isAttacking == false) {
-					Engine::GetInstance().audio.get()->PlayFx(BowserHit);
-					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-					enemy->hitCount++;
-					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
-				}
-				else if (enemy->name == "bowser" && enemy->isAttacking == true)
+				if (Engine::GetInstance().entityManager->isStarPower == true)// si el jugador esta en Star Power
 				{
+					//muerte enemigo
+					b2Filter filter = enemy->pbody->body->GetFixtureList()->GetFilterData();
+					filter.maskBits = 0x0000;
+					enemy->pbody->body->GetFixtureList()->SetFilterData(filter);
+					if (enemy->name == "bowser") {
+						enemy->hitCount = enemy->hitCount + 3;
+						Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+					}
+					else {
+						if (enemy->name == "koopa" || enemy->name == "koopa2") {
+							Engine::GetInstance().entityManager->puntuation += 650.50;
+						}
+						if (enemy->name == "goomba" || enemy->name == "goomba2") {
+							Engine::GetInstance().entityManager->puntuation += 300.0;
+						}
+						enemy->isDying = true;
+						b2Vec2 bounceVelocity(-5.0f, -7.0f); // Rebote hacia arriba
+						enemy->pbody->body->SetLinearVelocity(bounceVelocity);
+					}
 					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+				}
+				// Verificar si el jugador está cayendo y si el jugador está justo encima del enemigo y cayendo
+				else if (playerBottom <= enemyTop + 5.0f && Engine::GetInstance().entityManager->isStarPower == false) {
+					pbody->body->SetLinearVelocity(b2Vec2(0, -7)); // Rebote hacia arriba
+
+					if (enemy->name == "bowser" && enemy->isAttacking == false) {
+						Engine::GetInstance().audio.get()->PlayFx(BowserHit);
+						Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+						enemy->hitCount++;
+						Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+					}
+					else if (enemy->name == "bowser" && enemy->isAttacking == true)
+					{
+						Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+					}
+					else {
+						Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
+						enemy->hitCount++;
+						Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+					}
 				}
 				else {
-					Engine::GetInstance().audio.get()->PlayFx(EnemyDeathSound, 0);
-					enemy->hitCount++;
-					Engine::GetInstance().scene->UpdateEnemyHitCount(enemy->name, enemy->hitCount);
+					LoseLife();
 				}
 			}
-			else {
-				LoseLife();
-			}
+			break;
 		}
-		break;
-	}
-	default:
-		break;
+		default:
+			break;
+		}
 	}
 }
 

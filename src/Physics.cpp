@@ -4,9 +4,9 @@
 #include "Log.h"
 #include "math.h"
 #include "SDL2/SDL_keycode.h"
-#include "Log.h"
 #include "Render.h"
 #include "Player.h"
+#include "Scene.h"
 #include "Window.h"
 #include "box2D/box2d.h"
 #include "tracy/Tracy.hpp"
@@ -326,10 +326,12 @@ bool Physics::PostUpdate()
 	// Process bodies to delete after the world step
 	for (PhysBody* physBody : bodiesToDelete) {
 		if (physBody != nullptr) {
-			LOG("Destroying body: %p", physBody);
 			if (physBody->body != nullptr) {
 				world->DestroyBody(physBody->body);
-				//physBody->body = nullptr;
+				physBody->body = nullptr;
+			}
+			else {
+				continue;
 			}
 		}
 		else {
@@ -360,19 +362,27 @@ void Physics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData().pointer;
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData().pointer;
 
+	if (physA == nullptr || physB == nullptr) return;
+	if (Engine::GetInstance().scene.get()->showMainMenu) return;
+
 	if (physA && physA->listener != NULL) {
 		if (physB) // Ensure physB is also valid
 		{
 			physA->listener->OnCollision(physA, physB);
 		}
 	}
-
 	if (physB && physB->listener != NULL) {
-		if(physA) // Ensure physA is also valid
+		if (physA) // Ensure physA is also valid
 		{
 			physB->listener->OnCollision(physB, physA);
 		}
 	}
+	
+	
+	
+
+
+	
 }
 
 // Callback function to collisions with Box2D
@@ -388,6 +398,8 @@ void Physics::EndContact(b2Contact* contact)
 			physA->listener->OnCollisionEnd(physA, physB);
 		}
 	}
+
+
 }
 
 void Physics::DeletePhysBody(PhysBody* physBody) {

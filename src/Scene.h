@@ -190,4 +190,12 @@ private:
 
     GuiControlButton* guiBt;
     int isSave = 0;
+
+
+
+    int save_hitCount_koopa = 0; //Saber el hitcount de los enemigos cuando se hace un save
+    int save_hitCount_koopa2 = 0;
+    int save_hitCount_goomba = 0;
+    int save_hitCount_goomba2 = 0;
+    int save_hitCount_bowser = 0;
 };
