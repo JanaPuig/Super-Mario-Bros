@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="true" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
