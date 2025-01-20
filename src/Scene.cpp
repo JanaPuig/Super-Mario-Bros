@@ -17,7 +17,7 @@
 using namespace std;
 // Constructor: Initializes the Scene object and default values
 Scene::Scene()
-    : Module(), level(1), showHelpMenu(false), showMainMenu(true), ToggleHelpMenu(false)
+    : Module(), level(1), showHelpMenu(false), showMainMenu(true), ToggleHelpMenu(false), currentCheckpointIndex(-1)
 {
     name = "scene";
 
@@ -681,13 +681,37 @@ bool Scene::PostUpdate()
             LoadGame();
         }
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
-            // Mover al siguiente punto de control
-            if (currentCheckpointIndex == 6) currentCheckpointIndex = 0;
-            currentCheckpointIndex = (currentCheckpointIndex + 1);
+            // Cambiar al siguiente checkpoint basado en el nivel actual
+            if (level == 1) {
+                if (currentCheckpointIndex == 1) {
+                    ChangeLevel(2);
+                    currentCheckpointIndex = 2; 
+                }
+                else {
+                    currentCheckpointIndex = 1;
+                }
+            }
+            else if (level == 2) {
+                if (currentCheckpointIndex == 3) {
+                    ChangeLevel(3);
+                    currentCheckpointIndex = 4;
+                }
+                else {
+                    currentCheckpointIndex = 3; 
+                }
+            }
+            else if (level == 3) {
+                if (currentCheckpointIndex == 5) {
+                    ChangeLevel(1);
+                    currentCheckpointIndex = 0;
+                }
+                else {
+                    currentCheckpointIndex = 5; 
+                }
+            }
+
+            // Establecer la posición del jugador al checkpoint correspondiente
             Vector2D nextCheckpoint = checkpoints[currentCheckpointIndex];
-            if (currentCheckpointIndex == 2) ChangeLevel(2);
-            if (currentCheckpointIndex == 4) ChangeLevel(3);
-            if (currentCheckpointIndex == 6) ChangeLevel(1);
             player->SetPosition(nextCheckpoint);
         }
         if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {

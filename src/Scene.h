@@ -189,5 +189,5 @@ private:
 
 
     std::vector<Vector2D> checkpoints;
-    int currentCheckpointIndex = 0;
+    int currentCheckpointIndex = -1;
 };
