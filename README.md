@@ -111,7 +111,7 @@ For now, only level 1 has been implemented, but the levels include different typ
     * F4: Switch to level 4
 * GUI 
   * State buttons: (display, normal, press and focus)
-  * Intro screen
+  * Intro screen & Group Logo
   * Screen HUD
     * Elements:
       * Player lives
