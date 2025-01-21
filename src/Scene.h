@@ -46,9 +46,9 @@ public:
 
     Vector2D GetPlayerPosition();
 
-    void UpdateEnemyHitCount(const std::string& enemyName, int hitCount);
+    void UpdateEnemyHitCount(std::string enemyName, int hitCount);
 
-    void UpdateItem(const std::string& itemName, int isPicked);
+    void UpdateItem(std::string itemName, int isPicked);
 
     void SaveState();
 

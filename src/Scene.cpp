@@ -437,10 +437,10 @@ bool Scene::Update(float dt)
         }
         if (showSettings) {
             Settings();
-            isGameIntroPlaying = false;
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
+                isGameIntroPlaying = false;
                 showSettings = false;
             }
             return true;
@@ -1201,6 +1201,7 @@ void Scene::Credits()
 
 void Scene::Settings()
 {
+    Engine::GetInstance().audio->StopMusic();
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;
