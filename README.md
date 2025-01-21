@@ -132,7 +132,7 @@ For now, only level 1 has been implemented, but the levels include different typ
          * Settings
          * Back to title
          * Exit
-* You Win Screen
+* You Win Screen 
 * Optimitzation (optimization techniques)
   * Frustrum culling
   * Lazy updates
@@ -153,6 +153,15 @@ For now, only level 1 has been implemented, but the levels include different typ
   * You Win Music
   * Buttons Fx
   * Flag Fx
+    
+* List of Fixed Features:
+  * Load / Save crash
+  * More than one instance of every enemy
+    
+* List of Optimitzations:
+  *  Map Update
+  *  Entity Manager Update
+    
 ## Team Members
 ### Jana Puig & Toni Llovera
 ## Our Latest Release & Wiki: [Click Here](https://github.com/JanaPuig/Super-Mario-Bros/wiki/Release)
