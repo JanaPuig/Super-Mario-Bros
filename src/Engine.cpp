@@ -82,7 +82,6 @@ bool Engine::Awake() {
     LoadConfig();
 
     // L05: TODO 3: Read the title from the config file and set the variable gameTitle, read maxFrameDuration and set the variable
-    // also read maxFrameDuration 
     gameTitle = configFile.child("config").child("engine").child("title").child_value();
     maxFrameDuration = configFile.child("config").child("engine").child("maxFrameDuration").attribute("value").as_int();
 

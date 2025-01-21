@@ -12,7 +12,7 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="true" />
+		<fullscreen_window value="false" />
 	</window>
 	<scene>
 		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="0" time="23716.7285" isSave="false" />
@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />

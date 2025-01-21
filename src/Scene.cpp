@@ -491,9 +491,8 @@ bool Scene::Update(float dt)
 
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu;
-        Engine::GetInstance().audio->ResumeMusic();
-        isMusicPlaying = false;
         if (showPauseMenu) {
+            Engine::GetInstance().audio->PauseMusic();
             player->StopMovement();
             for (Enemy* enemy : enemyList) {
                 if (enemy) {
@@ -506,6 +505,7 @@ bool Scene::Update(float dt)
             }
         }
         else {
+            Engine::GetInstance().audio->ResumeMusic();
             player->ResumeMovement();
             for (Enemy* enemy : enemyList) {
                 if (enemy) {
@@ -773,7 +773,7 @@ void Scene::FinishTransition()
         CreateEnemies(1);
     }
     else if (level == 2) {
-        player->SetPosition(Vector2D(100, 740));
+        player->SetPosition(Vector2D(100, 720));
         Engine::GetInstance().map->Load(configParameters.child("map2").attribute("path").as_string(), configParameters.child("map2").attribute("name").as_string());
         Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/World2Theme.wav", 0.f);
         Mix_VolumeMusic(sdlVolume);
@@ -1134,11 +1134,6 @@ void Scene::menu()
 
 void Scene::MenuPause()
 {
-    if (!isMusicPlaying) {
-        Engine::GetInstance().audio->StopMusic();
-        Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/SecondMenuMusic.wav");
-        isMusicPlaying = true;
-    }
      Engine::GetInstance().guiManager->CleanUp();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
@@ -1288,7 +1283,6 @@ void Scene::Settings()
     ToggleFullscreen(); //Full screen
 
     if (activatebotton7 == true) {
-        LOG("Drawing tick because limitFPS is enabled.");
         Engine::GetInstance().render.get()->DrawTexture(tick, 940, 645);  // Mostrar el "tick". Vsync
     }
 
@@ -1338,16 +1332,12 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
 
         break;
 
-    case 3: //Menu: Setings Gamme
-
+    case 3: //Menu: Setings
          showSettings = true;
-
         break;
 
     case 4:// Menu: Credits Game
-
         showCredits = true;
-
         break;
 
     case 5:// Menu and Menu pause: Leave Game
@@ -1429,25 +1419,18 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         else if (activatebotton7 || !activatebotton7) {
             wasClicked = true;
         }
-            
         break;
 
     case 8:// Settings: Music Volume
-
             musicButtonHeld = true;
-
         break;
 
     case 9:// Settings: Fx Volume
-
             FxButtonHeld = true;
-
         break;
 
     case 10: //Menu pause: Back to tile
-
             showMainMenu = true;
-
         break;
 
     case 11: //Menu pause: Settings

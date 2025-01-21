@@ -102,8 +102,8 @@ bool Player::Update(float dt) {
     // Death handling
     if (isDead) {
         if (!deathSoundPlayed) {
-            Engine::GetInstance().audio.get()->PlayFx(ohNoId, 0);
             Engine::GetInstance().audio.get()->StopMusic(0.2f);
+            Engine::GetInstance().audio.get()->PlayFx(ohNoId, 0);
             Engine::GetInstance().audio.get()->PlayFx(DeathId, 0);
             deathSoundPlayed = true;
         }
@@ -119,8 +119,8 @@ bool Player::Update(float dt) {
         pbody->ctype = ColliderType::PLAYER;
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_T) == KEY_DOWN) {
+            deathSoundPlayed = false;
             if (Engine::GetInstance().entityManager->lives <= 0 || Engine::GetInstance().scene->timeUp) {
-                // Volver al menú
                 Engine::GetInstance().scene.get()->GameOver();
             }
             else {
@@ -141,7 +141,7 @@ bool Player::Update(float dt) {
                     newPosition = Engine::GetInstance().scene->isFlaged ? Vector2D(3250, 430) : Vector2D(30, 430);
                     break;
                 case 2:
-                    newPosition = Engine::GetInstance().scene->isFlaged ? Vector2D(3300, 830) : Vector2D(200, 700);
+                    newPosition = Engine::GetInstance().scene->isFlaged ? Vector2D(3300, 830) : Vector2D(150, 700);
                     break;
                 case 3:
                     newPosition = Engine::GetInstance().scene->isFlaged ? Vector2D(3500, 600) : Vector2D(100, 580);
