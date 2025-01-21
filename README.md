@@ -144,6 +144,7 @@ For now, only level 1 has been implemented, but the levels include different typ
   * Level 3 Music
   * Boss Fight Music
   * Star Power Music
+  * Credits/Settings/Puase Menu Music
   * Power Up Fx
   * Power Down Fx
   * Bowser dies Fx
