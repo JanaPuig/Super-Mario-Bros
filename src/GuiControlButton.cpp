@@ -36,8 +36,7 @@ bool GuiControlButton::Update(float dt)
 		if (state != GuiControlState::FOCUSED)
 		{
 			state = GuiControlState::FOCUSED;
-			
-			
+	
 		}
 
 		if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
@@ -46,18 +45,16 @@ bool GuiControlButton::Update(float dt)
 
 			if (!soundPlayed) {
 				soundTimer += dt;
-				float soundDurationInSeconds = 1.0f;
+				float soundDurationInSeconds =20.0f;
 				if (soundTimer >= soundDurationInSeconds)
 				{
 					Engine::GetInstance().audio->PlayFx(SelectUp);
-
 					soundPlayed = true;  // El sonido terminó, ya no se reproduce
 				}
 
 			}
 			else {
 				Engine::GetInstance().audio->StopFx();
-
 			}
 		}
 
@@ -70,7 +67,6 @@ bool GuiControlButton::Update(float dt)
 	{
 		if (state != GuiControlState::NORMAL)
 		{
-
 			state = GuiControlState::NORMAL;
 			soundTimer = 0.0f;
 			soundPlayed = false;
