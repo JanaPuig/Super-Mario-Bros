@@ -104,6 +104,7 @@ public:
     bool FxButtonHeld = false; 
     bool mouseOverMusicControl = false;
     bool mouseOverFxControl = false;
+    bool isMusicPlaying = false;
 
     SDL_Texture* loadingScreen = NULL; 
     SDL_Texture* helpMenuTexture = NULL; 

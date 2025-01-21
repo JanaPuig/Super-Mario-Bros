@@ -430,6 +430,7 @@ bool Scene::Update(float dt)
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showCredits = false; // Vuelve al menu si se presiona backspace
                 isGameIntroPlaying = false;
+                isMusicPlaying = false;
             }
             return true;
         }
@@ -440,6 +441,7 @@ bool Scene::Update(float dt)
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 isGameIntroPlaying = false;
+                isMusicPlaying = false;
                 showSettings = false;
             }
             return true;
@@ -490,6 +492,7 @@ bool Scene::Update(float dt)
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu;
         Engine::GetInstance().audio->ResumeMusic();
+        isMusicPlaying = false;
         if (showPauseMenu) {
             player->StopMovement();
             for (Enemy* enemy : enemyList) {
@@ -788,6 +791,7 @@ void Scene::FinishTransition()
 void Scene::StartNewGame() {
     hasPlayedWinMusic = false;
     isGameIntroPlaying = false;
+    isMusicPlaying = false;
     // Cargar el archivo de configuración original
     pugi::xml_document originalConfig;
     pugi::xml_parse_result result = originalConfig.load_file("config.xml");
@@ -967,10 +971,7 @@ void Scene::LoadGame() {
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
                 save_hitCount_bowser = 0;
             }
-
         }
-        
-
     }
     
     pugi::xml_node itemsNode = LoadFile.child("config").child("scene").child("entities").child("items");
@@ -1069,8 +1070,6 @@ void Scene::SaveState()
             SaveFile.child("config").child("scene").child("entities").child("enemies").child(enemies.first.c_str()).attribute("isAlive").set_value(enemyEntity->isAlive ? 1 : 0);
               
             if (enemies.first == "koopa") {
-                LOG("posx:%f, posY:%f", enemyEntity->GetPosition().getX(), enemyEntity->GetPosition().getY());
-
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("x").set_value(enemyEntity->GetPosition().getX()-40);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_koopa").attribute("y").set_value(enemyEntity->GetPosition().getY()- 42);
             }
@@ -1086,12 +1085,10 @@ void Scene::SaveState()
             if (enemies.first == "goomba2") {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("x").set_value(enemyEntity->GetPosition().getX() - 16);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy2").attribute("y").set_value(enemyEntity->GetPosition().getY() - 16);
-
             }
             if (enemies.first == "bowser" && level == 3) {
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("x").set_value(enemyEntity->GetPosition().getX()-72);
                 SaveFile.child("config").child("scene").child("entities").child("enemies").child("enemy_bowser").attribute("y").set_value(enemyEntity->GetPosition().getY()-64);
-
             }
         }
         else if (enemyEntity == nullptr) {
@@ -1100,11 +1097,8 @@ void Scene::SaveState()
             if (enemies.first == "goomba") save_hitCount_goomba = 1;
             if (enemies.first == "goomba2") save_hitCount_goomba2 = 1;
             if (enemies.first == "bowser")  save_hitCount_bowser = 3;
-
         }
-        
     }
-
     // Guardar el estado de los ítems
     pugi::xml_node itemsNode = SaveFile.child("config").child("scene").child("entities").child("items");
     for (const auto& item : itemStateList) {
@@ -1115,7 +1109,6 @@ void Scene::SaveState()
             itemsNode.child(item.first.c_str()).attribute("y").set_value(itemEntity->GetPosition().getY());
         }
     }
-
     // Guardar el archivo XML
     SaveFile.save_file("config.xml");
     LOG("Game state saved successfully.");
@@ -1141,6 +1134,11 @@ void Scene::menu()
 
 void Scene::MenuPause()
 {
+    if (!isMusicPlaying) {
+        Engine::GetInstance().audio->StopMusic();
+        Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/SecondMenuMusic.wav");
+        isMusicPlaying = true;
+    }
      Engine::GetInstance().guiManager->CleanUp();
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
@@ -1161,7 +1159,11 @@ void Scene::MenuPause()
 
 void Scene::Credits()
 {
-    Engine::GetInstance().audio->StopMusic();
+    if (!isMusicPlaying) {
+        Engine::GetInstance().audio->StopMusic();
+        Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/SecondMenuMusic.wav");
+        isMusicPlaying = true;
+    }
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;
@@ -1176,7 +1178,11 @@ void Scene::Credits()
 
 void Scene::Settings()
 {
-    Engine::GetInstance().audio->StopMusic();
+    if (!isMusicPlaying) {
+        Engine::GetInstance().audio->StopMusic();
+        Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/SecondMenuMusic.wav");
+        isMusicPlaying = true;
+    }
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;

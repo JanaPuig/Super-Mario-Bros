@@ -149,8 +149,7 @@ bool Player::Update(float dt) {
                 }
                 SetPosition(newPosition);
                 Engine::GetInstance().audio.get()->PlayMusic(Engine::GetInstance().scene->level == 1 ? "Assets/Audio/Music/GroundTheme.wav" :
-                    Engine::GetInstance().scene->level == 2 ? "Assets/Audio/Music/World2Theme.wav" :
-                    "Assets/Audio/Music/CastleTheme.wav");
+                    Engine::GetInstance().scene->level == 2 ? "Assets/Audio/Music/World2Theme.wav" : "Assets/Audio/Music/CastleTheme.wav");
                 Mix_VolumeMusic(Engine::GetInstance().scene.get()->sdlVolume);
                 Engine::GetInstance().audio.get()->PlayFx(hereWeGoAgain, 0);
             }

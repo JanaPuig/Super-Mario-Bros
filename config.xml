@@ -12,7 +12,7 @@
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
-		<fullscreen_window value="false" />
+		<fullscreen_window value="true" />
 	</window>
 	<scene>
 		<SaveFile level="1" playerX="30" playerY="430" itemX="1600" itemY="768" checkpoint="false" IsPowerUp="false" PowerUpTime="0" lives="3" object="0" Puntuation="0" time="23716.7285" isSave="false" />

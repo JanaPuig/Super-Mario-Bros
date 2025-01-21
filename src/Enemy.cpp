@@ -256,6 +256,7 @@ bool Enemy::Update(float dt) {
                 Engine::GetInstance().audio->StopMusic(1.0F);
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");
+                Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 3.0F);
                 return true;
             }
             if (isAttacking) {
