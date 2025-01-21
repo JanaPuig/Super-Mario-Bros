@@ -32,7 +32,7 @@
 		</textures>
 		<entities>
 			<items>
-				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="1" texture="Assets/Textures/Coin.png" gravity="true">
+				<coin name="coin" x="-1000" y="-1000" w="32" h="32" isCoin="true" isPicked="0" texture="Assets/Textures/Coin.png" gravity="true">
 					<animations>
 						<idle loop="true" speed="0.5">
 							<frame x="0" y="0" w="32" h="32" />
@@ -104,7 +104,7 @@
 			<player name="mario" x="271" y="431" w="32" h="40" isStar="false" texture_player="Assets/Textures/player.png" gravity="true">
 				<animations>
 					<idle loop="false">
-						<frame x="2" y="8" w="28" h="40" />
+						<frame x="2" y="8" w="28" h="43" />
 					</idle>
 					<idleL loop="false">
 						<frame x="2" y="56" w="28" h="40" />

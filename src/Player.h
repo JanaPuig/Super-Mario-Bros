@@ -11,43 +11,47 @@ class Player : public Entity
 {
 public:
     Player();
+
     virtual ~Player();
 
-    // Lifecycle methods
     bool Awake();
+
     bool Start();
+
     bool Update(float dt);
+
     bool CleanUp();
 
-    // Collision methods
     void OnCollision(PhysBody* physA, PhysBody* physB) override;
+
     void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
 
     void SetPosition(const Vector2D& newPosition);
 
-
-    // Player-specific functionality
-    Vector2D GetPosition() const { return position; }
     void ToggleGodMode();
+
     void PlayerFlight(float dt);
 
-    // State management
     void SetActive(bool active) { isActive = active; }
+
     bool IsActive() const { return isActive; }
 
     void SetParameters(pugi::xml_node parameters) {
         this->parameters = parameters;
     }
-
-    Vector2D GetPosition();
     void LoseLife();  // Función para perder una vida
 
-    //Pausar movimiento
     void StopMovement();
+
     void ResumeMovement();
+
     void ManageStarPower(float dt);
+
+    Vector2D GetPosition() const { return position; }
+
+    Vector2D GetPosition();
+
     bool canMove = true;
-   
     bool isDead = false;
 
 public:

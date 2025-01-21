@@ -207,6 +207,7 @@ bool Item::Update(float dt)
     }
     return true;
 }
+
 void Item::SavePickedStateToFile() {
     pugi::xml_document doc;
     if (!doc.load_file("config.xml")) {
@@ -233,6 +234,7 @@ bool Item::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(OneUpTexture);
     return true;
 }
+
 void Item::ResetPosition()
 {
     idle.LoadAnimations(parameters.child("animations").child("idle"));

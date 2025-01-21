@@ -37,27 +37,27 @@ public:
 
     void Load_SetPosition(Vector2D pos);
 
-    Vector2D GetPosition();
-
     void ResetPath();
 
     void UpdateColliderSize();
+
     int GetHitCount();
 
     void ResetPosition();
-    //Pausar movimiento
+
     void StopMovement();
+
     void ResumeMovement();
+
+    Vector2D GetPosition();
 
     // Variables públicas relacionadas con texturas y animaciones
     SDL_Texture* textureGoomba;
     SDL_Texture* textureKoopa;
     SDL_Texture* textureBowser;
     const char* texturePath;
-
     int texW, texH;
     pugi::xml_node parameters;
-
     Animation* currentAnimation = nullptr;
 
     // Animaciones específicas de Bowser
@@ -96,9 +96,9 @@ public:
     int BowserAttack = 1;
     int drawY = 0;
 
-    b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); // Velocidad de ataque de Bowser
+    b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); //Bowser's Attack velocity
 
-    bool isAttacking = false; // Estado del ataque
+    bool isAttacking = false; 
     bool isEnemyDead = false;
     bool isDying = false;
     bool movingRight = true;
@@ -106,6 +106,7 @@ public:
     bool showPath = false;
     bool isLookingRight = false;
     bool isAlive;
+
     // Parámetros relacionados con tiempo y rango
     float currentX=0;
     float deathTimer = 0.0f;
@@ -116,11 +117,11 @@ public:
     float lastAttackTime = 0.0f;
     float minAttackInterval = 2000.0f;
     float attackTimer = 0.0f;
-    float attackDuration = 6000.0f; // Duración del ataque en milisegundos (6 segundos)
+    float attackDuration = 6000.0f; 
     float detectionRange = 500.0f;
     float speed = 3.0f;
     float lastStepTime = 0.0f;
-    float stepInterval = 600.0f; // 0. segundos entre sonidos de paso
+    float stepInterval = 600.0f; 
 
     bool visible = true;
 

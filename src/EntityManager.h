@@ -10,16 +10,12 @@ public:
 
 	EntityManager();
 
-	// Destructor
 	virtual ~EntityManager();
 
-	// Called before render is available
 	bool Awake();
 
-	// Called after Awake
 	bool Start();
 
-	// Called every frame
 	bool Update(float dt);
 
 	void RemoveAllItems();
@@ -27,12 +23,10 @@ public:
 	void RemoveAllEnemies();
 
 	void ResetEnemies();
-	void ResetItems();
-	// Called before quitting
-	bool CleanUp();
 
-	// Additional methods
-	Entity* CreateEntity(EntityType type);
+	void ResetItems();
+
+	bool CleanUp();
 
 	void DestroyEntity(Entity* entity);
 
@@ -40,13 +34,17 @@ public:
 	
 	Entity* GetEntityByName(std::string name);
 
-public:
+	Entity* CreateEntity(EntityType type);
+
 	bool isStarPower = false;
-	float starPowerDuration = 15.0f;
 	bool StarMusicPlaying = false;
+
+	float starPowerDuration = 15.0f;
+	float puntuation = 0.0f;
+
 	int lives = 3;
 	int objects = 0;
-	float puntuation = 0.0f;
+
 	std::list<Entity*> entities;
 
 };

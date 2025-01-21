@@ -437,7 +437,6 @@ void Enemy::Load_SetPosition(Vector2D pos) {
 Vector2D Enemy::GetPosition() {
     if (pbody == nullptr) {
         Start();
-
     }
     if (pbody != nullptr) {
         b2Vec2 bodyPos = pbody->body->GetTransform().p;
@@ -451,88 +450,67 @@ void Enemy::ResetPath() {
     pathfinding->ResetPath(tilePos);
 }
 void Enemy::ResetPosition() {
-    std::string enemyName = parameters.attribute("name").as_string();
-    // Restablece el estado de la animación
-    if (parameters.attribute("name").as_string() == std::string("koopa") || parameters.attribute("name").as_string() == std::string("koopa2")) {
-        currentAnimation = &flyingkoopaLeft;
-    }
-    else if (parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) {
-        currentAnimation = &idleGoomba;
-    }
-    // Restablecer otras variables
+    currentAnimation = (name == "koopa" || name == "koopa2") ? &flyingkoopaLeft :
+        (name == "goomba" || name == "goomba2") ? &idleGoomba : nullptr;
+
     isDying = false;
     isEnemyDead = false;
     toBeDestroyed = false;
     hitCount = 0;
+
     if (pbody) {
         Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
         pbody = nullptr;
     }
+
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
     pbody->body->SetTransform(b2Vec2(PIXEL_TO_METERS(position.getX()), PIXEL_TO_METERS(position.getY())), 0);
     pbody->listener = this;
     pbody->ctype = ColliderType::ENEMY;
-    if (enemyName == "koopa" || enemyName == "koopa2") {
+
+    if (name == "koopa" || name == "koopa2" || name == "goomba" || name == "goomba2") {
         pbody->body->SetGravityScale(1);
     }
-    else if (enemyName == "goomba" || enemyName == "goomba2") {
-        pbody->body->SetGravityScale(1);
-    }
-    else if (enemyName == "bowser") {
-        pbody->body->SetGravityScale(1); // Gravedad normal para Bowser
+    else if (name == "bowser") {
+        pbody->body->SetGravityScale(5);
     }
 }
 
 void Enemy::StopMovement() {
     if (pbody != nullptr) {
-        std::string enemyName = parameters.attribute("name").as_string();
-        if (enemyName == "koopa" || enemyName == "koopa2") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        if (name == "koopa" || name == "koopa2") {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() - 2 + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
         }
-        else if (enemyName == "bowser") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        else if (name == "bowser") {
             if (isAttacking) {
                 newWidth = 84;
                 newHeight = 55;
-                pbody = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX() + newWidth / 2, (int)position.getY() + newHeight / 2 +30, newWidth, newHeight, bodyType::STATIC);
+                pbody = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX() + newWidth / 2, (int)position.getY() + newHeight / 2 + 30, newWidth, newHeight, bodyType::STATIC);
             }
             else {
                 pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
             }
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
         }
-        if (enemyName == "goomba" || enemyName == "goomba2") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        else if (name == "goomba" || name == "goomba2") {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
         }
+        pbody->listener = this;
+        pbody->ctype = ColliderType::ENEMY;
     }
 }
 void Enemy::ResumeMovement() {
     if (pbody != nullptr) {
-        std::string enemyName = parameters.attribute("name").as_string();
-        if (enemyName == "koopa"|| enemyName == "koopa2") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        if (name == "koopa" || name == "koopa2") {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() - 2 + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
-            pbody->body->SetGravityScale(1); 
-        }
-        else if (enemyName == "goomba"|| enemyName == "goomba2") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-            pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
             pbody->body->SetGravityScale(1);
         }
-
-        else if (enemyName == "bowser") {
-            Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+        else if (name == "goomba" || name == "goomba2") {
+            pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+            pbody->body->SetGravityScale(1);
+        }
+        else if (name == "bowser") {
             if (isAttacking) {
                 newWidth = 84;
                 newHeight = 55;
@@ -541,10 +519,10 @@ void Enemy::ResumeMovement() {
             else {
                 pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
             }
-            pbody->listener = this;
-            pbody->ctype = ColliderType::ENEMY;
             pbody->body->SetGravityScale(5); // Gravedad normal para Bowser
         }
+        pbody->listener = this;
+        pbody->ctype = ColliderType::ENEMY;
     }
 }
 

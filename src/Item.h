@@ -37,41 +37,44 @@ public:
     void SetPosition(const Vector2D& newPosition);
 
     Vector2D GetPosition() const;
+    // Flags
+    bool isCoin = false;    
+    bool isOneUp = false;   
+    bool isBigCoin = false;
+    bool isPowerUp = false; 
+    bool isFinishFlag = false; 
 
+    // State
+    bool apear = true;       
 
-public:
-    // Audio Fx
-    int pickCoinFxId= 0;
-    int CheckPoint= 0;
+    // Audio Effects
+    int pickCoinFxId = 0;
+    int CheckPoint = 0;
     int oneUpFxId = 0;
     int BigCoinFxId = 0;
     int PowerUpFxId = -1;
-    int isPicked;    // Indica si el ítem ha sido recogido
+    int isPicked = 0;       
 
-    bool isCoin = false;     // Indica si el ítem es una MONEDA
-    bool isOneUp = false;    // Indica si el ítem es una VIDA
-    bool isBigCoin = false;
-    bool isPowerUp = false;// Indica si el ítem es una MONEDA GRANDE
-    bool isFinishFlag = false;
+    // Item List
     std::vector<Item*> items;
 
-    bool apear=true;
-
 private:
+    // Textures
+    SDL_Texture* coinTexture = nullptr;
+    SDL_Texture* BigCoinTexture = nullptr;
+    SDL_Texture* OneUpTexture = nullptr;
+    SDL_Texture* flagTexture = nullptr;
+    SDL_Texture* flagpoleTexture = nullptr;
+    SDL_Texture* PowerUpTexture = nullptr;
+    SDL_Texture* finish_flagTexture = nullptr;
+    SDL_Texture* finish_flagpoleTexture = nullptr;
 
-    SDL_Texture* coinTexture =  NULL;
-    SDL_Texture* BigCoinTexture = NULL;
-    SDL_Texture* OneUpTexture = NULL;
-    SDL_Texture* flagTexture = NULL;
-    SDL_Texture* flagpoleTexture = NULL;
-    SDL_Texture* PowerUpTexture = NULL;
-    SDL_Texture* finish_flagTexture = NULL;
-    SDL_Texture* finish_flagpoleTexture = NULL;
+    // Texture Dimensions
+    const char* texturePath = nullptr;
+    int texW = 0;
+    int texH = 0;
 
-    const char* texturePath;
-    int texW= 0, texH = 0;
-
-    pugi::xml_node parameters;
+    // Animations
     Animation* currentAnimation = &idle;
     Animation idle;
 
@@ -85,11 +88,11 @@ private:
     Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;
 
-
     Animation* currentAnimation_finish_flag = &finish_flag;
     Animation finish_flag;
     Animation* currentAnimation_finish_flagpole = &finish_flagpole;
     Animation finish_flagpole;
 
-
+    // XML Parameters
+    pugi::xml_node parameters;
 };
