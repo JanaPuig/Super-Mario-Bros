@@ -403,38 +403,37 @@ bool Scene::Update(float dt)
         DrawPuntation();
         DrawWorld();
     }
+
     int cameraX = Engine::GetInstance().render.get()->camera.x;
     int cameraY = Engine::GetInstance().render.get()->camera.y;
 
-    if (showGroupLogo)
-    {
+    if (showGroupLogo) {
         logoTimer += dt;
         Engine::GetInstance().render.get()->DrawTexture(GroupLogo, -cameraX, -cameraY);
-        if (logoTimer >= logoDuration)
-        {
+        if (logoTimer >= logoDuration) {
             showGroupLogo = false;
             showMainMenu = true;  // Mostrar el menú principal
         }
-        return true;  
+        return true;
     }
 
     if (showMainMenu) {
-        // Reproducir GameIntro solo una vez
         if (!isGameIntroPlaying) {
             Engine::GetInstance().audio.get()->PlayMusic("Assets/Audio/Music/GameIntro.wav", 0.f);
             isGameIntroPlaying = true;
         }
         menu();
         Engine::GetInstance().render.get()->DrawTexture(mainMenu, -cameraX, -cameraY);
+
         if (showCredits) {
-            isGameIntroPlaying = false;
-            Credits(); 
+            Credits();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 showCredits = false; // Vuelve al menu si se presiona backspace
-          
+                isGameIntroPlaying = false;
             }
             return true;
         }
+
         if (showSettings) {
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
@@ -450,16 +449,10 @@ bool Scene::Update(float dt)
     }
     else {
         Engine::GetInstance().guiManager->CleanUp();
-
     }
+
     if (showWinScreen) {
-        int cameraX = Engine::GetInstance().render.get()->camera.x;
-        int cameraY = Engine::GetInstance().render.get()->camera.y;
-
-        // Dibuja la pantalla negra
         Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
-
-        // Dibuja el texto "YOU WIN!"
         Engine::GetInstance().render.get()->DrawText("YOU WIN!", 725, 400, 400, 250);
         Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 700, 800, 450, 75);
 
@@ -469,25 +462,24 @@ bool Scene::Update(float dt)
         }
         return true;
     }
-    // Handle level transition screen
+
     if (showingTransition) {
         transitionTimer += dt;
         Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
-        if (level == 1) { Engine::GetInstance().render->DrawText("WORLD 1-1", 730, 450, 475, 150); }
-        else if (level == 2) { Engine::GetInstance().render->DrawText("WORLD 1-2", 730, 450, 475, 150); }
-        else if (level == 3) { Engine::GetInstance().render->DrawText("CASTLE 1-3", 720, 450, 475, 150); }
+        const char* worldText = (level == 1) ? "WORLD 1-1" : (level == 2) ? "WORLD 1-2" : "CASTLE 1-3";
+        Engine::GetInstance().render->DrawText(worldText, 730, 450, 475, 150);
         if (transitionTimer >= transitionDuration) {
             FinishTransition();
         }
         return true; // Skip the rest of the game logic during transition
     }
-    //Handle Loading Screen
+
     if (isLoading) {
         loadingTimer += dt;
-        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);   // Renderiza la pantalla de carga
+        Engine::GetInstance().render.get()->DrawTexture(black, -cameraX, -cameraY);
         Engine::GetInstance().render->DrawText("LOADING...", 730, 450, 475, 150);
         Engine::GetInstance().audio.get()->StopMusic();
-        if (loadingTimer >= loadingScreenDuration) {     // Si el tiempo de espera ha terminado, carga el estado del juego
+        if (loadingTimer >= loadingScreenDuration) {
             isLoading = false; // Desactiva la pantalla de carga
             Engine::GetInstance().audio.get()->PlayFx(hereWeGo);
             LoadGame(); // Load Game State
@@ -498,56 +490,41 @@ bool Scene::Update(float dt)
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
         showPauseMenu = !showPauseMenu;
         Engine::GetInstance().audio->ResumeMusic();
-        if (showPauseMenu) {    //Que no se vean los items, los enemigos ni el player
-            player->StopMovement(); //Parar movimineto del player
-            for (Enemy* enemy : enemyList) { //Parar movimineto del enemigo
-                if (enemy != nullptr) {
+        if (showPauseMenu) {
+            player->StopMovement();
+            for (Enemy* enemy : enemyList) {
+                if (enemy) {
                     enemy->visible = false;
                     enemy->StopMovement();
                 }
-                else {
-                    continue;
-                }
             }
-            for (Item* item : itemList) { //Dejar de ver items
+            for (Item* item : itemList) {
                 item->apear = false;
             }
-
-            Engine::GetInstance().render.get()->camera.x = Engine::GetInstance().render.get()->camera.x;
-            Engine::GetInstance().render.get()->camera.y = Engine::GetInstance().render.get()->camera.y;
         }
         else {
-            player->ResumeMovement(); //Renundar movimineto del player
-
-            for (Enemy* enemy : enemyList) { //Renundar movimineto del enemigo
-                if (enemy != nullptr) {
+            player->ResumeMovement();
+            for (Enemy* enemy : enemyList) {
+                if (enemy) {
                     enemy->visible = true;
                     enemy->ResumeMovement();
                 }
-                else { 
-                    continue;
-                }
             }
-            for (Item* item : itemList) { //Ver items
+            for (Item* item : itemList) {
                 item->apear = true;
             }
-            showPauseMenu = false; // Cerrar el menú al presionar Backspace      
         }
     }
-    // Si el menú de pausa está activo, dibujarlo y detener el resto de la lógica
+
     if (showPauseMenu) {
         MenuPause();
-
         if (manageShowSettings) {
             Settings();
             mousePos = Engine::GetInstance().input->GetMousePosition();
             LOG("Mouse X: %f, Mouse Y: %f", mousePos.getX(), mousePos.getY());
-
-            //Engine::GetInstance().guiManager->Draw();
             if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN) {
                 manageShowSettings = false;
             }
-
         }
         return true;
     }
@@ -558,12 +535,12 @@ bool Scene::Update(float dt)
         ToggleMenu();
         ToggleHelpMenu = true;
     }
+
     if (showHelpMenu) {
-        int cameraX = Engine::GetInstance().render.get()->camera.x;
-        int cameraY = Engine::GetInstance().render.get()->camera.y;
         Engine::GetInstance().render.get()->DrawTexture(helpMenuTexture, -cameraX, -cameraY + 375);
         Engine::GetInstance().render.get()->DrawTexture(Title, -cameraX - 275, -cameraY - 250);
     }
+
     if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_UP) {
         ToggleHelpMenu = false;
     }
@@ -573,8 +550,9 @@ bool Scene::Update(float dt)
     float desiredCamPosX = playerPos.getX() - Engine::GetInstance().render.get()->camera.w / 2 + cameraFollowOffset;
     desiredCamPosX = std::max(cameraMinX, std::min(cameraMaxX, desiredCamPosX));
     Engine::GetInstance().render.get()->camera.x = -desiredCamPosX;
+
     // Handle teleportation in Level 1
-    if (level == 1 || level == 2 || level == 3) {
+    if (level >= 1 && level <= 3) {
         HandleTeleport(playerPos);
     }
 
@@ -583,18 +561,15 @@ bool Scene::Update(float dt)
     float currentTime = showRemainingTime ? (levelTime - elapsedTime) : elapsedTime;
 
     // Lógica si se acaba el tiempo
-    if ((currentTime / 1000) <= 0.0f)
-    {
+    if ((currentTime / 1000) <= 0.0f) {
         std::cout << "Time's up! Game over!" << std::endl;
         timeUp = true;
     }
 
     // Renderizar el tiempo en pantalla
     char timerText[64];
-    if (showRemainingTime)
-        sprintf_s(timerText, "%0.f", currentTime / 1000);
-    if (!timeUp) { Engine::GetInstance().render.get()->DrawText(timerText, 1620, 20, 30, 30); }
-    if (timeUp) { Engine::GetInstance().render.get()->DrawText("0", 1620, 20, 20, 30); }
+    sprintf_s(timerText, "%0.f", showRemainingTime ? currentTime / 1000 : 0);
+    Engine::GetInstance().render.get()->DrawText(timerText, 1620, 20, 30, 30);
     Engine::GetInstance().render.get()->DrawText("Time Remaining:", 1380, 20, 225, 30);
 
     return true;
@@ -1186,7 +1161,7 @@ void Scene::MenuPause()
 
 void Scene::Credits()
 {
-   
+    Engine::GetInstance().audio->StopMusic();
     Engine::GetInstance().guiManager->CleanUp();
 
     int cameraX = Engine::GetInstance().render.get()->camera.x;
