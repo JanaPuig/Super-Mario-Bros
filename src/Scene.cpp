@@ -1303,9 +1303,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
     case 1: // Menu; New Game
         CreateLevelItems(1);
         LOG("New Game button clicked");
-
-        //Engine::GetInstance().entityManager.get()->ResetItems();
-
         StartNewGame();
         player->isDead = false;
         player->canMove = true;
