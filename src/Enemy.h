@@ -95,7 +95,7 @@ public:
     int BowserDeath = 1;
     int BowserAttack = 1;
     int drawY = 0;
-
+    int CastelThem = 1;
     b2Vec2 attackVelocity = b2Vec2(8.0f, 0.0f); //Bowser's Attack velocity
 
     bool isAttacking = false; 

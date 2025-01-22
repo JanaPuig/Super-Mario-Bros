@@ -12,7 +12,8 @@
 #include "tracy/Tracy.hpp"
 
 Enemy::Enemy()
-    : Entity(EntityType::ENEMY),  hitCount(0), isAlive(true) {}
+    : Entity(EntityType::ENEMY), hitCount(0), isAlive(true) {
+}
 Enemy::~Enemy() {
     delete pathfinding;
 }
@@ -67,7 +68,7 @@ bool Enemy::Start() {
     BowserDeath = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserDeath.wav");
     BowserAttack = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserAttack.wav");
     BowserStep = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserStep.wav");
-
+    CastelThem = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/CastleTheme.wav");
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
@@ -104,7 +105,7 @@ void Enemy::UpdateColliderSize() {
     Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
 
     // Nuevo tamaño para el colisionador
-   
+
 
     if (name == "koopa" || name == "koopa2") {
         newWidth = 32;
@@ -130,7 +131,7 @@ void Enemy::UpdateColliderSize() {
 bool Enemy::Update(float dt) {
     if (Engine::GetInstance().scene.get()->showMainMenu ||
         Engine::GetInstance().scene.get()->showingTransition ||
-        Engine::GetInstance().scene.get()->isLoading || !visible|| Engine::GetInstance().scene.get()->showWinScreen) {
+        Engine::GetInstance().scene.get()->isLoading || !visible || Engine::GetInstance().scene.get()->showWinScreen) {
         return true;
     }
 
@@ -153,6 +154,7 @@ bool Enemy::Update(float dt) {
                 if (deathTimer >= 2000.0f) {
                     isEnemyDead = true;
                     toBeDestroyed = true;
+                    Engine::GetInstance().scene.get()->endFinalBoss = true;
                     return true;
                 }
             }
@@ -170,7 +172,6 @@ bool Enemy::Update(float dt) {
             Engine::GetInstance().render.get()->DrawTexture(textureGoomba, (int)position.getX(), (int)position.getY(), &frameRect);
             Engine::GetInstance().render.get()->DrawTexture(textureKoopa, (int)position.getX(), (int)position.getY() + 15, &frameRect);
             Engine::GetInstance().render.get()->DrawTexture(textureBowser, (int)position.getX(), (int)position.getY(), &frameRect);
-
             return true;
         }
 
@@ -256,7 +257,7 @@ bool Enemy::Update(float dt) {
                 Engine::GetInstance().audio->StopMusic(1.0F);
                 Engine::GetInstance().audio.get()->PlayFx(BowserDeath);
                 LOG("Bowser is dead");
-                Engine::GetInstance().audio->PlayMusic("Assets/Audio/Music/CastleTheme.wav", 3.0F);
+                Engine::GetInstance().audio.get()->PlayFx(CastelThem);
                 return true;
             }
             if (isAttacking) {
@@ -282,7 +283,7 @@ bool Enemy::Update(float dt) {
                         currentAnimation->Reset();
                     }
                 }
-                if(!isAttacking) {
+                if (!isAttacking) {
                     if (velocity.x < 0 && distanceToPlayer <= detectionRange) {
                         currentAnimation = &walkingBowserL;
                     }
@@ -394,7 +395,7 @@ bool Enemy::Update(float dt) {
                 pbody->body->SetLinearVelocity(b2Vec2(0, 0));
             }
 
-            if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2"))&&Engine::GetInstance().scene->level==1) {
+            if ((parameters.attribute("name").as_string() == std::string("goomba") || parameters.attribute("name").as_string() == std::string("goomba2")) && Engine::GetInstance().scene->level == 1) {
                 if (GetPosition().getY() > 490) {
                     isEnemyDead = true;
                     toBeDestroyed = true;
@@ -482,22 +483,29 @@ void Enemy::StopMovement() {
         Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
         if (name == "koopa" || name == "koopa2") {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() - 2 + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
+            pbody->listener = this;
+            pbody->ctype = ColliderType::ENEMY;
         }
         else if (name == "bowser") {
             if (isAttacking) {
                 newWidth = 84;
                 newHeight = 55;
                 pbody = Engine::GetInstance().physics.get()->CreateRectangle((int)position.getX() + newWidth / 2, (int)position.getY() + newHeight / 2 + 30, newWidth, newHeight, bodyType::STATIC);
+                pbody->listener = this;
+                pbody->ctype = ColliderType::ENEMY;
             }
             else {
                 pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
+                pbody->listener = this;
+                pbody->ctype = ColliderType::ENEMY;
             }
         }
         else if (name == "goomba" || name == "goomba2") {
             pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::STATIC);
+            pbody->listener = this;
+            pbody->ctype = ColliderType::ENEMY;
         }
-        pbody->listener = this;
-        pbody->ctype = ColliderType::ENEMY;
+
     }
 }
 void Enemy::ResumeMovement() {
@@ -526,4 +534,3 @@ void Enemy::ResumeMovement() {
         pbody->ctype = ColliderType::ENEMY;
     }
 }
-

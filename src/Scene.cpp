@@ -620,11 +620,15 @@ void Scene::HandleTeleport(const Vector2D& playerPos)
         }
         else if (IsInTeleportArea(playerPos, 6630, 415, tolerance) || IsInTeleportArea(playerPos, 6630, 375, tolerance))
         {
-            showWinScreen = true;
-            Engine::GetInstance().audio->StopMusic();
-            if (!hasPlayedWinMusic) {
-                Engine::GetInstance().audio.get()->PlayFx(EndGame);
-                hasPlayedWinMusic = true; // Marcar que la música ha sido reproducida
+            if (endFinalBoss == true) { //No ganar hasta que se haya derrotado a bowser
+                showWinScreen = true;
+                Engine::GetInstance().audio->StopFx();
+                Engine::GetInstance().audio->StopMusic(0.0F);
+                if (!hasPlayedWinMusic) {
+                    Engine::GetInstance().audio.get()->PlayFx(EndGame);
+                    hasPlayedWinMusic = true; // Marcar que la música ha sido reproducida
+                }
+              
             }
         }
     }
@@ -789,6 +793,7 @@ void Scene::FinishTransition()
 }
 
 void Scene::StartNewGame() {
+    
     hasPlayedWinMusic = false;
     isGameIntroPlaying = false;
     isMusicPlaying = false;
@@ -970,6 +975,7 @@ void Scene::LoadGame() {
                 enemyList.push_back(bowser);
                 enemyStateList.push_back(std::make_pair(std::string((configParameters.child("entities").child("enemies").child("enemy_bowser")).attribute("name").as_string()), 0));
                 save_hitCount_bowser = 0;
+                endFinalBoss = false;
             }
         }
     }
@@ -1316,6 +1322,8 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control)
         Engine::GetInstance().audio.get()->PlayFx(marioTime);
         ShowTransitionScreen();
         
+        endFinalBoss = false; 
+
         break;
 
     case 2: // Menu; Load Game

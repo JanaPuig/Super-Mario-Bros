@@ -138,6 +138,8 @@ public:
     int FxPosX = 1350;
     int EndGame = 0;
 
+    bool endFinalBoss=false;
+
 private:
 
     void ShowTransitionScreen();
