@@ -459,6 +459,8 @@ bool Scene::Update(float dt)
         Engine::GetInstance().render.get()->DrawText("PRESS ENTER TO RETURN TO MENU!", 700, 800, 450, 75);
 
         if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
+            Engine::GetInstance().audio.get()->StopFx();
+
             showWinScreen = false;
             showMainMenu = true;
         }
