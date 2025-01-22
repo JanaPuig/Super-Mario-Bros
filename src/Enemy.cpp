@@ -68,7 +68,7 @@ bool Enemy::Start() {
     BowserDeath = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserDeath.wav");
     BowserAttack = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserAttack.wav");
     BowserStep = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BowserStep.wav");
-    CastelThem = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/CastleTheme.wav");
+    CastelThem = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Music/CastleTheme.wav");
     // Añadir física
     pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
 
