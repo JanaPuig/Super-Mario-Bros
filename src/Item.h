@@ -66,8 +66,8 @@ private:
     SDL_Texture* flagTexture = nullptr;
     SDL_Texture* flagpoleTexture = nullptr;
     SDL_Texture* PowerUpTexture = nullptr;
-    SDL_Texture* finish_flagTexture = nullptr;
-    SDL_Texture* finish_flagpoleTexture = nullptr;
+    SDL_Texture* finishFlagTexture = nullptr;
+    SDL_Texture* finishFlagpoleTexture = nullptr;
 
     // Texture Dimensions
     const char* texturePath = nullptr;
@@ -78,19 +78,19 @@ private:
     Animation* currentAnimation = &idle;
     Animation idle;
 
-    Animation* currentAnimation_flag = &flag;
+    Animation* currentAnimationFlag = &flag;
     Animation flag;
-    Animation lower_flag;
-    Animation lower_lower_flag;
+    Animation LowCheckpointFlag;
+    Animation LowestFlag;
     Animation BigCoin;
-    Animation update_finish_flag;
+    Animation UpdateFinishFlag;
 
     Animation* currentAnimation_flagpole = &flagpole;
     Animation flagpole;
 
-    Animation* currentAnimation_finish_flag = &finish_flag;
-    Animation finish_flag;
-    Animation* currentAnimation_finish_flagpole = &finish_flagpole;
+    Animation* currentAnimationFinishFlag = &finishFlag;
+    Animation finishFlag;
+    Animation* currentAnimationFinishFlagpole = &finish_flagpole;
     Animation finish_flagpole;
 
     // XML Parameters

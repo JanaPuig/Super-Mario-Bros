@@ -40,8 +40,8 @@ bool Item::Start() {
     flagTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_flag").as_string());
     flagpoleTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_flagpole").as_string());
 
-    finish_flagTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_finish_flag").as_string());
-    finish_flagpoleTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_finish_flagpole").as_string());
+    finishFlagTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_finish_flag").as_string());
+    finishFlagpoleTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture_finish_flagpole").as_string());
 
     BigCoinTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("BigCoinTexture").as_string());
     PowerUpTexture = Engine::GetInstance().textures.get()->Load(parameters.attribute("PowerUpTexture").as_string());
@@ -50,20 +50,20 @@ bool Item::Start() {
     currentAnimation = &idle;
 
     flag.LoadAnimations(parameters.child("animations").child("idle_flag"));
-    currentAnimation_flag = &flag;
+    currentAnimationFlag = &flag;
 
     flagpole.LoadAnimations(parameters.child("animations").child("idle_flagpole"));
-    currentAnimation_finish_flagpole = &flagpole;
+    currentAnimationFinishFlagpole = &flagpole;
 
-    finish_flag.LoadAnimations(parameters.child("animations").child("idle_finish_flag"));
-    currentAnimation_finish_flag = &finish_flag;
+    finishFlag.LoadAnimations(parameters.child("animations").child("idle_finish_flag"));
+    currentAnimationFinishFlag = &finishFlag;
 
     finish_flagpole.LoadAnimations(parameters.child("animations").child("idle_finish_flagpole"));
-    currentAnimation_finish_flagpole = &finish_flagpole;
+    currentAnimationFinishFlagpole = &finish_flagpole;
 
-    lower_flag.LoadAnimations(parameters.child("animations").child("lower_flag"));
-    lower_lower_flag.LoadAnimations(parameters.child("animations").child("lower_lower_flag"));
-    update_finish_flag.LoadAnimations(parameters.child("animations").child("update_finish_flag"));
+    LowCheckpointFlag.LoadAnimations(parameters.child("animations").child("lower_flag"));
+    LowestFlag.LoadAnimations(parameters.child("animations").child("lower_lower_flag"));
+    UpdateFinishFlag.LoadAnimations(parameters.child("animations").child("update_finish_flag"));
 
     BigCoin.LoadAnimations(parameters.child("animations").child("idleBigCoin"));
 
@@ -73,8 +73,8 @@ bool Item::Start() {
     Engine::GetInstance().textures.get()->GetSize(flagpoleTexture, texW, texH);
     Engine::GetInstance().textures.get()->GetSize(flagTexture, texW, texH);
     Engine::GetInstance().textures.get()->GetSize(PowerUpTexture, texW, texH);
-    Engine::GetInstance().textures.get()->GetSize(finish_flagpoleTexture, texW, texH);
-    Engine::GetInstance().textures.get()->GetSize(finish_flagTexture, texW, texH);
+    Engine::GetInstance().textures.get()->GetSize(finishFlagpoleTexture, texW, texH);
+    Engine::GetInstance().textures.get()->GetSize(finishFlagTexture, texW, texH);
 
     // Cargar efecto de sonido
     pickCoinFxId = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Coin.wav"); // Sonido Coin
@@ -104,7 +104,6 @@ bool Item::Update(float dt)
             // Si el ítem es BigCoin, la distancia mínima es 50.0f
             if (isBigCoin && distance < 50.0f && isPicked == 0) {
                 isPicked = 1;
-                LOG("BigCoin picked up!");
                 Engine::GetInstance().scene->UpdateItem(name, isPicked);
                 SavePickedStateToFile();
                 Engine::GetInstance().entityManager->puntuation += 250;
@@ -115,7 +114,7 @@ bool Item::Update(float dt)
             // Para los otros ítems, la distancia mínima sigue siendo 35.0f
             else if (!isBigCoin && distance < 35.0f && isPicked == 0) {
                 isPicked = 1;
-                LOG("Item picked up!");
+
                 Engine::GetInstance().scene->UpdateItem(name, isPicked);
                 SavePickedStateToFile();
 
@@ -124,6 +123,7 @@ bool Item::Update(float dt)
                     Engine::GetInstance().entityManager->objects++;
                     Engine::GetInstance().entityManager->puntuation += 250;
                     Engine::GetInstance().audio.get()->PlayFx(pickCoinFxId); // Reproducir sonido de Coin
+                    LOG("Coin picked up!");
                 }
                 else if (isPowerUp) {
                     Engine::GetInstance().entityManager->puntuation += 300;
@@ -140,7 +140,7 @@ bool Item::Update(float dt)
                 else if (isFinishFlag) {
                     Engine::GetInstance().entityManager->puntuation += 400;
                     LOG("Collision with Finish Flag");
-                    currentAnimation_finish_flag = &update_finish_flag;
+                    currentAnimationFinishFlag = &UpdateFinishFlag;
                     float targetY = position.getY() + 248.0f;
                     float moveSpeed = 3.0f;
                     if (position.getY() < targetY) {
@@ -152,29 +152,28 @@ bool Item::Update(float dt)
                     Engine::GetInstance().entityManager->puntuation += 400;
                     Engine::GetInstance().scene.get()->isFlaged = true;
                     Engine::GetInstance().audio.get()->PlayFx(CheckPoint, 0); // Reproducir sonido de checkpoint
-                    LOG("Collision with Flag");
-                    currentAnimation_flag = &lower_flag;
+                    LOG("Collision with Checkpoint");
+                    currentAnimationFlag = &LowCheckpointFlag;
                 }
             }
 
-            // Cambiar animación a "lower_lower_flag" si la actual termina
-            if (currentAnimation_flag == &lower_flag && currentAnimation_flag->HasFinished()) {
-                currentAnimation_flag = &lower_lower_flag;
+            if (currentAnimationFlag == &LowCheckpointFlag && currentAnimationFlag->HasFinished()) {
+                currentAnimationFlag = &LowestFlag;
             }
-            if (isFinishFlag && currentAnimation_finish_flag != nullptr) {
+            if (isFinishFlag && currentAnimationFinishFlag != nullptr) {
                 // Actualizar y dibujar animación de Finish Flag
-                currentAnimation_finish_flag->Update();
+                currentAnimationFinishFlag->Update();
                 Engine::GetInstance().render.get()->DrawTexture(
-                    finish_flagTexture,
+                    finishFlagTexture,
                     (int)position.getX(),
                     (int)position.getY(),
-                    &currentAnimation_finish_flag->GetCurrentFrame()
+                    &currentAnimationFinishFlag->GetCurrentFrame()
                 );
 
                 // Cambiar de animación si ha terminado
-                if (currentAnimation_finish_flag == &update_finish_flag && currentAnimation_finish_flag->HasFinished()) {
+                if (currentAnimationFinishFlag == &UpdateFinishFlag && currentAnimationFinishFlag->HasFinished()) {
                     LOG("Finish flag animation completed.");
-                    currentAnimation_finish_flag = &finish_flag;
+                    currentAnimationFinishFlag = &finishFlag;
                 }
             }
         }
@@ -189,21 +188,21 @@ bool Item::Update(float dt)
             Engine::GetInstance().render.get()->DrawTexture(isOneUp ? OneUpTexture : coinTexture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
             currentAnimation->Update();
 
-            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
-            currentAnimation_flag->Update();
+            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimationFlag->GetCurrentFrame());
+            currentAnimationFlag->Update();
         }
         else {
-            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flag->GetCurrentFrame());
-            currentAnimation_flag->Update();
+            Engine::GetInstance().render.get()->DrawTexture(flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimationFlag->GetCurrentFrame());
+            currentAnimationFlag->Update();
         }
         // Dibujar el mástil de la bandera
         Engine::GetInstance().render.get()->DrawTexture(flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_flagpole->GetCurrentFrame());
         currentAnimation_flagpole->Update();
 
-        Engine::GetInstance().render.get()->DrawTexture(finish_flagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flagpole->GetCurrentFrame());
-        currentAnimation_finish_flagpole->Update();
+        Engine::GetInstance().render.get()->DrawTexture(finishFlagpoleTexture, (int)position.getX(), (int)position.getY(), &currentAnimationFinishFlagpole->GetCurrentFrame());
+        currentAnimationFinishFlagpole->Update();
 
-        Engine::GetInstance().render.get()->DrawTexture( finish_flagTexture, (int)position.getX(), (int)position.getY(), &currentAnimation_finish_flag->GetCurrentFrame());
+        Engine::GetInstance().render.get()->DrawTexture( finishFlagTexture, (int)position.getX(), (int)position.getY(), &currentAnimationFinishFlag->GetCurrentFrame());
     }
     return true;
 }
@@ -228,8 +227,8 @@ bool Item::CleanUp()
     Engine::GetInstance().textures.get()->UnLoad(coinTexture);
     Engine::GetInstance().textures.get()->UnLoad(flagpoleTexture);
     Engine::GetInstance().textures.get()->UnLoad(flagTexture);
-    Engine::GetInstance().textures.get()->UnLoad(finish_flagpoleTexture);
-    Engine::GetInstance().textures.get()->UnLoad(finish_flagTexture);
+    Engine::GetInstance().textures.get()->UnLoad(finishFlagpoleTexture);
+    Engine::GetInstance().textures.get()->UnLoad(finishFlagTexture);
     Engine::GetInstance().textures.get()->UnLoad(BigCoinTexture);
     Engine::GetInstance().textures.get()->UnLoad(OneUpTexture);
     return true;
@@ -241,27 +240,27 @@ void Item::ResetPosition()
     currentAnimation = &idle;
 
     flag.LoadAnimations(parameters.child("animations").child("idle_flag"));
-    currentAnimation_flag = &flag;
+    currentAnimationFlag = &flag;
 
     flagpole.LoadAnimations(parameters.child("animations").child("idle_flagpole"));
-    currentAnimation_finish_flagpole = &flagpole;
+    currentAnimationFinishFlagpole = &flagpole;
 
-    finish_flag.LoadAnimations(parameters.child("animations").child("idle_finish_flag"));
-    currentAnimation_finish_flag = &finish_flag;
+    finishFlag.LoadAnimations(parameters.child("animations").child("idle_finish_flag"));
+    currentAnimationFinishFlag = &finishFlag;
 
     finish_flagpole.LoadAnimations(parameters.child("animations").child("idle_finish_flagpole"));
-    currentAnimation_finish_flagpole = &finish_flagpole;
+    currentAnimationFinishFlagpole = &finish_flagpole;
 
-    lower_flag.LoadAnimations(parameters.child("animations").child("lower_flag"));
-    lower_lower_flag.LoadAnimations(parameters.child("animations").child("lower_lower_flag"));
-    update_finish_flag.LoadAnimations(parameters.child("animations").child("update_finish_flag"));
+    LowCheckpointFlag.LoadAnimations(parameters.child("animations").child("lower_flag"));
+    LowestFlag.LoadAnimations(parameters.child("animations").child("lower_lower_flag"));
+    UpdateFinishFlag.LoadAnimations(parameters.child("animations").child("update_finish_flag"));
 
     BigCoin.LoadAnimations(parameters.child("animations").child("idleBigCoin"));
 
     isPicked = 0;
     currentAnimation = &idle;
-    currentAnimation_flag = &flag;
-    currentAnimation_finish_flag = &finish_flag;
+    currentAnimationFlag = &flag;
+    currentAnimationFinishFlag = &finishFlag;
 }
 void Item::SetPosition(const Vector2D& newPosition) {
     position = newPosition; // Asigna la nueva posición
